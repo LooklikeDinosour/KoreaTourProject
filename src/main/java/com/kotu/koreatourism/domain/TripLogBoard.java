@@ -2,6 +2,7 @@ package com.kotu.koreatourism.domain;
 
 import java.sql.Timestamp;
 
+
 public class TripLogBoard {
 
     private int tripLogId; //PK
