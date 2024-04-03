@@ -1,14 +1,18 @@
 package com.kotu.koreatourism.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Component
 public class TravelCompanionBoard {
 
     private int travelCompanionId; // PK
