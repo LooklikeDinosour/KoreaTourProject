@@ -22,12 +22,12 @@ public class BoardTest {
         board.setAuthor("테스트1");
         board.setContent("수원여행기 짱이다. 내용");
         board.setArea("수원");
-        Board testPost = boardMapper.createPost(board);
+        int testPost = boardMapper.createPost(board);
         //then
 
 
 
         //when
-        Assertions.assertThat(testPost.getBid() != 0).isTrue();
+        Assertions.assertThat(testPost == 1).isTrue();
     }
 }

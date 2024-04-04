@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     //글 작성하기
-    public Board createPost(Board board);
+    public int createPost(Board board);
 
     //상세글 불러오기
     public void findPost(int bno);

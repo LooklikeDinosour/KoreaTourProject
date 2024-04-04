@@ -17,7 +17,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void createPost(Board board) {
-        Board newPost = boardMapper.createPost(board);
+       int newPost = boardMapper.createPost(board);
     }
 
     @Override
