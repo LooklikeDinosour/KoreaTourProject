@@ -9,18 +9,10 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Component
-public class TravelCompanionBoard {
+public class TravelCompanionBoard extends Board {
 
-    private int travelCompanionId; // PK
-    private String travelCompanionTitle; // 제목
-    private Timestamp travelCompanionDate; // 작성날짜
-    private String travelCompanionAuthor; // 작성자
-    private String travelCompanionContent; // 작성내용
-    private int travelCompanionCount; // 조회수
-    private String travelCompanionArea; // 지역
+
 
 }

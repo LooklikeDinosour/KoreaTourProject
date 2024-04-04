@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class UploadFile {
 
-    private int uploadId;
+    private int uId;
     private String fileName;
     private String fileType;
     private String fileAddress;
