@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.BoardDTO;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface BoardService {
     public void findPost(int bid);
 
     //글 수정하기
-    public void updatePost(int bid, Board board);
+    public void updatePost(int bid, BoardDTO updateParam);
 
     //글 제거하기
     public void deletePost(int bid);

@@ -1,7 +1,9 @@
 package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.BoardDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,7 +16,8 @@ public interface BoardMapper {
     public void findPost(int bid);
 
     //글 수정하기
-    public void updatePost(int bid, Board board);
+    public void updatePost(@Param("bid") int bid,
+                           @Param("updateParam") BoardDTO updateParam);
 
     //글 제거하기
     public int deletePost(int bid);

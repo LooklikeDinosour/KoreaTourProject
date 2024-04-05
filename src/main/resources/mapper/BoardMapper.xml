@@ -12,6 +12,21 @@
                 #{area})
     </insert>
 
+    <select id="findPost" resultType="Board">
+        select bid, title, regdate, updatedate, author, content, viewcount
+        from POST_DB
+        where bid = #{bid}
+    </select>
+
+    <update id="updatePost">
+        update POST_TB
+        set (
+            title = #{updateParam.title},
+            author = #{updateParam.author},
+            content = #(updateParam.content),
+            area = #{updateParam.area})
+        where bid = #{bid}
+    </update>
 
     <delete id="deletePost">
         delete from POST_TB

@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.BoardDTO;
 import com.kotu.koreatourism.domain.TripLogBoard;
 import com.kotu.koreatourism.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void updatePost(int bid, Board board) {
-
+    public void updatePost(int bid, BoardDTO updateParam) {
+        boardMapper.updatePost(bid, updateParam);
     }
 
     @Override
