@@ -21,18 +21,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void findPost(int bno) {
+    public void findPost(int bid) {
 
     }
 
     @Override
-    public void updatePost(int bno, Board board) {
+    public void updatePost(int bid, Board board) {
 
     }
 
     @Override
-    public void deletePost(int bno) {
-
+    public void deletePost(int bid) {
+        //삭제기능은 본인 글이 맞아야 하는 로직
+        boardMapper.deletePost(bid);
     }
 
     @Override

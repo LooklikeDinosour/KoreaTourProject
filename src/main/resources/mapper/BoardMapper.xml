@@ -12,4 +12,9 @@
                 #{area})
     </insert>
 
+
+    <delete id="deletePost">
+        delete from POST_TB
+        where bid = #{bid}
+    </delete>
 </mapper>

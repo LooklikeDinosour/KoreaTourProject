@@ -3,9 +3,12 @@ package com.kotu.koreatourism;
 import com.kotu.koreatourism.domain.Board;
 import com.kotu.koreatourism.mapper.BoardMapper;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class BoardTest {
@@ -13,6 +16,7 @@ public class BoardTest {
     @Autowired
     BoardMapper boardMapper;
 
+    @DisplayName("게시글 작성테스트")
     @Test
     public void createPostTest() {
         //given
@@ -25,9 +29,18 @@ public class BoardTest {
         int testPost = boardMapper.createPost(board);
         //then
 
+        //when
+        assertThat(testPost == 1).isTrue();
+    }
 
+    @DisplayName("게시글 삭제 테스트")
+    @Test
+    public void deletePostTest() {
+        //given
+           int dbid = boardMapper.deletePost(2);
+        //then
 
         //when
-        Assertions.assertThat(testPost == 1).isTrue();
+        assertThat(dbid == 1).isTrue();
     }
 }
