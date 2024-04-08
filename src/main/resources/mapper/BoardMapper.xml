@@ -14,17 +14,17 @@
 
     <select id="findPost" resultType="Board">
         select bid, title, regdate, updatedate, author, content, viewcount
-        from POST_DB
+        from POST_TB
         where bid = #{bid}
     </select>
 
     <update id="updatePost">
         update POST_TB
-        set (
+        set
+            board_category = #{updateParam.board_category},
             title = #{updateParam.title},
-            author = #{updateParam.author},
-            content = #(updateParam.content),
-            area = #{updateParam.area})
+            content = #{updateParam.content},
+            area = #{updateParam.area}
         where bid = #{bid}
     </update>
 
@@ -32,4 +32,10 @@
         delete from POST_TB
         where bid = #{bid}
     </delete>
+
+    <select id="findAllPost">
+        select bid, title, regdate, updatedate, author, content, viewcount
+        from POST_TB
+        where board_category = 'tl';
+    </select>
 </mapper>

@@ -17,13 +17,13 @@ public class BoardServiceImpl implements BoardService {
     private final BoardMapper boardMapper;
 
     @Override
-    public void createPost(Board board) {
-       int newPost = boardMapper.createPost(board);
+    public Board createPost(Board board) {
+        return boardMapper.createPost(board);
     }
 
     @Override
-    public void findPost(int bid) {
-
+    public Board findPost(int bid) {
+        return boardMapper.findPost(bid);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Board> findAllPost() {
-        return null;
+
+       return boardMapper.findAllPost();
     }
 }

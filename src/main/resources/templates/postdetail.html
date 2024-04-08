@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세보기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1 th:text="${post.title}"></h1>
+<p th:text="${post.author}"><b>작성자:</b></p>
+<p th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"><b>작성일:</b></p>
+<div th:text="${post.content}">
+</div>
+<div>
+    <button
+            th:onclick="|location.href='@{/board/{postbid}/update(postbid=${post.bid})}'|"
+            type="button">글 수정하기</button>
+</div>
+</body>
+</html>

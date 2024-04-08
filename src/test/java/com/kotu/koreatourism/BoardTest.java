@@ -2,7 +2,6 @@ package com.kotu.koreatourism;
 
 import com.kotu.koreatourism.domain.Board;
 import com.kotu.koreatourism.mapper.BoardMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +25,11 @@ public class BoardTest {
         board.setAuthor("테스트1");
         board.setContent("수원여행기 짱이다. 내용");
         board.setArea("수원");
-        int testPost = boardMapper.createPost(board);
+        Board testPost = boardMapper.createPost(board);
         //then
 
         //when
-        assertThat(testPost == 1).isTrue();
+        assertThat(testPost).isNotNull();
     }
 
     @DisplayName("게시글 삭제 테스트")

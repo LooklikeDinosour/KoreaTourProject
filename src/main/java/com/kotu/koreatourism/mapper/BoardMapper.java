@@ -10,10 +10,10 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     //글 작성하기
-    public int createPost(Board board);
+    public Board createPost(Board board);
 
     //상세글 불러오기
-    public void findPost(int bid);
+    public Board findPost(int bid);
 
     //글 수정하기
     public void updatePost(@Param("bid") int bid,

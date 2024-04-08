@@ -14,7 +14,7 @@ public class Board {
     private String area; // 지역
     private String author; // 작성자
     private String content; // 작성내용
-    private int count; // 조회수
+    private int viewcount; // 조회수
 
 
 }

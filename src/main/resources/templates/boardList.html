@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>게시판 목록</title>
@@ -14,17 +14,25 @@
         <th>제목</th>
         <th>작성자</th>
         <th>작성일</th>
+        <th>조회</th>
     </tr>
     </thead>
     <tbody>
     <!-- 게시물 목록이 들어갈 자리 -->
-    <tr>
-        <td>1</td>
-        <td><a href="post-detail.html">게시글 제목</a></td>
-        <td>작성자</td>
-        <td>작성일</td>
+    <tr th:each="post : ${allPosts}">
+        <td th:text="${post.bid}"></td>
+        <td><a href="postdetail.html" th:href="@{readpost/{postbid}(postbid=${post.bid})}" th:text="${post.title}">제목</a></td>
+        <td th:text="${post.author}">작성자</td>
+        <td th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd')}">작성일</td>
+        <td th:text="${post.viewcount}"></td>
     </tr>
     <!-- 반복 -->
+    <!-- 글쓰기 버튼 추가 -->
+    <tr>
+        <td colspan="5" style="text-align: center;">
+            <button th:onclick="|location.href='@{/board/createpost}'|" class="write-post-btn">글쓰기</button>
+        </td>
+    </tr>
     </tbody>
 </table>
 </body>

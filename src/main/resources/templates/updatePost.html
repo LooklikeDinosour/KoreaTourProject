@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>게시글 작성</h1>
+<form action="readPost.html" th:action method="post">
+    <div>
+        <label for="board_category">게시판 고르기</label>
+        <select id="board_category" name="board_category"  required>
+            <option th:selected="${'tc'}">동행</option>
+            <option th:selected="${'tl'}">기록</option>
+        </select>
+    </div>
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:value="${post.title}">
+    </div>
+    <div>
+        <label for="author">작성자:</label>
+        <input type="text" id="author" name="author" th:value="${post.author}" disabled>
+    </div>
+    <div>
+        <label for="author">작성일:</label>
+        <input type="text" id="regdate" name="regdate" th:value="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm:ss')}" disabled>
+    </div>
+    <div>
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" th:value="${post.content}" th:text="${post.content}"></textarea>
+    </div>
+    <button type="submit">글 저장</button>
+    <button
+            th:onclick="|location.href='@{/board/tcboard}'|"
+            type="button">취소하기</button>
+</form>
+</body>
+</html>

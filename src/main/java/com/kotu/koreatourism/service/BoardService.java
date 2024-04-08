@@ -8,10 +8,10 @@ import java.util.List;
 public interface BoardService {
 
     //글 작성하기
-    public void createPost(Board board);
+    public Board createPost(Board board);
 
     //상세글 불러오기
-    public void findPost(int bid);
+    public Board findPost(int bid);
 
     //글 수정하기
     public void updatePost(int bid, BoardDTO updateParam);
