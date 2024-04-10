@@ -19,6 +19,15 @@
     <!-- Add Navigation -->
     <div class="swiper-button-prev"></div>
     <div class="swiper-button-next"></div>
+
+</div>
+<div>
+    <nav>
+    <ul>
+        <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
+        <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
+    </ul>
+    </nav>
 </div>
 
 <!-- Swiper JS -->

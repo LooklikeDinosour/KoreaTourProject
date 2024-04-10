@@ -1,8 +1,7 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Board;
-import com.kotu.koreatourism.domain.BoardDTO;
-import com.kotu.koreatourism.domain.TripLogBoard;
+import com.kotu.koreatourism.dto.BoardDTO;
 import com.kotu.koreatourism.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardMapper boardMapper;
 
     @Override
-    public Board createPost(Board board) {
+    public int createPost(Board board) {
         return boardMapper.createPost(board);
     }
 
@@ -38,8 +37,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAllPost() {
-
-       return boardMapper.findAllPost();
+    public List<Board> findAllPost(String boardCategory) {
+       return boardMapper.findAllPost(boardCategory);
     }
 }

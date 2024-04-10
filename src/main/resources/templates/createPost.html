@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>게시글 작성</h1>
 <form action="createPost.html" th:action method="post">
     <div>
-        <label for="board_category">게시판 고르기</label>
-        <select th:field="${board.board_category}"id="board_category" name="board_category" required>
-            <option th:selected="${'tc'}">동행</option>
-            <option th:selected="${'tl'}">기록</option>
-        </select>
+        <input type="hidden" th:value="${board_category}" name="board_category">
     </div>
     <div>
         <label for="title">제목:</label>
@@ -29,7 +23,7 @@
     </div>
     <button type="submit">글 저장</button>
     <button
-            th:onclick="|location.href='@{/board/tcboard}'|"
+            th:onclick="|location.href='@{/board/{board_category}(board_category=${board_category})}'|"
             type="button">취소하기</button>
 </form>
 </body>

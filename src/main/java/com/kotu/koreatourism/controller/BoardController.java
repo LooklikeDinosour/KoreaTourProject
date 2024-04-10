@@ -1,7 +1,7 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Board;
-import com.kotu.koreatourism.domain.BoardDTO;
+import com.kotu.koreatourism.dto.BoardDTO;
 import com.kotu.koreatourism.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,32 +21,37 @@ public class BoardController  {
     private final BoardService boardService;
 
     //게시판 조회하기
-    @GetMapping("/tcboard")
-    public String findAllBoard(Model model) {
+    @GetMapping("/{board_category}")
+    public String findAllBoard(Model model, @PathVariable("board_category") String boardCategory) {
 
-        List<Board> allPosts = boardService.findAllPost();
+        log.info("board_category = {}", boardCategory);
+        List<Board> allPosts = boardService.findAllPost(boardCategory);
         log.info("allposts = {}", allPosts);
         model.addAttribute("allPosts", allPosts);
+        model.addAttribute("board_category", boardCategory);
 
-        return "/boardList";
+        return "boardList";
     }
 
     //게시글 작성하기 폼으로 이동
-    @GetMapping("/createpost")
-    public String createPostform() {
-
+    @GetMapping("/{board_category}/createpost")
+    public String createPostform(@PathVariable("board_category") String board_category, Model model) {
+        log.info("board_category:createPost(Get) = {}", board_category);
+        model.addAttribute("board_category", board_category);
         return "/createPost";
     }
     //게시글 작성하기
-    @PostMapping("/createpost")
-    public String createPost(@ModelAttribute("Board") Board board, RedirectAttributes redirectAttributes) {
-        log.info("board_category={}", board.getBoardCategory());
-        board.setBoardCategory("tc");
-        board.setArea("수원");
-        Board createdPost = boardService.createPost(board);
+    @PostMapping("/{board_category}/createpost")
+    public String createPost(@ModelAttribute("Board") Board board,
+                             @RequestParam("board_category") String boardCategory,
+                             RedirectAttributes redirectAttributes) {
+        log.info("board_category,createPost(Post)={}", board.getBoardCategory());
+        board.setBoardCategory(boardCategory);
+        boardService.createPost(board);
+        Board createdPost = boardService.findPost(board.getBid());
         redirectAttributes.addAttribute("postbid", createdPost.getBid());
 
-        return "redirect:/readpost/{postbid}";
+        return "redirect:/board/readpost/{postbid}";
     }
     //게시글 상세보기
     @GetMapping("/readpost/{postbid}")
@@ -71,6 +76,6 @@ public class BoardController  {
     public String updatePost(@PathVariable("postbid") int postbid, @ModelAttribute BoardDTO updateParam) {
 
         boardService.updatePost(postbid, updateParam);
-        return "/updatePost";
+        return "redirect:/board/readpost/{postbid}";
     }
 }

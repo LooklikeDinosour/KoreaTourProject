@@ -1,10 +1,12 @@
-package com.kotu.koreatourism.domain;
+package com.kotu.koreatourism.dto;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Data
+@Component
 public class BoardDTO {
 
     private String board_category; // 분류

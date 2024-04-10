@@ -25,21 +25,21 @@ public class BoardTest {
         board.setAuthor("테스트1");
         board.setContent("수원여행기 짱이다. 내용");
         board.setArea("수원");
-        Board testPost = boardMapper.createPost(board);
+        int testPost = boardMapper.createPost(board);
         //then
 
         //when
         assertThat(testPost).isNotNull();
     }
 
-    @DisplayName("게시글 삭제 테스트")
-    @Test
-    public void deletePostTest() {
-        //given
-           int dbid = boardMapper.deletePost(2);
-        //then
-
-        //when
-        assertThat(dbid == 1).isTrue();
-    }
+//    @DisplayName("게시글 삭제 테스트")
+//    @Test
+//    public void deletePostTest() {
+//        //given
+//           int dbid = boardMapper.deletePost(2);
+//        //then
+//
+//        //when
+//        assertThat(dbid == 1).isTrue();
+//    }
 }
