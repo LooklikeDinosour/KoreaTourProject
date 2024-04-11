@@ -1,10 +1,13 @@
 package com.kotu.koreatourism.domain;
 
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Board {
 
     private int bid; // PK

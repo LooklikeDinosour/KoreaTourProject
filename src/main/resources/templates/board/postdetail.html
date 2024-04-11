@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세보기</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1 th:text="${post.title}"></h1>
@@ -14,7 +13,16 @@
 <div>
     <button
             th:onclick="|location.href='@{/board/{postbid}/update(postbid=${post.bid})}'|"
-            type="button">글 수정하기</button>
+            type="button">수정하기</button>
+    <button
+            th:onclick="|location.href='@{/board/{postbid}/delete(postbid=${post.bid})}'|"
+            type="button">삭제 하기</button>
 </div>
 </body>
+<script th:inline="javascript">
+    let msg = `${msg}`
+    if(msg != null) {
+        alert(${msg});
+    }
+</script>
 </html>

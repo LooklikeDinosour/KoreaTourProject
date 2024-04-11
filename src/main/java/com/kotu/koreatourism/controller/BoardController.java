@@ -30,7 +30,7 @@ public class BoardController  {
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("board_category", boardCategory);
 
-        return "boardList";
+        return "board/boardList";
     }
 
     //게시글 작성하기 폼으로 이동
@@ -38,7 +38,7 @@ public class BoardController  {
     public String createPostform(@PathVariable("board_category") String board_category, Model model) {
         log.info("board_category:createPost(Get) = {}", board_category);
         model.addAttribute("board_category", board_category);
-        return "/createPost";
+        return "board/createPost";
     }
     //게시글 작성하기
     @PostMapping("/{board_category}/createpost")
@@ -59,7 +59,7 @@ public class BoardController  {
         Board post = boardService.findPost(postId);
         log.info("post={}", post);
         model.addAttribute("post", post);
-        return "/postdetail";
+        return "board/postdetail";
     }
 
     //게시글 수정하기
@@ -68,7 +68,7 @@ public class BoardController  {
 
         Board post = boardService.findPost(postbid);
         model.addAttribute("post", post);
-        return "/updatePost";
+        return "board/updatePost";
     }
 
     //게시글 수정하기
@@ -77,5 +77,20 @@ public class BoardController  {
 
         boardService.updatePost(postbid, updateParam);
         return "redirect:/board/readpost/{postbid}";
+    }
+
+    //게시글 삭제
+    @GetMapping("/{postbid}/delete")
+    public String deletePost(@PathVariable("postbid") int postbid, RedirectAttributes redirectAttributes) {
+        log.info("삭제 요청이 들어왔습니다.");
+        Board loadedPost = boardService.findPost(postbid);
+        String loadedPostCategory = loadedPost.getBoardCategory();
+        if(loadedPost != null) {
+            boardService.deletePost(postbid);
+            redirectAttributes.addAttribute("board_category", loadedPostCategory);
+            redirectAttributes.addFlashAttribute("msg", "삭제됐습니다.");
+        }
+        log.info("삭제 완료");
+        return "redirect:/board/{board_category}";
     }
 }

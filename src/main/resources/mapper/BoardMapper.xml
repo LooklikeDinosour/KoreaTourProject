@@ -4,7 +4,9 @@
 <mapper namespace="com.kotu.koreatourism.mapper.BoardMapper">
 
     <insert id="createPost" useGeneratedKeys="true" keyProperty="bid">
-        insert into POST_TB (board_category, title, author, content, area)
+        insert into
+            POST_TB
+            (board_category, title, author, content, area)
         values (#{boardCategory},
                 #{title},
                 #{author},
