@@ -5,6 +5,7 @@
     <title>게시글 상세보기</title>
 </head>
 <body>
+
 <h1 th:text="${post.title}"></h1>
 <p th:text="${post.author}"><b>작성자:</b></p>
 <p th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"><b>작성일:</b></p>
@@ -12,11 +13,14 @@
 </div>
 <div>
     <button
+            th:onclick="|location.href='@{/board/{board_category}(board_category=${post.boardCategory})}'|"
+            type="button">목록</button>
+    <button
             th:onclick="|location.href='@{/board/{postbid}/update(postbid=${post.bid})}'|"
-            type="button">수정하기</button>
+            type="button">수정</button>
     <button
             th:onclick="|location.href='@{/board/{postbid}/delete(postbid=${post.bid})}'|"
-            type="button">삭제 하기</button>
+            type="button">삭제</button>
 </div>
 </body>
 <script th:inline="javascript">

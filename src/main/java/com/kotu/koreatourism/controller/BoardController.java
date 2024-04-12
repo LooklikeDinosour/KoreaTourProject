@@ -45,6 +45,7 @@ public class BoardController  {
     public String createPost(@ModelAttribute("Board") Board board,
                              @RequestParam("board_category") String boardCategory,
                              RedirectAttributes redirectAttributes) {
+
         log.info("board_category,createPost(Post)={}", board.getBoardCategory());
         board.setBoardCategory(boardCategory);
         boardService.createPost(board);
@@ -56,8 +57,9 @@ public class BoardController  {
     //게시글 상세보기
     @GetMapping("/readpost/{postbid}")
     public String readPost(@PathVariable("postbid") int postId, Model model) {
+
         Board post = boardService.findPost(postId);
-        log.info("post={}", post);
+        log.info("readPost={}", post);
         model.addAttribute("post", post);
         return "board/postdetail";
     }
@@ -82,15 +84,20 @@ public class BoardController  {
     //게시글 삭제
     @GetMapping("/{postbid}/delete")
     public String deletePost(@PathVariable("postbid") int postbid, RedirectAttributes redirectAttributes) {
+
         log.info("삭제 요청이 들어왔습니다.");
+        //삭제 전에 조회해서 테이블 카테고리만 가져오기
         Board loadedPost = boardService.findPost(postbid);
         String loadedPostCategory = loadedPost.getBoardCategory();
-        if(loadedPost != null) {
-            boardService.deletePost(postbid);
-            redirectAttributes.addAttribute("board_category", loadedPostCategory);
-            redirectAttributes.addFlashAttribute("msg", "삭제됐습니다.");
-        }
+
+        //삭제
+        boardService.deletePost(postbid);
+
+        //해당 게시판으로 리다이렉트하기 위해서 카테고리값 넣어주기
+        redirectAttributes.addAttribute("board_category", loadedPostCategory);
+        redirectAttributes.addFlashAttribute("msg", "삭제됐습니다.");
         log.info("삭제 완료");
+
         return "redirect:/board/{board_category}";
     }
 }
