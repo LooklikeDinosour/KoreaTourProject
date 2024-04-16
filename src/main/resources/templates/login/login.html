@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+
+</head>
+<body>
+                <h2>LOGIN</h2>
+                <p>서비스를 사용하려면 로그인을 해주세요!</p>
+
+                <div>
+                    <form action="/loginProc" method="POST">
+                        <input type="hidden" th:value="ok" />
+                        <div>
+                            <label>Email address</label>
+                            <input type="email" name="username">
+                        </div>
+                        <div>
+                            <label>Password</label>
+                            <input type="password" name="password">
+                        </div>
+                        <button type="submit">Submit</button>
+                    </form>
+
+                    <button type="button" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+                </div>
+</body>
+</body>
+</html>
