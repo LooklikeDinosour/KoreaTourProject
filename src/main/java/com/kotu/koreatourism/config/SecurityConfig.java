@@ -24,7 +24,8 @@ public class SecurityConfig {
 
         //로그인이되어있지 않은 상태에서 /설정주소에 접근하면 login 페이지로 리다이렉션됌.
         http
-                .formLogin((auth) -> auth.loginPage("/login")
+                .formLogin((auth) -> auth
+                        .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
                         .permitAll()
                 );

@@ -21,9 +21,15 @@
     <div class="swiper-button-next"></div>
 
 </div>
+
+
+
 <div>
+    <div><a th:href="@{/login/login}">로그인</a></div>
+    <div><a th:href="@{/login/signUp}">회원가입</a></div>
     <nav>
     <ul>
+        <li></li>
         <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
         <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
     </ul>

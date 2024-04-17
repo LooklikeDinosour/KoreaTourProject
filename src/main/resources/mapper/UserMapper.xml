@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kotu.koreatourism.mapper.UserMapper">
+
+    <insert id="signUp">
+        insert into
+            USER_TB
+            (user_id, user_password, user_phone, user_email, user_nickname, user_createdate, user_role)
+        values (#{userId},
+                #{userPassword},
+                #{userPhone},
+                #{userEmail},
+                #{userNickname},
+                #{createDate},
+                #{userRole}
+               )
+    </insert>
+
+    <select id = Id>
+
+    </select>
+
+</mapper>

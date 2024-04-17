@@ -11,7 +11,8 @@
                 #{title},
                 #{author},
                 #{content},
-                #{area})
+                #{area}
+               )
     </insert>
 
     <select id="findPost" resultType="Board">
