@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
 
-        return "main/mainPage";
+        return "login/login";
     }
     //회원가입
     @GetMapping("/signup")
@@ -40,7 +40,7 @@ public class UserController {
         log.info("SiteUser Info={}", siteUser.toString());
         userService.signUp(siteUser);
 
-        return "redirect:/login/login";
+        return "redirect:login/login";
     }
 
     @GetMapping("/admin")

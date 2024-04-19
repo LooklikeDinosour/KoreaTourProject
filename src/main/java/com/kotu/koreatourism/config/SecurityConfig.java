@@ -16,7 +16,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/main","/login","/signup").permitAll()
+                        .requestMatchers("/","/main","/login","/signup","/loginProc").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/board/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()// 특정한 경로에 작업하고 싶으면 설정하는 메서드
@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .passwordParameter("userPassword")
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
+                        .defaultSuccessUrl("/main", true)
                         .permitAll()
                 );
 

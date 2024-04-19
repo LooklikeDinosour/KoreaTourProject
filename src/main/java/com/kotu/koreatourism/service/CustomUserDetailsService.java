@@ -2,6 +2,7 @@ package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.SiteUser;
 import com.kotu.koreatourism.dto.CustomUserDetails;
+import com.kotu.koreatourism.dto.LoginDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         log.info("UserId ={}", userId);
         //username == userId 기본 매개변수를 따르느라.
-        SiteUser findUserId = userService.findByUserId(userId);
+        LoginDTO findUserId = userService.findByUserId(userId);
 
         if(findUserId != null) {
             return new CustomUserDetails(findUserId);

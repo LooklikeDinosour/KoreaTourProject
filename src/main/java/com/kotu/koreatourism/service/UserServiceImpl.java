@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.SiteUser;
+import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SiteUser findByUserId(String userId) {
+    public LoginDTO findByUserId(String userId) {
         return userMapper.findByUserId(userId);
     }
 }

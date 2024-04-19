@@ -13,19 +13,20 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final SiteUser siteUser;
+    private final LoginDTO user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        log.info("siteUser ={}", siteUser.toString());
+        log.info("siteUser = {}", user.toString());
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
         collection.add( new GrantedAuthority() {
 
             @Override
             public String getAuthority() {
-                return siteUser.getUserRole();
+                log.info("user Role ={}", user.getUserRole());
+                return user.getUserRole();
             }
         });
 
@@ -34,12 +35,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return siteUser.getUserPassword();
+        return user.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return siteUser.getUserId();
+        return user.getUserId();
     }
 
 
