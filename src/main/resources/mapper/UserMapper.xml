@@ -17,8 +17,10 @@
                )
     </insert>
 
-    <select id = Id>
-
+    <select id ="findByUserId">
+        select user_id, user_password, user_role
+        from USER_TB
+        where user_id = #{userId}
     </select>
 
 </mapper>

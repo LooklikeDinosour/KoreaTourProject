@@ -22,7 +22,8 @@ public class UserController {
     //로그인
     @GetMapping("/login")
     public String login() {
-        return "login/login";
+
+        return "main/mainPage";
     }
     //회원가입
     @GetMapping("/signup")
@@ -35,12 +36,11 @@ public class UserController {
 
         //회원가입일자 생성하기
         //String createDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        siteUser.setCreateDate(LocalDateTime.now());
-        siteUser.setUserRole("ROLE_USER");
+
         log.info("SiteUser Info={}", siteUser.toString());
         userService.signUp(siteUser);
 
-        return "main/mainPage";
+        return "redirect:/login/login";
     }
 
     @GetMapping("/admin")

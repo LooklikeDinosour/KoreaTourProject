@@ -6,6 +6,5 @@ public interface UserService {
 
     public int signUp(SiteUser user);
 
-    public String loginCheck();
-
+    public SiteUser findByUserId(String userId);
 }

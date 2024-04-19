@@ -8,4 +8,6 @@ public interface UserMapper {
 
     public int signUp(SiteUser user);
 
+    public SiteUser findByUserId(String userId);
+
 }

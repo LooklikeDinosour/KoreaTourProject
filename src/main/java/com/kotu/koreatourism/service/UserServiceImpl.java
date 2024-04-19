@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,6 +19,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public int signUp(SiteUser user) {
 
+
+        //ID가 존재유무를 검증하는 로직 필요
+
+        user.setCreateDate(LocalDateTime.now());
+        user.setUserRole("ROLE_USER");
+        user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
         return userMapper.signUp(user);
+    }
+
+    @Override
+    public SiteUser findByUserId(String userId) {
+        return userMapper.findByUserId(userId);
     }
 }
