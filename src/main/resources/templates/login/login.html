@@ -24,7 +24,8 @@
                             <label>비밀번호</label>
                             <input type="password" name="userPassword">
                         </div>
-                        <button type="submit">Submit</button>
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                        <button type="submit">로그인</button>
                     </form>
 
                     <button type="button" th:onclick="|location.href='@{/signup}'|">회원가입</button>

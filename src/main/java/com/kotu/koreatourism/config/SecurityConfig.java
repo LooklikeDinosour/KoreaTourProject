@@ -29,12 +29,20 @@ public class SecurityConfig {
                         .passwordParameter("userPassword")
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
-                        .defaultSuccessUrl("/main", true)
+                        .defaultSuccessUrl("/main")
                         .permitAll()
                 );
 
         http
-                .csrf((auth) -> auth.disable()
+                .logout((auth) -> auth.logoutUrl("/logout")
+                        .logoutSuccessUrl("/main")
+                );
+
+
+        http
+                .sessionManagement((auth) -> auth
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(true) //true면 설정 갯수 초과시 신규 로그인 불가, false는 기존세션 1개를 종료하고 접속시킴
                 );
 
         return http.build();

@@ -7,26 +7,28 @@
 <body>
 
 <!-- Swiper -->
-<div class="swiper-container">
-    <div class="swiper-wrapper">
-        <!-- Your dynamic posts here. Example static post: -->
-        <div class="swiper-slide"><img src="path/to/your/image1.jpg" alt="Post 1"/></div>
-        <div class="swiper-slide"><img src="path/to/your/image2.jpg" alt="Post 2"/></div>
-        <!-- Add more slides as needed -->
-    </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
-    <!-- Add Navigation -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
+<!--<div class="swiper-container">-->
+<!--    <div class="swiper-wrapper">-->
+<!--        &lt;!&ndash; Your dynamic posts here. Example static post: &ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="swiper-slide"><img src="" alt="Post 1"/></div>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="swiper-slide"><img src="" alt="Post 2"/></div>&ndash;&gt;-->
+<!--        &lt;!&ndash; Add more slides as needed &ndash;&gt;-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Add Pagination &ndash;&gt;-->
+<!--    <div class="swiper-pagination"></div>-->
+<!--    &lt;!&ndash; Add Navigation &ndash;&gt;-->
+<!--    <div class="swiper-button-prev"></div>-->
+<!--    <div class="swiper-button-next"></div>-->
 
-</div>
+<!--</div>-->
 
 
 
 <div>
-    <div><a th:href="@{/login/login}">로그인</a></div>
-    <div><a th:href="@{/login/signUp}">회원가입</a></div>
+    <h3 th:text="${id}"></h3>
+    <h3 th:text="${role}"></h3>
+    <div><a th:href="@{/login}">로그인</a></div>
+    <div><a th:href="@{/signup}">회원가입</a></div>
     <nav>
     <ul>
         <li></li>

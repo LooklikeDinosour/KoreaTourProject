@@ -20,13 +20,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
-        log.info("UserId ={}", userId);
-        //username == userId 기본 매개변수를 따르느라.
+        log.info("UserId = {}", userId);
+
         LoginDTO findUserId = userService.findByUserId(userId);
 
-        if(findUserId != null) {
-            return new CustomUserDetails(findUserId);
+        if(findUserId == null) {
+            throw new UsernameNotFoundException(userId);
         }
-        return null;
+
+        return new CustomUserDetails(findUserId);
     }
 }

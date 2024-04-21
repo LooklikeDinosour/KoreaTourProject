@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,12 +17,6 @@ public class UserController {
 
     private final UserService userService;
 
-    //로그인
-    @GetMapping("/login")
-    public String login() {
-
-        return "login/login";
-    }
     //회원가입
     @GetMapping("/signup")
     public String signUp() {
@@ -40,7 +32,7 @@ public class UserController {
         log.info("SiteUser Info={}", siteUser.toString());
         userService.signUp(siteUser);
 
-        return "redirect:login/login";
+        return "redirect:/login/login";
     }
 
     @GetMapping("/admin")

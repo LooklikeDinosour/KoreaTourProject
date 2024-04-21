@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
         user.setCreateDate(LocalDateTime.now());
         user.setUserRole("ROLE_USER");
         user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
+
         return userMapper.signUp(user);
     }
 
