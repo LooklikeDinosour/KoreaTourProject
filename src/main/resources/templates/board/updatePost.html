@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>게시글 작성</title>
+    <title>게시글 수정</title>
 </head>
 <body>
 
-<form action="readPost.html" th:action method="post">
+<form action="updatePost.html" th:action method="post">
 
     <div>
         <label for="title">제목:</label>
         <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:value="${post.title}">
     </div>
+
     <div>
-        <label for="author">작성자:</label>
-        <input type="text" id="author" name="author" th:value="${post.author}" disabled>
-    </div>
-    <div>
-        <label for="author">작성일:</label>
+        <label for="regdate">작성일:</label>
         <input type="text" id="regdate" name="regdate" th:value="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm:ss')}" disabled>
     </div>
     <div>

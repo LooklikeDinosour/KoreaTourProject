@@ -18,7 +18,7 @@
     </insert>
 
     <select id ="findByUserId">
-        select user_id, user_password, user_role
+        select user_id, user_password, user_nickname, user_role
         from USER_TB
         where user_id = #{userId}
     </select>

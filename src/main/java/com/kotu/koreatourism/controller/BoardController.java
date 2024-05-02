@@ -77,6 +77,7 @@ public class BoardController  {
     @PostMapping("/{postbid}/update")
     public String updatePost(@PathVariable("postbid") int postbid, @ModelAttribute BoardDTO updateParam) {
 
+        log.info("updateParam.title ={}", updateParam.getTitle());
         boardService.updatePost(postbid, updateParam);
         return "redirect:/board/readpost/{postbid}";
     }

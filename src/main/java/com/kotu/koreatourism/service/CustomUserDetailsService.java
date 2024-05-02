@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         LoginDTO findUserId = userService.findByUserId(userId);
 
         if(findUserId == null) {
-            throw new UsernameNotFoundException(userId);
+            throw new UsernameNotFoundException(userId + "는 없는 ID입니다.");
         }
 
         return new CustomUserDetails(findUserId);

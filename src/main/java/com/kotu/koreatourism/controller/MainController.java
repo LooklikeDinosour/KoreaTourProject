@@ -17,7 +17,7 @@ import java.util.Iterator;
 @RequiredArgsConstructor
 public class MainController {
 
-    @GetMapping("/main")
+    @GetMapping("/")
     public String mainPage(Model model) {
 
         //아래 로직은 서비스단으로 위치시키기 관련로직 알아보기

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Main Page</title>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
@@ -27,14 +28,16 @@
 <div>
     <h3 th:text="${id}"></h3>
     <h3 th:text="${role}"></h3>
-    <div><a th:href="@{/login}">로그인</a></div>
+
+    <div><a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></div>
+    <div><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></div>
     <div><a th:href="@{/signup}">회원가입</a></div>
     <nav>
-    <ul>
-        <li><a th:href="@{/message}">쪽지</a></li>
-        <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
-        <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
-    </ul>
+        <ul>
+            <li><a th:href="@{/message}">쪽지</a></li>
+            <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
+            <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
+        </ul>
     </nav>
 </div>
 

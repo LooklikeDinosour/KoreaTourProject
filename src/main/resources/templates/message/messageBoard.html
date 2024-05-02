@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -30,8 +31,8 @@
     <div>
         <nav>
             <ul>
-                <li><a href="#sent">보낸 쪽지함</a></li>
-                <li><a href="#received">받은 쪽지함</a></li>
+                <li><a th:href="@{/message}">받은 쪽지함</a></li>
+                <li><a th:href="@{/message}">보낸 쪽지함</a></li>
                 <li><a href="#saved">쪽지 보관함</a></li>
                 <li><a href="#trash">휴지통</a></li>
             </ul>
@@ -40,7 +41,7 @@
 
 
     <div>
-        <button th:onclick="|location.href='@{/message/createmessage}'|">보내기</button>
+        <button th:onclick="|location.href='@{/message/createmessage}'|">쪽지 쓰기</button>
     </div>
     <table>
         <thead>

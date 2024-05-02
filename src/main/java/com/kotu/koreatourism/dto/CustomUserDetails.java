@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.dto;
 
 import com.kotu.koreatourism.domain.SiteUser;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.Collection;
 
 @Slf4j
 @RequiredArgsConstructor
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final LoginDTO user;

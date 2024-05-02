@@ -1,10 +1,12 @@
 package com.kotu.koreatourism.controller;
 
+import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,7 +31,8 @@ public class MessageController {
     }
 
     @PostMapping("/sendmessage")
-    public String sendMessage() {
+    public String sendMessage(@ModelAttribute("message") Message message) {
+
         return "redirect:/message/messageBoard";
     }
 }

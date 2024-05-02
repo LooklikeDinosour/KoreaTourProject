@@ -29,13 +29,14 @@ public class SecurityConfig {
                         .passwordParameter("userPassword")
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
-                        .defaultSuccessUrl("/main")
+                        .defaultSuccessUrl("/")
                         .permitAll()
                 );
 
         http
                 .logout((auth) -> auth.logoutUrl("/logout")
-                        .logoutSuccessUrl("/main")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
                 );
 
 
