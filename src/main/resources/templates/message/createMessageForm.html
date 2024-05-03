@@ -1,25 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<form th:action method="post">
+<form th:action="@{/message/sendmessage}" method="post">
     <div>
         <label for="title">제목</label>
-        <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:field="*{message.title}">
     </div>
     <div>
-        <input type="hidden" th:value="${#authentication.principal.user.userNickname}" name="sentUser">
+        <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
+    </div>
+    <div>
+        <input type="hidden" th:value="Send" name="sentReceivedIdentifier">
     </div>
     <div>
         <label for="receivedUser">받는사람 </label>
-        <input type="text" id="receivedUser" name="receivedUser">
+        <input type="text" id="receivedUser" name="receivedUser" th:field="*{message.receivedUser}">
     </div>
     <div>
-        <label for="content">내용 </label>
-        <textarea id="content" name="content"></textarea>
+        <label for="messageContent">내용 </label>
+        <textarea id="messageContent" name="messageContent" th:field="*{messageContent.messageContent}"></textarea>
     </div>
     <button type="submit">보내기</button>
 

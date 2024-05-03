@@ -30,7 +30,4 @@ public class SiteUser {
                 ", createDate=" + createDate +
                 '}';
     }
-//    private String userAddress1; // 주소1
-//    private String userAddress2; // 주소2
-
 }

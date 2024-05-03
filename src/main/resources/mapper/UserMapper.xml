@@ -6,7 +6,13 @@
     <insert id="signUp">
         insert into
             USER_TB
-            (user_id, user_password, user_phone, user_email, user_nickname, user_createdate, user_role)
+            (user_id,
+             user_password,
+             user_phone,
+             user_email,
+             user_nickname,
+             user_createdate,
+             user_role)
         values (#{userId},
                 #{userPassword},
                 #{userPhone},
