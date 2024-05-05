@@ -31,10 +31,9 @@
     <div>
         <nav>
             <ul>
-                <li><a th:href="@{/message}">받은 쪽지함</a></li>
+                <li><a th:href="@{/message/received}">받은 쪽지함</a></li>
                 <li><a th:href="@{/message}">보낸 쪽지함</a></li>
                 <li><a href="#saved">쪽지 보관함</a></li>
-                <li><a href="#trash">휴지통</a></li>
             </ul>
         </nav>
     </div>
@@ -51,14 +50,13 @@
                 <th>제목</th>
                 <th>받은날짜</th>
             </tr>
-
         </thead>
         <tbody>
-            <tr>
+            <tr th:each="messages : ${receivedMessages}">
                 <td><input type="checkbox"></td>
-                <td>보낸 사람</td>
-                <td>제목</td>
-                <td>날짜</td>
+                <td th:text="${messages.sentUser}"></td>
+                <td th:text="${messages.title}"></td>
+                <td th:text="${messages.sentDate}"></td>
             </tr>
         </tbody>
 

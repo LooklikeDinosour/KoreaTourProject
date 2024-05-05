@@ -2,19 +2,20 @@ package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
-import com.kotu.koreatourism.domain.SiteUser;
-import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -51,5 +52,15 @@ public class MessageController {
         log.info("messageContent.content ={}", messageContent.getMessageContent());
         messageService.sendMessage(messageContent, message);
         return "redirect:/message";
+    }
+
+    @GetMapping("/received")
+    public String receivedMessages(Model model, Principal principal) {
+        //String userId = session.getId();
+        String userId = principal.getName();
+        log.info("접속한 유저 아이디 가져오기 = {}", userId);
+        List<Message> receivedMessages = messageService.findAllMessage("Received", userId);
+        model.addAttribute("receivedMessages", receivedMessages);
+        return "message/messageBoard";
     }
 }
