@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class Message {
     private String sentUser; //보낸 회원
     private String receivedUser; //받은 회원
     private String title; // 쪽지 제목
-    private Timestamp sentDate; // 보낸 날짜
-    private Timestamp readDate; // 읽은 날짜
+    private LocalDateTime sentDate; // 보낸 날짜
+    private LocalDateTime readDate; // 읽은 날짜
     private String sentReceivedIdentifier; // 수발신코드
     private int messageContentId; //message Content FK
 

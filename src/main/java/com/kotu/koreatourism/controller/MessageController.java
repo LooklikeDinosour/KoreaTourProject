@@ -4,7 +4,6 @@ import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -27,8 +26,11 @@ public class MessageController {
     private final MessageService messageService;
 
     @GetMapping("")
-    public String messageBoard() {
-
+    public String messageBoard(Model model, Principal principal) {
+        String userId = principal.getName();
+        log.info("접속한 유저 아이디 가져오기 = {}", userId);
+        List<Message> receivedMessages = messageService.findAllMessage("Received", userId);
+        model.addAttribute("receivedMessages", receivedMessages);
         return "message/messageBoard";
     }
 
@@ -62,5 +64,14 @@ public class MessageController {
         List<Message> receivedMessages = messageService.findAllMessage("Received", userId);
         model.addAttribute("receivedMessages", receivedMessages);
         return "message/messageBoard";
+    }
+
+    @GetMapping("/sent")
+    public String sentMessages(Model model, Principal principal) {
+        String userId = principal.getName();
+        log.info("접속한 유저 아이디 가져오기 = {}", userId);
+        List<Message> sentMessages = messageService.findAllMessage("Sent", userId);
+        model.addAttribute("sentMessages", sentMessages);
+        return "message/sentMessagesBoard";
     }
 }
