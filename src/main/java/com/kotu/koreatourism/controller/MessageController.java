@@ -5,6 +5,7 @@ import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -74,9 +75,31 @@ public class MessageController {
     }
 
     @GetMapping("/detail/{messageId}")
-    public String messageDetail(Model model, @PathVariable int messageId) {
+    public String messageDetail(Model model, @PathVariable("messageId") int messageId) {
         MessageContentDTO findContent = messageService.findContent(messageId);
         model.addAttribute("content", findContent);
         return "message/messageDetail";
     }
+
+    @GetMapping("/delete/{messageId}")
+    public String messageDelete(@PathVariable("messageId") int messageId) {
+        MessageContentDTO content = messageService.findContent(messageId);
+        String sentReceivedIdentifier = content.getSentReceivedIdentifier();
+        log.info("송수신 식별자 = {}", sentReceivedIdentifier);
+        messageService.deleteMessage(sentReceivedIdentifier, messageId);
+        String lowerAddress = sentReceivedIdentifier.toLowerCase();
+        return "redirect:/message/" + lowerAddress;
+    }
+
+//    히든타입으로 값불러와서 해결해보기
+
+//    @GetMapping("/delete/{messageId}")
+//    public String messageDelete(@PathVariable("messageId") int messageId, @ModelAttribute("content") MessageContentDTO mcDTO) {
+//        String sentReceivedIdentifier = mcDTO.getSentReceivedIdentifier();
+//        String title = mcDTO.getTitle();
+//        log.info("제목 불러오니 = {}", title);
+//        log.info("송수신 식별자 = {}", sentReceivedIdentifier);
+//        //messageService.deleteMessage(messageId);
+//        return "redirect:/";
+//    }
 }
