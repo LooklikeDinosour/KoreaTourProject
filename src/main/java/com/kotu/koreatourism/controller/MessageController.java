@@ -2,16 +2,14 @@ package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
+import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -73,5 +71,12 @@ public class MessageController {
         List<Message> sentMessages = messageService.findAllMessage("Sent", userId);
         model.addAttribute("sentMessages", sentMessages);
         return "message/sentMessagesBoard";
+    }
+
+    @GetMapping("/detail/{messageId}")
+    public String messageDetail(Model model, @PathVariable int messageId) {
+        MessageContentDTO findContent = messageService.findContent(messageId);
+        model.addAttribute("content", findContent);
+        return "message/messageDetail";
     }
 }
