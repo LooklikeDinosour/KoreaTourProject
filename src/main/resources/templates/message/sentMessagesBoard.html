@@ -58,7 +58,7 @@
                 <td th:text="${messages.receivedUser}"></td>
                 <td><a th:href="@{/message/detail/{messageId}(messageId=${messages.messageId})}" th:text="${messages.title}"></a></td>
                 <td th:text="${#temporals.format(messages.sentDate, 'yyyy-MM-dd HH:mm')}"></td>
-                <td th:text="${#temporals.format(messages.readDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${messages.readDate != null ? #temporals.format(messages.readDate, 'yyyy-MM-dd HH:mm') : '읽지않음'}"></td>
             </tr>
         </tbody>
 

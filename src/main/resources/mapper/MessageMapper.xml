@@ -27,10 +27,10 @@
         select
             <choose>
                 <when test="type == 'Sent'">
-                    M.message_id, M.sent_user, M.title, M.sent_date, M.read_date
+                    M.message_id, M.received_user, M.title, M.sent_date, M.read_date
                 </when>
                 <when test="type == 'Received'">
-                    M.message_id, M.received_user, M.title, M.sent_date
+                    M.message_id, M.sent_user, M.title, M.sent_date
                 </when>
             </choose>
         from MESSAGE_TB AS M

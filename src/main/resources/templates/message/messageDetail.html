@@ -84,6 +84,9 @@
     </body>
     <div>
         <button
+                th:onclick="|location.href='@{/message/reply}'|"
+                type="button">답장</button>
+        <button
                 th:onclick="|location.href='@{/message/delete/{messageId}(messageId=${content.messageId})}'|"
                 type="button">삭제</button>
     </div>

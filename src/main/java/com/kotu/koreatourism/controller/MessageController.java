@@ -6,6 +6,7 @@ import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -75,22 +76,39 @@ public class MessageController {
     }
 
     @GetMapping("/detail/{messageId}")
-    public String messageDetail(Model model, @PathVariable("messageId") int messageId) {
+    public String messageDetail(Model model,
+                                @PathVariable("messageId") int messageId,
+                                HttpSession httpSession) {
         MessageContentDTO findContent = messageService.findContent(messageId);
+        log.info("쪽지 상세보기 = {}", findContent.toString());
         int messageContentId = findContent.getMessageContentId();
         messageService.readMessage(messageContentId);
         model.addAttribute("content", findContent);
+        httpSession.setAttribute("replySender", findContent.getSentUser());
         return "message/messageDetail";
     }
 
     @GetMapping("/delete/{messageId}")
-    public String messageDelete(@PathVariable("messageId") int messageId) {
+    public String deleteMessage(@PathVariable("messageId") int messageId) {
         MessageContentDTO content = messageService.findContent(messageId);
         String sentReceivedIdentifier = content.getSentReceivedIdentifier();
         log.info("송수신 식별자 = {}", sentReceivedIdentifier);
         messageService.deleteMessage(sentReceivedIdentifier, messageId);
         String lowerAddress = sentReceivedIdentifier.toLowerCase();
         return "redirect:/message/" + lowerAddress;
+    }
+
+    @GetMapping("/reply")
+    public String replyMessage(HttpSession session, Model model) {
+        String replySender = (String)session.getAttribute("replySender");
+        MessageContent messageContent = new MessageContent();
+        Message message = new Message();
+
+        model.addAttribute("message", message);
+        model.addAttribute("messageContent", messageContent);
+        model.addAttribute("sender", replySender);
+
+        return "message/replyMessageForm";
     }
 
 //    히든타입으로 값불러와서 해결해보기
