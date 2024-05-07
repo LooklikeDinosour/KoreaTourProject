@@ -77,6 +77,8 @@ public class MessageController {
     @GetMapping("/detail/{messageId}")
     public String messageDetail(Model model, @PathVariable("messageId") int messageId) {
         MessageContentDTO findContent = messageService.findContent(messageId);
+        int messageContentId = findContent.getMessageContentId();
+        messageService.readMessage(messageContentId);
         model.addAttribute("content", findContent);
         return "message/messageDetail";
     }

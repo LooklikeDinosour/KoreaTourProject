@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Received Messages</title>
+    <style>
+        /* 사이드 메뉴 스타일 */
+        nav {
+            width: 200px; /* 너비 설정 */
+            height: 100%; /* 전체 높이 */
+            border-right: 1px solid #ccc; /* 오른쪽 테두리 */
+            padding: 10px; /* 패딩 */
+        }
+        ul {
+            list-style-type: none; /* 리스트 기호 없애기 */
+            padding: 0; /* 내부 여백 제거 */
+        }
+        li {
+            padding: 8px; /* 각 아이템 패딩 */
+            margin-bottom: 5px; /* 아래 여백 */
+            background-color: #f8f8f8; /* 배경색 */
+        }
+        li:hover {
+            background-color: #e8e8e8; /* 마우스 오버 시 배경색 변경 */
+        }
+        .message-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .message-card {
+            width: 300px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .message-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .message-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .message-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .message-content {
+            font-size: 16px;
+            color: #444;
+        }
+    </style>
+</head>
+
+<div style="display: flex;">
+    <div>
+        <nav>
+            <ul>
+                <li><a th:href="@{/message/createmessage}">쪽지 쓰기</a></li>
+                <li><a th:href="@{/message/received}">받은 쪽지함</a></li>
+                <li><a th:href="@{/message/sent}">보낸 쪽지함</a></li>
+                <li><a href="#saved">쪽지 보관함</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <body>
+        <div class="message-container">
+                <div class="message-title" th:text="${content.title}"></div>
+                <div><input type="hidden" th:value="${content.sentReceivedIdentifier}" th:name="srIdentifier"></div>
+                <div class="message-info">
+                    <span th:text="${content.sentUser} + ' - '"></span>
+                    <span th:text="${content.sentDate != null ? #temporals.format(content.sentDate, 'yyyy-MM-dd HH:mm') : ''}"></span>
+                </div>
+                <div class="message-content" th:text="${content.messageContent}"></div>
+        </div>
+    </body>
+    <div>
+        <button
+                th:onclick="|location.href='@{/message/delete/{messageId}(messageId=${content.messageId})}'|"
+                type="button">삭제</button>
+    </div>
+</div>
+</html>
