@@ -36,12 +36,8 @@ public class MessageController {
 
     @GetMapping("/createmessage")
     public String createMessage(Model model) {
-        MessageContent messageContent = new MessageContent();
-        Message message = new Message();
-
-        model.addAttribute("message", message);
-        model.addAttribute("messageContent", messageContent);
-
+        model.addAttribute("message", new Message());
+        model.addAttribute("messageContent", new MessageContent());
         return "message/createMessageForm";
     }
 

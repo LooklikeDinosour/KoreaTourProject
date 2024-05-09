@@ -1,12 +1,14 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Board;
-import com.kotu.koreatourism.dto.BoardDTO;
+import com.kotu.koreatourism.dto.BoardUpdateDTO;
 import com.kotu.koreatourism.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,17 +39,26 @@ public class BoardController  {
     @GetMapping("/{board_category}/createpost")
     public String createPostform(@PathVariable("board_category") String board_category, Model model) {
         log.info("board_category:createPost(Get) = {}", board_category);
-        model.addAttribute("board_category", board_category);
+        Board board = new Board();
+        model.addAttribute("post", board);
         return "board/createPost";
     }
     //게시글 작성하기
     @PostMapping("/{board_category}/createpost")
-    public String createPost(@ModelAttribute("Board") Board board,
-                             @RequestParam("board_category") String boardCategory,
+    public String createPost(@Validated @ModelAttribute("post") Board board,
+                             BindingResult bindingResult,
+                             @PathVariable("board_category") String board_category,
                              RedirectAttributes redirectAttributes) {
 
-        log.info("board_category,createPost(Post)={}", board.getBoardCategory());
-        board.setBoardCategory(boardCategory);
+        log.info("보드 카테고리 = {}", board.getBoardCategory());
+        log.info("보드 카테고리 = {}", board.getAuthor());
+        log.info("보드 카테고리 = {}", board.getTitle());
+
+        if(bindingResult.hasErrors()) {
+            log.info("게시글 작성 에러 = {}", bindingResult);
+            return "board/createPost";
+        }
+
         boardService.createPost(board);
         Board createdPost = boardService.findPost(board.getBid());
         redirectAttributes.addAttribute("postbid", createdPost.getBid());
@@ -67,7 +78,6 @@ public class BoardController  {
     //게시글 수정하기
     @GetMapping("/{postbid}/update")
     public String updateForm(@PathVariable("postbid") int postbid, Model model) {
-
         Board post = boardService.findPost(postbid);
         model.addAttribute("post", post);
         return "board/updatePost";
@@ -75,7 +85,14 @@ public class BoardController  {
 
     //게시글 수정하기
     @PostMapping("/{postbid}/update")
-    public String updatePost(@PathVariable("postbid") int postbid, @ModelAttribute BoardDTO updateParam) {
+    public String updatePost(@PathVariable("postbid") int postbid,
+                             @Validated @ModelAttribute("post") BoardUpdateDTO updateParam,
+                             BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            log.info("게시글 수정하기 errors = {}", bindingResult);
+            return "board/updatePost";
+        }
 
         log.info("updateParam.title ={}", updateParam.getTitle());
         boardService.updatePost(postbid, updateParam);

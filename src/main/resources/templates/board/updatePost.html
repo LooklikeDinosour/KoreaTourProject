@@ -4,23 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 수정</title>
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
 </head>
 <body>
 
-<form action="updatePost.html" th:action method="post">
+<form action="updatePost.html" th:action th:object="${post}" method="post">
 
     <div>
         <label for="title">제목:</label>
-        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:value="${post.title}">
+        <input type="text" id="title" placeholder="제목을 입력하세요" th:field="*{title}"
+        th:errorclass="field-error" class="form-control">
+        <div class="field-error" th:errors="*{title}">
+            제목을 입력하세요.
+        </div>
     </div>
 
     <div>
         <label for="regdate">작성일:</label>
-        <input type="text" id="regdate" name="regdate" th:value="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm:ss')}" disabled>
+        <input type="text" id="regdate" name="regdate" th:value="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm:ss')}" readonly class="form-control">
     </div>
+
     <div>
         <label for="content">내용:</label>
-        <textarea id="content" name="content" th:value="${post.content}" th:text="${post.content}"></textarea>
+        <textarea id="content" th:field="*{content}"
+        th:errorclass="field-error" class="form-control"
+        placeholder="내용을 작성해주세요">
+        </textarea>
+        <div class="field-error" th:errors="*{content}">
+            내용을 입력하세요
+        </div>
     </div>
     <button type="submit">글 저장</button>
     <button

@@ -6,20 +6,27 @@
     <title>게시글 작성</title>
 </head>
 <body>
-<form action="createPost.html" th:action method="post">
+<form action="createPost.html" th:action th:object="${post}" method="post">
     <div>
-        <input type="hidden" th:value="${board_category}" name="board_category">
-    </div>
-    <div>
-        <label for="title">제목:</label>
-        <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
-    </div>
-    <div>
+        <input type="hidden" th:value="${board_category}" th:name="boardCategory">
         <input type="hidden" th:value="${#authentication.principal.user.userNickname}" name="author">
     </div>
     <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요"
+        th:errorclass="field-error" class="form-control">
+        <div class="field-error" th:errors="*{title}">
+            내용을 입력하세요.
+        </div>
+    </div>
+    <div>
         <label for="content">내용:</label>
-        <textarea id="content" name="content"></textarea>
+        <textarea id="content" th:field="*{content}"
+        th:errorclass="field-error" placeholder="내용을 입력하세요"
+                  class="form-control"></textarea>
+        <div class="field-error" th:errors="*{content}">
+            내용을 입력하세요.
+        </div>
     </div>
     <button type="submit">글 저장</button>
     <button

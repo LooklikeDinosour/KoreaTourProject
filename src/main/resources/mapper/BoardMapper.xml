@@ -16,7 +16,7 @@
     </insert>
 
     <select id="findPost" resultType="Board">
-        select bid, board_category, title, regdate, updatedate, author, content, viewcount
+        select bid, board_category, title, regdate, author, content, viewcount
         from POST_TB
         where bid = #{bid}
     </select>
@@ -36,17 +36,18 @@
     </delete>
 
     <select id="findAllPost">
-        select bid, title, regdate, updatedate, author, content, viewcount
+        select bid, title, regdate, author, content, viewcount
         from POST_TB
         <where>
             <choose>
                 <when test="boardCategory == 'tc'">
-                   board_category = 'tc';
+                   board_category = 'tc'
                 </when>
                 <when test="boardCategory == 'tl'">
-                   board_category = 'tl';
+                   board_category = 'tl'
                 </when>
             </choose>
         </where>
+        order by regdate desc;
     </select>
 </mapper>

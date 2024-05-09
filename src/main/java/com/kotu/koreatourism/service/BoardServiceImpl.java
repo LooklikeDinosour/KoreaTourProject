@@ -1,7 +1,7 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Board;
-import com.kotu.koreatourism.dto.BoardDTO;
+import com.kotu.koreatourism.dto.BoardUpdateDTO;
 import com.kotu.koreatourism.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void updatePost(int bid, BoardDTO updateParam) {
-        boardMapper.updatePost(bid, updateParam);
+    public void updatePost(int bid, BoardUpdateDTO updateParam) {
+        Board post = boardMapper.findPost(bid);
+        post.setTitle(updateParam.getTitle());
+        post.setContent(updateParam.getContent());
+        post.setArea(updateParam.getArea());
+        boardMapper.updatePost(bid, post);
     }
 
     @Override

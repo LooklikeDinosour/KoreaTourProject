@@ -40,7 +40,7 @@ public class MessageServiceImpl implements MessageService{
 
         //키값을 불러오기 위해서 기존과 다른 방식으로 진행
         Integer messageContentId = sendMessageContent(messageContent);
-        log.info("메시지콘텐트 PK 값 = {}", messageContentId);
+        log.info("메시지콘텐츠 PK 값 = {}", messageContentId);
         message.setMessageContentId(messageContentId);
         messageMapper.sendMessage(message);
     }
@@ -49,6 +49,7 @@ public class MessageServiceImpl implements MessageService{
         return messageContent.getMessageContentId();
     }
 
+    //메시지 내용 찾기
     @Override
     public MessageContentDTO findContent(int messageId) {
         return messageMapper.findContent(messageId);
