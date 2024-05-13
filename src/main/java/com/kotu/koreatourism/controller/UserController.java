@@ -5,6 +5,8 @@ import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,19 +21,20 @@ public class UserController {
 
     //회원가입
     @GetMapping("/signup")
-    public String signUp() {
+    public String signUp(Model model) {
+        model.addAttribute("user", new SiteUser());
         return "login/signUp";
     }
     @PostMapping("/signup")
-    public String signUpProcess(@ModelAttribute SiteUser siteUser) {
+    public String signUpProcess(@ModelAttribute SiteUser siteUser, BindingResult bindingResult) {
         log.info("회원가입");
 
-        //회원가입일자 생성하기
-        //String createDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if(bindingResult.hasErrors()) {
+            log.info("회원가입 에러 = {}", bindingResult);
+            return "login/signUp";
+        }
 
-        log.info("SiteUser Info={}", siteUser.toString());
         userService.signUp(siteUser);
-
         return "redirect:/login/login";
     }
 

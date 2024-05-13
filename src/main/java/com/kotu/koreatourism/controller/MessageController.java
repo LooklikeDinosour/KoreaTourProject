@@ -5,7 +5,6 @@ import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -10,6 +10,7 @@
     <div>
         <input type="hidden" th:value="${board_category}" th:name="boardCategory">
         <input type="hidden" th:value="${#authentication.principal.user.userNickname}" name="author">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
     </div>
     <div>
         <label for="title">제목:</label>

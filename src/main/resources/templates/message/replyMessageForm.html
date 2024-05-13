@@ -8,14 +8,13 @@
 <body>
 <form th:action="@{/message/sendmessage}" method="post">
     <div>
+        <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
+        <input type="hidden" th:value="Sent" name="sentReceivedIdentifier">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    </div>
+    <div>
         <label for="title">제목</label>
         <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:field="*{message.title}">
-    </div>
-    <div>
-        <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
-    </div>
-    <div>
-        <input type="hidden" th:value="Sent" name="sentReceivedIdentifier">
     </div>
     <div>
         <label for="receivedUser">받는사람 </label>

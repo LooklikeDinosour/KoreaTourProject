@@ -1,5 +1,6 @@
 package com.kotu.koreatourism.domain;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SiteUser {
 
+    @NotBlank(message = "")
     private String userId; // 아이디 PK
     private String userPassword; // 비밀번호
     private String userPhone; // 전화번호
