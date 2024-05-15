@@ -11,37 +11,49 @@
                 <p class="text-white-50 mt-2 mb-5">서비스 사용을 위한 회원 가입</p>
 
                 <div>
-                    <form th:action="@{/signup}" method="POST">
+                    <form th:action="@{/signup}" th:object="${userForm}" method="POST">
                         <div>
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}">
                         </div>
                         <div>
-                            <label>아이디</label>
-                            <input type="text" name="userId">
+                            <label for="userId">아이디</label>
+                            <input type="text" id="userId" th:field="*{userId}"
+                                   th:errorclass="field-error" class="form-control">
+                            <div class="field-error" th:errors="*{userId}"></div>
                         </div>
                         <div>
-                            <label>비밀번호</label>
-                            <input type="password" name="userPassword">
+                            <label for="userPassword">비밀번호</label>
+                            <input type="password" id="userPassword" th:field="*{userPassword}"
+                                   th:errorclass="field-error" class="form-control">
+                            <div class="field-error" th:errors="*{userPassword}"></div>
                         </div>
 <!--                        <div>
                             <label>비밀번호 확인</label>
                             <input type="password" name="userPassword">
                         </div>-->
                         <div>
-                            <label>전화번호</label>
-                            <input type="text" name="userPhone">
+                            <label for="userPhone">전화번호</label>
+                            <input type="text" id="userPhone" th:field="*{userPhone}"
+                                   th:errorclass="field-error" class="form-control">
+                            <div class="field-error" th:errors="*{userPhone}"></div>
                         </div>
                         <div>
-                            <label>이메일</label>
-                            <input type="text" name="userEmail">
+                            <label for="userEmail">이메일</label>
+                            <input type="text" id="userEmail" th:field="*{userEmail}"
+                                   th:errorclass="field-error" class="form-control">
+                            <div class="field-error" th:errors="*{userEmail}"></div>
                         </div>
                         <div>
-                            <label>닉네임(이름)</label>
-                            <input type="text" name="userNickname">
+                            <label for="userNickname">닉네임(이름)</label>
+                            <input type="text" id="userNickname" th:field="*{userNickname}"
+                                   th:errorclass="field-error" class="form-control">
+                            <div class="field-error" th:errors="*{userNickname}"></div>
                         </div>
 
-                        <button type="submit" >Submit</button>
+                        <button type="submit" >회원가입</button>
                     </form>
                 </div>
+    <script>
+    </script>
 </body>
 </html>

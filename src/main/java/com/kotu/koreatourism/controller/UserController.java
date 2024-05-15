@@ -1,12 +1,14 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.SiteUser;
+import com.kotu.koreatourism.dto.SignUpFormDTO;
 import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +24,11 @@ public class UserController {
     //회원가입
     @GetMapping("/signup")
     public String signUp(Model model) {
-        model.addAttribute("user", new SiteUser());
+        model.addAttribute("userForm", new SignUpFormDTO());
         return "login/signUp";
     }
     @PostMapping("/signup")
-    public String signUpProcess(@ModelAttribute SiteUser siteUser, BindingResult bindingResult) {
+    public String signUpProcess(@Validated @ModelAttribute("userForm") SignUpFormDTO userForm, BindingResult bindingResult) {
         log.info("회원가입");
 
         if(bindingResult.hasErrors()) {
@@ -34,8 +36,9 @@ public class UserController {
             return "login/signUp";
         }
 
-        userService.signUp(siteUser);
-        return "redirect:/login/login";
+        userService.signUp(userForm);
+//        return "redirect:/login/login";
+        return "main/mainPage";
     }
 
     @GetMapping("/admin")

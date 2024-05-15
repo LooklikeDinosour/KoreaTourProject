@@ -2,6 +2,7 @@ package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.SiteUser;
 import com.kotu.koreatourism.dto.LoginDTO;
+import com.kotu.koreatourism.dto.SignUpFormDTO;
 import com.kotu.koreatourism.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,16 +19,14 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public int signUp(SiteUser user) {
+    public int signUp(SignUpFormDTO userInfo) {
 
 
         //ID가 존재유무를 검증하는 로직 필요
+        userInfo.setUserRole("ROLE_USER");
+        userInfo.setUserPassword(bCryptPasswordEncoder.encode(userInfo.getUserPassword()));
 
-        user.setCreateDate(LocalDateTime.now());
-        user.setUserRole("ROLE_USER");
-        user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
-
-        return userMapper.signUp(user);
+        return userMapper.signUp(userInfo);
     }
 
     @Override
