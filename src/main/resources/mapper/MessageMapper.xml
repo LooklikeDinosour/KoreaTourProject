@@ -78,6 +78,7 @@
         update MESSAGE_TB
         set message_read_chk = 1
         where message_content_id = #{messageContentId}
+        and received_user = #{currentUsername}
     </update>
 
 </mapper>

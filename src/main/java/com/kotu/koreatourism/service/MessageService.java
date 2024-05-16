@@ -4,6 +4,7 @@ import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface MessageService {

@@ -14,6 +14,7 @@ public class MessageContentDTO {
 
     private int messageId; //Message PK
     private String sentUser; //보낸 회원
+    private String receivedUser;
     private String title; // 쪽지 제목
     private LocalDateTime sentDate; // 보낸 날짜
     private LocalDateTime readDate; // 받은 날짜

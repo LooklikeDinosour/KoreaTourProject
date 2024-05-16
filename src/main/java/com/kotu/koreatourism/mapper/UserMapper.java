@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
 
-    public int signUp(SignUpFormDTO userInfo);
+    public int signUp(SiteUser newUserInfo);
 
     public LoginDTO findByUserId(String userId);
 

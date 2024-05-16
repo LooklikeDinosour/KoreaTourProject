@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
-        log.info("UserId = {}", userId);
+        log.info("로그인 UserId = {}", userId);
 
         LoginDTO findUserId = userService.findByUserId(userId);
 

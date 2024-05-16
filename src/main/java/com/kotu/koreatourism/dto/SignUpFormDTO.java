@@ -30,7 +30,7 @@ public class SignUpFormDTO {
     private String userEmail; // 이메일
 
     @NotBlank(message = "닉네임은 필수입니다.")
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$", message = "닉네임은 특수문자를 제외한 2~10자리여야 합니다.")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,20}$", message = "닉네임은 특수문자를 제외한 2~20자리여야 합니다.")
     private String userNickname; // 닉네임
 
     private String userRole; // 유저 권한 구분

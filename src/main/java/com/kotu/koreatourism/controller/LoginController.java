@@ -20,12 +20,13 @@ public class LoginController {
 
     //로그인
     @GetMapping("/login")
-    public String login(Model model, BindingResult bindingResult) {
+    public String login(Model model) {
         log.info("로그인");
-        if (bindingResult.hasErrors()) {
-            log.info("로그인 에러 = {}", bindingResult);
-            return "login/login";
-        }
+
+//        if (bindingResult.hasErrors()) {
+//            log.info("로그인 에러 = {}", bindingResult);
+//            return "login/login";
+//        }
 
         model.addAttribute("LoginDTO", new LoginDTO());
         return "login/login";

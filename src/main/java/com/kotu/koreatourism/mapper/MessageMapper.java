@@ -5,6 +5,7 @@ import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public interface MessageMapper {
     public void deleteMessage(@Param("type") String type,
                               @Param("messageId") int messageId);
 
-    public void readMessage(int messageContentId);
+    public void readMessage(@Param("messageContentId") int messageContentId,
+                            @Param("currentUsername") String currentUser);
 
 }

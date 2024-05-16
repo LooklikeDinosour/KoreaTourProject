@@ -12,12 +12,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MessageServiceImpl implements MessageService{
+
+    private final UserService userService;
 
     private final UserMapper userMapper;
 
@@ -68,7 +71,7 @@ public class MessageServiceImpl implements MessageService{
     }
     @Override
     public void readMessage(int messageContentId) {
-        messageMapper.readMessage(messageContentId);
-
+        String currentUserName = userService.getCurrentUserName();
+        messageMapper.readMessage(messageContentId, currentUserName);
     }
 }

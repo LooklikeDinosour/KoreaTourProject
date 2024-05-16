@@ -11,14 +11,12 @@
              user_phone,
              user_email,
              user_nickname,
-             user_createdate,
              user_role)
         values (#{userId},
                 #{userPassword},
                 #{userPhone},
                 #{userEmail},
                 #{userNickname},
-                #{createDate},
                 #{userRole}
                )
     </insert>

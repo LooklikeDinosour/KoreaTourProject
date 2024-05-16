@@ -37,7 +37,6 @@ public class UserController {
         }
 
         userService.signUp(userForm);
-//        return "redirect:/login/login";
         return "main/mainPage";
     }
 

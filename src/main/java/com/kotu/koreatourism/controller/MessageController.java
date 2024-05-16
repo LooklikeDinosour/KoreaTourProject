@@ -75,6 +75,7 @@ public class MessageController {
                                 @PathVariable("messageId") int messageId,
                                 HttpSession httpSession) {
         MessageContentDTO findContent = messageService.findContent(messageId);
+
         log.info("쪽지 상세보기 = {}", findContent.toString());
         int messageContentId = findContent.getMessageContentId();
         messageService.readMessage(messageContentId);
