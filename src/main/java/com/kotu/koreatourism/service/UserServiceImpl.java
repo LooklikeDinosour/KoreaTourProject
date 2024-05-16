@@ -55,4 +55,13 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public boolean checkUserIdExist(String userId) {
+        boolean existUserId = userMapper.checkUserIdExist(userId);
+        if(existUserId == false) {
+            return false;
+        }
+        return true;
+    }
 }

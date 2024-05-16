@@ -12,4 +12,6 @@ public interface UserMapper {
 
     public LoginDTO findByUserId(String userId);
 
+    public boolean checkUserIdExist(String userId);
+
 }

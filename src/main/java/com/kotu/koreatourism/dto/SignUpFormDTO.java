@@ -14,7 +14,7 @@ import lombok.Setter;
 public class SignUpFormDTO {
 
     @NotBlank(message = "아이디는 필수입니다.")
-    @Pattern(regexp = "^[A-Za-z0-9]{10,30}$", message = "아이디는 10~30자 영문 대 소문자, 숫자를 사용해서 작성해주세요.")
+    @Pattern(regexp = "^[a-z0-9]{10,30}$", message = "아이디는 10~30자 영문 소문자, 숫자를 사용해서 작성해주세요.")
     private String userId; // 아이디 PK
 
     @NotBlank(message = "비밀번호는 필수입니다.")

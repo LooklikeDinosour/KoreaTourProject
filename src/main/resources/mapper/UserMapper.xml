@@ -27,6 +27,11 @@
         where user_id = #{userId}
     </select>
 
+    <select id="checkUserIdExist">
+        select count(*)
+        from USER_TB
+        where user_id = #{userId}
+    </select>
 
 
 </mapper>

@@ -14,4 +14,6 @@ public interface UserService {
     public LoginDTO findByUserId(String userId);
 
     public String getCurrentUserName();
+
+    public boolean checkUserIdExist(String userId);
 }
