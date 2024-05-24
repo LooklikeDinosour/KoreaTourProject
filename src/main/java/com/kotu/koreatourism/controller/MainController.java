@@ -36,4 +36,10 @@ public class MainController {
 
         return "main/mainPage";
     }
+
+    @GetMapping("/api/test1234")
+    public String tourTest() {
+
+        return "tour/tourtest";
+    }
 }

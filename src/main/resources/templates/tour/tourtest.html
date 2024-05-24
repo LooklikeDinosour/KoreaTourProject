@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thymeleaf Fetch Example</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h1>Tour Area Information</h1>
+<div id="user-info">
+    <!-- Tour area information will be loaded here -->
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/test')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const userInfoDiv = document.getElementById('user-info');
+                const options = data.item.map(item => `
+                        <option value="${item.code}">${item.name}</option>
+                    `).join('');
+
+                userInfoDiv.innerHTML = `
+                        <div class="item">
+                            <p><strong>Name:</strong></p>
+                            <select>
+                                ${options}
+                            </select>
+                        </div>
+                    `;
+            })
+            .catch(error => {
+                const userInfoDiv = document.getElementById('user-info');
+                userInfoDiv.innerHTML = `<p>An error occurred while fetching tour area information: ${error.message}</p>`;
+            });
+    });
+</script>
+
+</body>
+</html>

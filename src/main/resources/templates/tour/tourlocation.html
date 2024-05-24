@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tourist Locations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .tourist-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tourist-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .tourist-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .tourist-item h2 {
+            margin: 0 0 10px 0;
+        }
+        .tourist-item p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tourist-container">
+    <h1>Tourist Locations</h1>
+    <div th:if="${tourLocation.tourLocations != null}">
+        <div th:each="tour : ${tourLocation.tourLocations}" class="tourist-item">
+            <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
+            <img th:if="${tour.firstImage2}" th:src="${tour.firstImage2}" alt="Image">
+            <h2 th:text="${tour.title}">Title</h2>
+            <p th:text="'Address: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
+            <p th:text="'Area Code: ' + ${tour.areaCode}">Area Code</p>
+            <p th:text="'Telephone: ' + ${tour.tel}">Telephone</p>
+            <p th:text="'Distance: ' + ${tour.dist} + ' meters'">Distance</p>
+        </div>
+    </div>
+    <div th:if="${tourLocation == null}">
+        <p>No tourist locations available.</p>
+    </div>
+</div>
+
+</body>
+</html>
