@@ -9,8 +9,8 @@
     <style>
 
     #map {
-        height: 300px;
-        width : 300px;
+        height: 350px;
+        width : 400px;
     }
 
     /*
@@ -23,7 +23,6 @@
 <div th:if="${tourDetailInfo.tourDetailInfoList != null}">
     <div th:each="tour : ${tourDetailInfo.tourDetailInfoList}" class="tourist-item">
         <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
-        <img th:if="${tour.firstImage2}" th:src="${tour.firstImage2}" alt="Image">
         <input type="hidden" name="contentId" th:value="${tour.contentId}">
         <h2 id="title" th:text="${tour.title}">Title</h2>
         <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}"></p>
@@ -42,7 +41,7 @@ let map;
 
 async function initMap() {
     console.log("initMap 함수가 호출되었습니다.");
-    const { Map } = await google.maps.importLibrary("maps");
+    const { Map, InfoWindow } = await google.maps.importLibrary("maps");
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
     const mapElement = document.getElementById("map");
@@ -52,22 +51,28 @@ async function initMap() {
 
     const titleElement = document.getElementById("title");
     const title = titleElement.innerText;
-
-    console.log(position);
-    console.log(title);
+    const infoWindow = new InfoWindow();
 
     map = new Map(mapElement, {
         center : position,
-        zoom : 15,
+        zoom : 17,
         mapId : "demo"
     });
 
     const marker = new AdvancedMarkerElement({
         map : map,
         position : position,
-        title : title
+        title : title,
+        gmpClickable: true
     });
 
+    marker.addListener("click", ({domEvent, latLng}) => {
+        const { target } = domEvent;
+
+        infoWindow.close();
+        infoWindow.setContent(marker.title);
+        infoWindow.open(marker.map, marker);
+    });
 }
 
 initMap();

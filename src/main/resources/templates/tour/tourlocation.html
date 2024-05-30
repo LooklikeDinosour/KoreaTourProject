@@ -45,7 +45,6 @@
     <div th:if="${tourLocation.tourLocations != null}">
         <div th:each="tour : ${tourLocation.tourLocations}" class="tourist-item">
             <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
-            <img th:if="${tour.firstImage2}" th:src="${tour.firstImage2}" alt="Image">
             <input type="hidden" name="contentId" th:value="${tour.contentId}">
             <a th:href="@{location/{contentId}(contentId=${tour.contentId})}"  th:text="${tour.title}">Title</a>
             <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
