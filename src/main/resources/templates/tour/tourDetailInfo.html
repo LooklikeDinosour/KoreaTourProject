@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>-->
+<!--    <script src="../../static/js/calllocationinfo.js"></script>-->
+
+    <style>
+
+    #map {
+        height: 300px;
+        width : 300px;
+    }
+
+    /*
+    * Optional: Makes the sample page fill the window.
+    */
+    </style>
+</head>
+<body>
+
+<div th:if="${tourDetailInfo.tourDetailInfoList != null}">
+    <div th:each="tour : ${tourDetailInfo.tourDetailInfoList}" class="tourist-item">
+        <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
+        <img th:if="${tour.firstImage2}" th:src="${tour.firstImage2}" alt="Image">
+        <input type="hidden" name="contentId" th:value="${tour.contentId}">
+        <h2 id="title" th:text="${tour.title}">Title</h2>
+        <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}"></p>
+        <p th:text="'설명: ' + ${tour.overview}"></p>
+        <div id="map" th:attr="data-mapx=${tour.mapX}, data-mapy=${tour.mapY}">
+        </div>
+    </div>
+</div>
+<div th:if="${tourDetailInfo == null}" style="grid-column: span 4; text-align: center;">
+    <p>No tourist locations available.</p>
+</div>
+<script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+({key: "AIzaSyDvVIET7SBPcEC0_87HAbg42OfQHPZulDo", v: "weekly"});
+
+let map;
+
+async function initMap() {
+    console.log("initMap 함수가 호출되었습니다.");
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+    const mapElement = document.getElementById("map");
+    const mapX = parseFloat(mapElement.getAttribute("data-mapx"));
+    const mapY = parseFloat(mapElement.getAttribute("data-mapy"));
+    const position = { lat: mapY, lng: mapX };
+
+    const titleElement = document.getElementById("title");
+    const title = titleElement.innerText;
+
+    console.log(position);
+    console.log(title);
+
+    map = new Map(mapElement, {
+        center : position,
+        zoom : 15,
+        mapId : "demo"
+    });
+
+    const marker = new AdvancedMarkerElement({
+        map : map,
+        position : position,
+        title : title
+    });
+
+}
+
+initMap();
+</script>
+
+</body>
+</html>

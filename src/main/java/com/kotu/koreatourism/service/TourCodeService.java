@@ -1,7 +1,5 @@
 package com.kotu.koreatourism.service;
 
-import com.kotu.koreatourism.dto.TourAreaCodesDTO;
-import com.kotu.koreatourism.dto.TourLocationDTO;
 
 public interface TourCodeService {
 

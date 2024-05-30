@@ -8,46 +8,50 @@
             font-family: Arial, sans-serif;
         }
         .tourist-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
         .tourist-item {
             border: 1px solid #ccc;
             padding: 10px;
-            margin: 10px 0;
             border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .tourist-item img {
             max-width: 100%;
             height: auto;
-            display: block;
             margin-bottom: 10px;
         }
         .tourist-item h2 {
             margin: 0 0 10px 0;
+            text-align: center;
         }
         .tourist-item p {
             margin: 5px 0;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="tourist-container">
-    <h1>Tourist Locations</h1>
+    <h1 style="grid-column: span 4; text-align: center;">Tourist Locations</h1>
     <div th:if="${tourLocation.tourLocations != null}">
         <div th:each="tour : ${tourLocation.tourLocations}" class="tourist-item">
             <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
             <img th:if="${tour.firstImage2}" th:src="${tour.firstImage2}" alt="Image">
-            <h2 th:text="${tour.title}">Title</h2>
-            <p th:text="'Address: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
-            <p th:text="'Area Code: ' + ${tour.areaCode}">Area Code</p>
-            <p th:text="'Telephone: ' + ${tour.tel}">Telephone</p>
-            <p th:text="'Distance: ' + ${tour.dist} + ' meters'">Distance</p>
+            <input type="hidden" name="contentId" th:value="${tour.contentId}">
+            <a th:href="@{location/{contentId}(contentId=${tour.contentId})}"  th:text="${tour.title}">Title</a>
+            <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
         </div>
     </div>
-    <div th:if="${tourLocation == null}">
+    <div th:if="${tourLocation == null}" style="grid-column: span 4; text-align: center;">
         <p>No tourist locations available.</p>
     </div>
 </div>

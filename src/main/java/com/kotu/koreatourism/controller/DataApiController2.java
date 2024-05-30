@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.dto.TourAreaCodesDTO;
+import com.kotu.koreatourism.dto.TourDetailInfoItemDTO;
 import com.kotu.koreatourism.dto.TourLocationDTO;
 import com.kotu.koreatourism.service.TourCodeService;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -86,7 +89,7 @@ public class DataApiController2 {
         System.out.println(areaData);
         log.info("공공데이터 API 호출 = {}", areaData );
 
-        TourAreaCodesDTO items = tourCodeService.parsingJsonAreaCode(areaData);
+        TourAreaCodesDTO items = tourCodeService.parsingJsonObject(areaData, TourAreaCodesDTO.class);
 
         return new ResponseEntity<TourAreaCodesDTO>(items, HttpStatus.OK) ;
     }
@@ -138,14 +141,69 @@ public class DataApiController2 {
         rd.close();
         conn.disconnect();
         // 11. 전달받은 데이터 확인.
-        String tourLocation = sb.toString();
-        log.info("공공데이터 API String type= {}", tourLocation);
+        String tourLocationJson = sb.toString();
+        log.info("공공데이터 API String type= {}", tourLocationJson);
 
-        TourLocationDTO item = tourCodeService.parsingJsonObject(tourLocation, TourLocationDTO.class);
-        log.info("공공데이터 API 호출 = {}", item );
+        TourLocationDTO tourLocation = tourCodeService.parsingJsonObject(tourLocationJson, TourLocationDTO.class);
+        log.info("공공데이터 API 호출 = {}", tourLocation );
 
-        model.addAttribute("tourLocation", item);
+        model.addAttribute("tourLocation", tourLocation);
 
         return "tour/tourlocation";
+    }
+
+    @GetMapping("/location/{contentId}")
+    public String detailInfo(@PathVariable("contentId") int contentId,
+                             Model model) throws IOException {
+
+        // 1. URL을 만들기 위한 StringBuilder.
+        StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/detailCommon1"); /*URL*/
+        // 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + ServiceKey); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("contentId","UTF-8") + "=" + URLEncoder.encode(String.valueOf(contentId) , "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("addrinfoYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("mapinfoYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("overviewYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+
+        // 3. URL 객체 생성.
+        URL url = new URL(urlBuilder.toString());
+        // 4. 요청하고자 하는 URL과 통신하기 위한 Connection 객체 생성.
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // 5. 통신을 위한 메소드 SET. 대문자로 작성
+        conn.setRequestMethod("GET");
+        // 6. 통신을 위한 Content-type SET.
+        conn.setRequestProperty("Content-type", "application/json");
+        // 7. 통신 응답 코드 확인.
+        System.out.println("Response code: " + conn.getResponseCode());
+        // 8. 전달받은 데이터를 BufferedReader 객체로 저장.
+        BufferedReader rd;
+
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
+        }
+        // 9. 저장된 데이터를 라인별로 읽어 StringBuilder 객체로 저장.
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        // 10. 객체 해제.
+        rd.close();
+        conn.disconnect();
+        // 11. 전달받은 데이터 확인.
+        String tourLocationJson = sb.toString();
+        log.info("공공데이터 API String type= {}", tourLocationJson);
+
+        TourDetailInfoItemDTO tourDetailInfo = tourCodeService.parsingJsonObject(tourLocationJson, TourDetailInfoItemDTO.class);
+        log.info("공공데이터 API 호출 = {}", tourDetailInfo );
+
+        model.addAttribute("tourDetailInfo", tourDetailInfo);
+
+        return "tour/tourDetailInfo";
     }
 }

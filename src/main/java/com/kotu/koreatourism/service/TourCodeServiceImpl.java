@@ -2,8 +2,6 @@ package com.kotu.koreatourism.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kotu.koreatourism.dto.TourAreaCodesDTO;
-import com.kotu.koreatourism.dto.TourLocationDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -25,26 +23,26 @@ public class TourCodeServiceImpl implements TourCodeService {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public TourAreaCodesDTO parsingJsonAreaCode(String json) {
-        try {
-            log.info("Json = {}", json);
-            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourAreaCodesDTO.class));
-            return objectMapper.readValue(json, TourAreaCodesDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public TourLocationDTO parsingJsonLocation(String json) {
-        try {
-            log.info("Json = {}", json);
-            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourLocationDTO.class));
-            return objectMapper.readValue(json, TourLocationDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//
+//    @Override
+//    public TourAreaCodesDTO parsingJsonAreaCode(String json) {
+//        try {
+//            log.info("Json = {}", json);
+//            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourAreaCodesDTO.class));
+//            return objectMapper.readValue(json, TourAreaCodesDTO.class);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    @Override
+//    public TourLocationDTO parsingJsonLocation(String json) {
+//        try {
+//            log.info("Json = {}", json);
+//            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourLocationDTO.class));
+//            return objectMapper.readValue(json, TourLocationDTO.class);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
