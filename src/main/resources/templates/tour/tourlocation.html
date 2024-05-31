@@ -6,54 +6,126 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-        .tourist-container {
+        .tourist-container-wrapper {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .tourist-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
+        }
+        .tourist-container h1 {
+            grid-column: span 4;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
         }
         .tourist-item {
             border: 1px solid #ccc;
-            padding: 10px;
             border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            transition: transform 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
         }
-        .tourist-item img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
+        .tourist-item:hover {
+            transform: scale(1.05);
         }
-        .tourist-item h2 {
-            margin: 0 0 10px 0;
+        .tourist-item a img {
+            width: 100%;
+            height: 190px;
+            border-bottom: 1px solid #ccc;
+        }
+        .tourist-item a h2 {
+            color: #007bff;
+            font-size: 1.2em;
+            margin: 10px 0;
             text-align: center;
         }
         .tourist-item p {
             margin: 5px 0;
             text-align: center;
+            font-size: 0.9em;
+        }
+        .tourist-item a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .no-locations {
+            grid-column: span 4;
+            text-align: center;
+            font-size: 1.2em;
+            color: #999;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<div class="tourist-container">
-    <h1 style="grid-column: span 4; text-align: center;">Tourist Locations</h1>
-    <div th:if="${tourLocation.tourLocations != null}">
+<div class="tourist-container-wrapper">
+    <h1>Tourist Locations</h1>
+    <div class="tourist-container" th:if="${tourLocation.tourLocations != null}">
         <div th:each="tour : ${tourLocation.tourLocations}" class="tourist-item">
-            <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
-            <input type="hidden" name="contentId" th:value="${tour.contentId}">
-            <a th:href="@{location/{contentId}(contentId=${tour.contentId})}"  th:text="${tour.title}">Title</a>
-            <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
+            <a th:href="@{location/{contentId}(contentId=${tour.contentId})}">
+                <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
+                <input type="hidden" name="contentId" th:value="${tour.contentId}">
+                <h2 th:text="${tour.title}">Title</h2>
+                <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
+            </a>
+            <div class="buttons">
+                <button class="button" th:attr="onclick='like(' + ${tour.contentId} + ')'">좋아요</button>
+                <button class="button" th:attr="onclick='save(' + ${tour.contentId} + ')'">저장하기</button>
+            </div>
         </div>
     </div>
-    <div th:if="${tourLocation == null}" style="grid-column: span 4; text-align: center;">
+    <div th:if="${tourLocation == null}" class="no-locations">
         <p>No tourist locations available.</p>
     </div>
 </div>
+
+<script>
+    function like(contentId) {
+        // 좋아요 버튼 클릭 시 처리할 로직
+        console.log('좋아요:', contentId);
+    }
+
+    function save(contentId) {
+        // 저장하기 버튼 클릭 시 처리할 로직
+        console.log('저장하기:', contentId);
+    }
+</script>
 
 </body>
 </html>
