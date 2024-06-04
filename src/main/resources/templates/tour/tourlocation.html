@@ -116,19 +116,24 @@
 <body>
 
 <div class="tourist-container-wrapper">
-    <h1>Tourist Locations</h1>
+    <div>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    </div>
     <div>
         <nav>
-            <a th:href="@{/}" th:text="'Home'"></a>
-            <a th:each="content : ${contentList}"
-               th:href="@{'/api/location/' + ${content.name().replace('_','-').toLowerCase()}}"
-               th:text="${content.contentName}"></a>
+            <a th:href="@{/api/location/attraction}" th:text="'Home'"></a>
+            <a th:each="topic : ${category}"
+               th:href="@{'/api/location/' + ${topic.name().replace('_','-').toLowerCase()}}"
+               th:text="${topic.contentName}"
+               onclick="setContentType(${topic.name().replace('_','-').toLowerCase()});
+                        takeLocationData();"></a>
         </nav>
     </div>
     <div class="tourist-container" th:if="${tourLocation.tourLocations != null}">
         <div th:each="tour : ${tourLocation.tourLocations}" class="tourist-item">
             <a th:href="@{/api/location/detail-info/{contentId}(contentId=${tour.contentId})}">
-                <img th:if="${tour.firstImage}" th:src="${tour.firstImage}" alt="Image">
+                <img th:if="${tour.firstImage != null}" th:src="${tour.firstImage}" alt="Image">
+                <img th:unless="${tour.firstImage != null}" th:src="@{/images/default.jpg}" alt="Image">
                 <input type="hidden" name="contentId" th:value="${tour.contentId}">
                 <h2 th:text="${tour.title}">Title</h2>
                 <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
@@ -139,12 +144,19 @@
             </div>
         </div>
     </div>
-    <div th:if="${tourLocation == null}" class="no-locations">
+    <div th:if="${tourLocation.tourLocations == null}" class="no-locations">
         <p>No tourist locations available.</p>
     </div>
 </div>
 
 <script>
+
+    let selectedContentType = '';
+    function setContentType(contentType) {
+        selectedContentType = contentType;
+        console.log(selectedContentType);
+    }
+
     function like(contentId) {
         // 좋아요 버튼 클릭 시 처리할 로직
         console.log('좋아요:', contentId);
@@ -153,6 +165,29 @@
     function save(contentId) {
         // 저장하기 버튼 클릭 시 처리할 로직
         console.log('저장하기:', contentId);
+    }
+
+    // 위치기반
+    function takeLocationData() {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                console.log("takeLocationData 실행");
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const url = document.querySelector('a[href*="api/location"]');
+                url.href = `/api/location/${selectedContentType}?latitude=${latitude}&longitude=${longitude}`;
+
+                fetch(url.href , {
+                    method: 'GET',
+                })
+                    .then(response => response.json())
+                    .then(data => console.log('Success:', data))
+                    .catch((error) => console.error('Error:', error));
+            });
+        } else {
+            console.log("지원하지 않는 브라우저입니다.")
+        }
     }
 </script>
 

@@ -14,8 +14,10 @@ import java.net.URLEncoder;
 @Service
 public class TourLocationServiceImpl implements TourLocationService {
     @Override
-    public String locationContentsTypeAPI(String callBackUrl, String serviceKey, String dataType, String contentTypeId) throws IOException {
+    public String locationContentsTypeAPI(String callBackUrl, String serviceKey, String dataType, String contentTypeId, String mapX, String mapY) throws IOException {
 
+        log.info("X, Y = {} , = {}", mapX, mapY);
+        // 위치기반인데 X,Y 좌표를 서울근처로 설정해서 서울만 나오는 거였음
         // 1. URL을 만들기 위한 StringBuilder.
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/locationBasedList1"); /*URL*/
         // 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
@@ -27,9 +29,9 @@ public class TourLocationServiceImpl implements TourLocationService {
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("listYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("arrange","UTF-8") + "=" + URLEncoder.encode("A", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("mapX","UTF-8") + "=" + URLEncoder.encode("126.981611", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("mapY","UTF-8") + "=" + URLEncoder.encode("37.568477", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("radius","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("mapX","UTF-8") + "=" + URLEncoder.encode(mapX, "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("mapY","UTF-8") + "=" + URLEncoder.encode(mapY, "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("radius","UTF-8") + "=" + URLEncoder.encode("1500", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("contentTypeId","UTF-8") + "=" + URLEncoder.encode(contentTypeId, "UTF-8"));
 
         // 3. URL 객체 생성.

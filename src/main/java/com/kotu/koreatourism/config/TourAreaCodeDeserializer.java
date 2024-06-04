@@ -33,7 +33,7 @@ public class TourAreaCodeDeserializer extends JsonDeserializer {
 
             TourAreaCodeDTO[] tourAreaCodeArrays = objectMapper.treeToValue(itemNode, TourAreaCodeDTO[].class);
             List<TourAreaCodeDTO> tourAreaCodeList = Arrays.asList(tourAreaCodeArrays);
-            log.info("배열 정렬 = {}", tourAreaCodeList);
+        //    log.info("배열 정렬 = {}", tourAreaCodeList);
             return new TourAreaCodesDTO(tourAreaCodeList);
     }
 }

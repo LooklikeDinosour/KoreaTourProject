@@ -47,7 +47,7 @@
 <!-- Swiper JS -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-<script>
+<script th:inline="javascript">
     var swiper = new Swiper('.swiper-container', {
         // Optional parameters
         direction: 'horizontal',
@@ -61,6 +61,28 @@
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
         },
+    });
+
+    // 위치기반
+    document.addEventListener("DOMContentLoaded",function () {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const url = document.querySelector('a[href*="api/location"]');
+                url.href = `/api/location?latitude=${latitude}&longitude=${longitude}`
+
+                fetch(url.href, {
+                    method: 'GET',
+                })
+                    .then(response => response.json())
+                    .then(data => console.log('Success:', data))
+                    .catch((error) => console.error('Error:', error));
+            });
+        } else {
+            console.log("지원하지 않는 브라우저입니다.")
+        }
     });
 </script>
 

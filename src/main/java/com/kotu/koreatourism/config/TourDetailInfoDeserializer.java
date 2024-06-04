@@ -26,7 +26,7 @@ public class TourDetailInfoDeserializer extends JsonDeserializer {
     @Override
     public TourDetailInfoItemDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        log.info("node 내부 구조? = {}", node.toString());
+    //    log.info("node 내부 구조? = {}", node.toString());
         JsonNode itemNode = node.findValue("item");
 
         TourDetailInfoDTO[] tourDetailInfoArrays = objectMapper.treeToValue(itemNode, TourDetailInfoDTO[].class);
