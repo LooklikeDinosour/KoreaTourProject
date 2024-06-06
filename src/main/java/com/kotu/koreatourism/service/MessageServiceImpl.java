@@ -35,9 +35,8 @@ public class MessageServiceImpl implements MessageService{
         //존재하는 유저인지 검증
         String receivedUser = message.getReceivedUser();
         LoginDTO userInfo = userMapper.findByUserId(receivedUser);
-        String userId = userInfo.getUserId();
-        log.info("쪽지 수신 유저 확인 = {}", userId);
-        if(userId == null) {
+        log.info("쪽지 수신 유저 확인 = {}", userInfo);
+        if(userInfo == null) {
            throw new RuntimeException("해당 ID" + receivedUser + "는 없는 아이디입니다.");
         }
 

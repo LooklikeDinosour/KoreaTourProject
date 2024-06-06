@@ -1,4 +1,4 @@
-package com.kotu.koreatourism.dto;
+package com.kotu.koreatourism.dto.tour;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TouristDTO {
+public class TourLocationBasedDTO {
 
     @JsonProperty("addr1")
     private String addr1;

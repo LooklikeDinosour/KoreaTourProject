@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kotu.koreatourism.dto.TourAreaCodeDTO;
-import com.kotu.koreatourism.dto.TourAreaCodesDTO;
-import com.kotu.koreatourism.dto.TourLocationDTO;
-import com.kotu.koreatourism.dto.TouristDTO;
+import com.kotu.koreatourism.dto.tour.TourLocationBasedItemDTO;
+import com.kotu.koreatourism.dto.tour.TourLocationBasedDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -19,31 +17,31 @@ import java.util.List;
 
 
 @Slf4j
-public class TourLocationDeserializer extends JsonDeserializer {
+public class TourLocationBasedDeserializer extends JsonDeserializer {
     private final ObjectMapper objectMapper;
 
-    private TourLocationDeserializer() {
+    private TourLocationBasedDeserializer() {
         this.objectMapper = new ObjectMapper();
     }
 
     @Override
-    public TourLocationDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
+    public TourLocationBasedItemDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         JsonNode itemNode = node.findValue("item");
 
         // "item" 노드가 없는 경우 null 반환
         // 지역에 따라 데이터가 없는 경우 Json 구조가 다름
         if (itemNode == null) {
-            log.warn("itemNode is null. Returning empty TourLocationDTO.");
-            return new TourLocationDTO(Collections.emptyList());
+            log.warn("itemNode is null. Returning empty TourLocationBasedItemDTO.");
+            return new TourLocationBasedItemDTO(Collections.emptyList());
         }
 
 
         //지역정보
-            TouristDTO[] tourLocationsArray = objectMapper.treeToValue(itemNode, TouristDTO[].class);
-            List<TouristDTO> tourlocationList = Arrays.asList(tourLocationsArray);
-        //    log.info("배열 정렬 = {}", tourlocationList);
-            return new TourLocationDTO(tourlocationList);
+            TourLocationBasedDTO[] tourLocationBasedArray = objectMapper.treeToValue(itemNode, TourLocationBasedDTO[].class);
+            List<TourLocationBasedDTO> tourLocationBasedList = Arrays.asList(tourLocationBasedArray);
+            log.info("배열 정렬 = {}", tourLocationBasedList);
+            return new TourLocationBasedItemDTO(tourLocationBasedList);
     }
 }
 

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kotu.koreatourism.dto.TourAreaCodeDTO;
-import com.kotu.koreatourism.dto.TourAreaCodesDTO;
+import com.kotu.koreatourism.dto.tour.TourAreaCodeDTO;
+import com.kotu.koreatourism.dto.tour.TourAreaCodeItemDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,14 +27,14 @@ public class TourAreaCodeDeserializer extends JsonDeserializer {
 
 
     @Override
-    public TourAreaCodesDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
+    public TourAreaCodeItemDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         JsonNode itemNode = node.findValue("item");
 
             TourAreaCodeDTO[] tourAreaCodeArrays = objectMapper.treeToValue(itemNode, TourAreaCodeDTO[].class);
             List<TourAreaCodeDTO> tourAreaCodeList = Arrays.asList(tourAreaCodeArrays);
         //    log.info("배열 정렬 = {}", tourAreaCodeList);
-            return new TourAreaCodesDTO(tourAreaCodeList);
+            return new TourAreaCodeItemDTO(tourAreaCodeList);
     }
 }
 

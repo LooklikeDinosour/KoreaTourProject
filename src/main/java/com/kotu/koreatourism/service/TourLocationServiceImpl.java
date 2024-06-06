@@ -14,7 +14,7 @@ import java.net.URLEncoder;
 @Service
 public class TourLocationServiceImpl implements TourLocationService {
     @Override
-    public String locationContentsTypeAPI(String callBackUrl, String serviceKey, String dataType, String contentTypeId, String mapX, String mapY) throws IOException {
+    public String locationBasedAPI(String callBackUrl, String serviceKey, String dataType, String contentTypeId, String mapX, String mapY) throws IOException {
 
         log.info("X, Y = {} , = {}", mapX, mapY);
         // 위치기반인데 X,Y 좌표를 서울근처로 설정해서 서울만 나오는 거였음
@@ -68,7 +68,7 @@ public class TourLocationServiceImpl implements TourLocationService {
     }
 
     @Override
-    public String locationDetailInfoAPI(String callBackUrl, String serviceKey, String dataType, int contentId) throws IOException {
+    public String detailCommonInfoAPI(String callBackUrl, String serviceKey, String dataType, int contentId) throws IOException {
         // 1. URL을 만들기 위한 StringBuilder.
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/detailCommon1"); /*URL*/
         // 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
@@ -116,4 +116,60 @@ public class TourLocationServiceImpl implements TourLocationService {
 
         return locationDetailInfo;
     }
+
+    @Override
+    public String detailIntroAPI(String callBackUrl, String serviceKey, String dataType, int contentId) throws IOException {
+        // 1. URL을 만들기 위한 StringBuilder.
+        StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/detailIntro1"); /*URL*/
+        // 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + serviceKey); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("defaultYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("firstImageYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("contentId","UTF-8") + "=" + URLEncoder.encode(String.valueOf(contentId) , "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("addrinfoYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("mapinfoYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("overviewYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+
+        // 3. URL 객체 생성.
+        URL url = new URL(urlBuilder.toString());
+        // 4. 요청하고자 하는 URL과 통신하기 위한 Connection 객체 생성.
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // 5. 통신을 위한 메소드 SET. 대문자로 작성
+        conn.setRequestMethod("GET");
+        // 6. 통신을 위한 Content-type SET.
+        conn.setRequestProperty("Content-type", "application/json");
+        // 7. 통신 응답 코드 확인.
+        System.out.println("Response code: " + conn.getResponseCode());
+        // 8. 전달받은 데이터를 BufferedReader 객체로 저장.
+        BufferedReader br;
+
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+        } else {
+            br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
+        }
+        // 9. 저장된 데이터를 라인별로 읽어 StringBuilder 객체로 저장.
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        // 10. 객체 해제.
+        br.close();
+        conn.disconnect();
+        // 11. 전달받은 데이터 확인.
+        String locationDetailInfo = sb.toString();
+        //log.info("공공데이터 API String type= {}", tourLocationJson);
+
+        return locationDetailInfo;
+    }
+
+    @Override
+    public String areBasedAPI(String callBackUrl, String serviceKey, String dataType, int contentId) throws IOException {
+        return null;
+    }
+
 }

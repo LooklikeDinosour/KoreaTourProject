@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class TourCodeServiceImpl implements TourCodeService {
+public class TourDeserializerServiceImpl implements TourDeserializerService {
 
     private final ObjectMapper objectMapper;
 
-    public TourCodeServiceImpl() {
+    public TourDeserializerServiceImpl() {
         this.objectMapper = new ObjectMapper();
     }
     @Override
@@ -25,22 +25,22 @@ public class TourCodeServiceImpl implements TourCodeService {
     }
 //
 //    @Override
-//    public TourAreaCodesDTO parsingJsonAreaCode(String json) {
+//    public TourAreaCodeItemDTO parsingJsonAreaCode(String json) {
 //        try {
 //            log.info("Json = {}", json);
-//            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourAreaCodesDTO.class));
-//            return objectMapper.readValue(json, TourAreaCodesDTO.class);
+//            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourAreaCodeItemDTO.class));
+//            return objectMapper.readValue(json, TourAreaCodeItemDTO.class);
 //        } catch (JsonProcessingException e) {
 //            throw new RuntimeException(e);
 //        }
 //    }
 //
 //    @Override
-//    public TourLocationDTO parsingJsonLocation(String json) {
+//    public TourLocationBasedItemDTO parsingJsonLocation(String json) {
 //        try {
 //            log.info("Json = {}", json);
-//            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourLocationDTO.class));
-//            return objectMapper.readValue(json, TourLocationDTO.class);
+//            log.info("파싱 데이터 = {}", objectMapper.readValue(json, TourLocationBasedItemDTO.class));
+//            return objectMapper.readValue(json, TourLocationBasedItemDTO.class);
 //        } catch (JsonProcessingException e) {
 //            throw new RuntimeException(e);
 //        }

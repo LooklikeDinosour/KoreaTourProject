@@ -129,9 +129,9 @@
                         takeLocationData();"></a>
         </nav>
     </div>
-    <div class="tourist-container" th:if="${tourLocation.tourLocations != null}">
-        <div th:each="tour : ${tourLocation.tourLocations}" class="tourist-item">
-            <a th:href="@{/api/location/detail-info/{contentId}(contentId=${tour.contentId})}">
+    <div class="tourist-container" th:if="${tourLocationBased.tourLocations != null}">
+        <div th:each="tour : ${tourLocationBased.tourLocations}" class="tourist-item">
+            <a th:href="@{/api/location/{content}()/detail-info/{contentId}(contentId=${tour.contentId})}">
                 <img th:if="${tour.firstImage != null}" th:src="${tour.firstImage}" alt="Image">
                 <img th:unless="${tour.firstImage != null}" th:src="@{/images/default.jpg}" alt="Image">
                 <input type="hidden" name="contentId" th:value="${tour.contentId}">
@@ -144,7 +144,7 @@
             </div>
         </div>
     </div>
-    <div th:if="${tourLocation.tourLocations == null}" class="no-locations">
+    <div th:if="${tourLocationBased.tourLocations == null}" class="no-locations">
         <p>No tourist locations available.</p>
     </div>
 </div>

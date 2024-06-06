@@ -1,11 +1,10 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.ContentType;
-import com.kotu.koreatourism.domain.Location;
-import com.kotu.koreatourism.dto.TourAreaCodesDTO;
-import com.kotu.koreatourism.dto.TourDetailInfoItemDTO;
-import com.kotu.koreatourism.dto.TourLocationDTO;
-import com.kotu.koreatourism.service.TourCodeService;
+import com.kotu.koreatourism.dto.tour.TourAreaCodeItemDTO;
+import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
+import com.kotu.koreatourism.dto.tour.TourLocationBasedItemDTO;
+import com.kotu.koreatourism.service.TourDeserializerService;
 import com.kotu.koreatourism.service.TourLocationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -42,12 +41,12 @@ public class DataApiController2 {
     private String dataType;
 
 
-    private final TourCodeService tourCodeService;
+    private final TourDeserializerService tourCodeService;
     private final TourLocationService tourLocationService;
 
     @GetMapping("/test")
     @ResponseBody
-    public ResponseEntity<TourAreaCodesDTO> tourInfo() throws IOException, ParseException {
+    public ResponseEntity<TourAreaCodeItemDTO> tourInfo() throws IOException, ParseException {
 
         // 1. URL을 만들기 위한 StringBuilder.
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/areaCode1"); /*URL*/
@@ -90,9 +89,9 @@ public class DataApiController2 {
         String areaData = sb.toString();
         //log.info("공공데이터 API 호출 = {}", areaData );
 
-        TourAreaCodesDTO items = tourCodeService.parsingJsonObject(areaData, TourAreaCodesDTO.class);
+        TourAreaCodeItemDTO items = tourCodeService.parsingJsonObject(areaData, TourAreaCodeItemDTO.class);
 
-        return new ResponseEntity<TourAreaCodesDTO>(items, HttpStatus.OK) ;
+        return new ResponseEntity<TourAreaCodeItemDTO>(items, HttpStatus.OK) ;
     }
 
     @GetMapping("/location")
@@ -108,21 +107,21 @@ public class DataApiController2 {
 
         // contentType만 불러오면 된다. => 이거를 백엔드에서 검증하기 위해서 백엔드에서 먼저 보내서 그 걸로 프론트를 구성하고
         // 다시 받아서 enum으로 검증해서 넣으면 교차 검증되는것 아닌가?
-        log.info("URL 확인하기 = {} ", request.getRequestURL());
-        log.info("URI 확인하기 = {} ", request.getRequestURI());
-        log.info("URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
+        log.info("location URL 확인하기 = {} ", request.getRequestURL());
+        log.info("location URI 확인하기 = {} ", request.getRequestURI());
+        log.info("location URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
 
-        log.info("좌표찍어보자 기본 location Y = {}, X = {} ", latitude, longitude);
+        log.info("location 좌표찍어보자 기본 Y = {}, X = {} ", latitude, longitude);
 
         session.setAttribute("longitude", longitude);
         session.setAttribute("latitude", latitude);
 
-        String locationList = tourLocationService.locationContentsTypeAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
-        TourLocationDTO tourLocation = tourCodeService.parsingJsonObject(locationList, TourLocationDTO.class);
-        //log.info("공공데이터 API 호출 = {}", tourLocation);
+        String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
+        TourLocationBasedItemDTO tourLocationBased = tourCodeService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
+        log.info("location 공공데이터 API 호출 = {}", tourLocationBased);
 
         model.addAttribute("category", ContentType.values());
-        model.addAttribute("tourLocation", tourLocation);
+        model.addAttribute("tourLocationBased", tourLocationBased);
 
         return "tour/tourlocation";
    }
@@ -137,37 +136,38 @@ public class DataApiController2 {
         //Enum 목록에 있는 건지 다시 검증
         ContentType content = ContentType.fromUrlName(contentType);
         int contentTypeId = content.getContentTypeId();
-        log.info("URL 확인하기 = {} ", request.getRequestURL());
-        log.info("URI 확인하기 = {} ", request.getRequestURI());
-        log.info("URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
-        log.info("ContentTypeId 인증 검사 = {}", contentTypeId);
+        log.info("LC URL 확인하기 = {} ", request.getRequestURL());
+        log.info("LC URI 확인하기 = {} ", request.getRequestURI());
+        log.info("LC URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
+        log.info("LC ContentTypeId 인증 검사 = {}", contentTypeId);
 
         String longitude = (String)session.getAttribute("longitude");
         String latitude = (String)session.getAttribute("latitude");
-        log.info("좌표찍어보자 location-contenttype Y = {}, X = {} ", latitude, longitude);
-        log.info("@RequestParam 찍어보자 location-contenttype Y = {}, X = {} ", latitude1, longitude1);
+        log.info("LC 좌표찍어보자  Y = {}, X = {} ", latitude, longitude);
+        log.info("LC @RequestParam 찍어보자  Y = {}, X = {} ", latitude1, longitude1);
 
-        String locationList = tourLocationService.locationContentsTypeAPI(callBackUrl, serviceKey, dataType, String.valueOf(contentTypeId), longitude, latitude);
-        TourLocationDTO tourLocation = tourCodeService.parsingJsonObject(locationList, TourLocationDTO.class);
-        log.info("공공데이터 API 호출 = {}", tourLocation);
+        String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, String.valueOf(contentTypeId), longitude, latitude);
+        TourLocationBasedItemDTO tourLocationBased = tourCodeService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
+        log.info("LC 공공데이터 API 호출 = {}", tourLocationBased);
 
         model.addAttribute("category", ContentType.values());
-        model.addAttribute("tourLocation", tourLocation);
+        model.addAttribute("tourLocationBased", tourLocationBased);
 
         return "tour/tourlocation";
     }
 
 
 
-    @GetMapping("/location/detail-info/{contentId}")
-    public String detailInfo(@PathVariable("contentId") int contentId,
+    @GetMapping("/location/{content-type}/detail-info/{contentId}")
+    public String detailIntro(@PathVariable("content-type") String contentType,
+                             @PathVariable("contentId") int contentId,
                              Model model) throws IOException {
 
-        String LocationDetailInfo = tourLocationService.locationDetailInfoAPI(callBackUrl, serviceKey, dataType, contentId);
-        TourDetailInfoItemDTO tourDetailInfo = tourCodeService.parsingJsonObject(LocationDetailInfo, TourDetailInfoItemDTO.class);
-//        log.info("공공데이터 API 호출 = {}", tourDetailInfo );
+        String LocationCommonInfo = tourLocationService.detailCommonInfoAPI(callBackUrl, serviceKey, dataType, contentId);
+        TourDetailCommonItemDTO tourCommonInfo = tourCodeService.parsingJsonObject(LocationCommonInfo, TourDetailCommonItemDTO.class);
+//        log.info("공공데이터 API 호출 = {}", tourCommonInfo );
 
-        model.addAttribute("tourDetailInfo", tourDetailInfo);
+        model.addAttribute("tourCommonInfo", tourCommonInfo);
 
         return "tour/tourDetailInfo";
     }

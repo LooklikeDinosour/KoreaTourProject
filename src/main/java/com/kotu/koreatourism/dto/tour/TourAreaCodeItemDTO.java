@@ -1,4 +1,4 @@
-package com.kotu.koreatourism.dto;
+package com.kotu.koreatourism.dto.tour;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -11,12 +11,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonDeserialize(using = TourAreaCodeDeserializer.class)
-public class TourAreaCodesDTO {
+public class TourAreaCodeItemDTO {
 
     @JsonProperty("item")
     private List<TourAreaCodeDTO> tourCodes;
 
-    public TourAreaCodesDTO(List<TourAreaCodeDTO> tourCodes) {
+    public TourAreaCodeItemDTO(List<TourAreaCodeDTO> tourCodes) {
         this.tourCodes = tourCodes;
     }
 }
