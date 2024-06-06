@@ -26,7 +26,6 @@ public class TourDetailCommonInfoDeserializer extends JsonDeserializer {
     @Override
     public TourDetailCommonItemDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    //    log.info("node 내부 구조? = {}", node.toString());
         JsonNode itemNode = node.findValue("item");
 
         TourDetailCommonDTO[] tourDetailCommonArrays = objectMapper.treeToValue(itemNode, TourDetailCommonDTO[].class);

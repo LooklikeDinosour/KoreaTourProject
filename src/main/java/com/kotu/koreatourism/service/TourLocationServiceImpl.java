@@ -118,7 +118,7 @@ public class TourLocationServiceImpl implements TourLocationService {
     }
 
     @Override
-    public String detailIntroAPI(String callBackUrl, String serviceKey, String dataType, int contentId) throws IOException {
+    public String detailIntroAPI(String callBackUrl, String serviceKey, String dataType, int contentId, int contentType) throws IOException {
         // 1. URL을 만들기 위한 StringBuilder.
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/detailIntro1"); /*URL*/
         // 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
@@ -126,12 +126,9 @@ public class TourLocationServiceImpl implements TourLocationService {
         urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("defaultYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("firstImageYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("contentId","UTF-8") + "=" + URLEncoder.encode(String.valueOf(contentId) , "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("addrinfoYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("mapinfoYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("overviewYN","UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("contentTypeId","UTF-8") + "=" + URLEncoder.encode(String.valueOf(contentType) , "UTF-8"));
+
 
         // 3. URL 객체 생성.
         URL url = new URL(urlBuilder.toString());
@@ -161,10 +158,10 @@ public class TourLocationServiceImpl implements TourLocationService {
         br.close();
         conn.disconnect();
         // 11. 전달받은 데이터 확인.
-        String locationDetailInfo = sb.toString();
-        //log.info("공공데이터 API String type= {}", tourLocationJson);
+        String locationDetailIntro = sb.toString();
+        log.info("LocationDetail String type= {}", locationDetailIntro);
 
-        return locationDetailInfo;
+        return locationDetailIntro;
     }
 
     @Override

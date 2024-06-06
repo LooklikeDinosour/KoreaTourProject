@@ -3,8 +3,9 @@ package com.kotu.koreatourism.dto.tour;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TourDetailIntroDTO {
 
@@ -111,7 +112,7 @@ public class TourDetailIntroDTO {
         private String eventEndDate;
 
         @JsonProperty("eventhomepage")
-        private String eventHomePage;
+        private String eventHomepage;
 
         @JsonProperty("eventplace")
         private String eventPlace;
@@ -302,7 +303,7 @@ public class TourDetailIntroDTO {
         @JsonProperty("chkbabycarriageshopping")
         private String chkBabyCarriageShopping;
 
-        @JsonProperty("chkcreditcard")
+        @JsonProperty("chkcreditcardshopping")
         private String chkCreditCardShopping;
 
         @JsonProperty("shopping")
@@ -324,7 +325,7 @@ public class TourDetailIntroDTO {
         private String openDateShopping;
 
         @JsonProperty("opentime")
-        private String openTimeShopping;
+        private String openTime;
 
         @JsonProperty("parkingshopping")
         private String parkingShopping;

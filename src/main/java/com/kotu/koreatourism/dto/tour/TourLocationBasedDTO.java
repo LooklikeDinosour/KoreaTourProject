@@ -57,4 +57,30 @@ public class TourLocationBasedDTO {
     @JsonProperty("title")
     private String title;
 
+    @Override
+    public String toString() {
+        return "TourLocationBasedDTO{" +
+                "addr1='" + addr1 + '\'' +
+                ", addr2='" + addr2 + '\'' +
+                ", areaCode=" + areaCode +
+                ", bookTour='" + bookTour + '\'' +
+                ", cat1='" + cat1 + '\'' +
+                ", cat2='" + cat2 + '\'' +
+                ", cat3='" + cat3 + '\'' +
+                ", contentId='" + contentId + '\'' +
+                ", contentTypeId='" + contentTypeId + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                ", dist='" + dist + '\'' +
+                ", firstImage='" + firstImage + '\'' +
+                ", firstImage2='" + firstImage2 + '\'' +
+                ", cpyrhtDivCd='" + cpyrhtDivCd + '\'' +
+                ", mapx=" + mapx +
+                ", mapy=" + mapy +
+                ", mlevel=" + mlevel +
+                ", modifiedTime='" + modifiedTime + '\'' +
+                ", sigunguCode=" + sigunguCode +
+                ", tel='" + tel + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

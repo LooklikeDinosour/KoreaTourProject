@@ -14,9 +14,9 @@ import java.util.List;
 public class TourDetailCommonItemDTO {
 
     @JsonProperty("item")
-    private List<TourDetailCommonDTO> tourDetailInfoList;
+    private List<TourDetailCommonDTO> tourDetailCommonList;
 
-    public TourDetailCommonItemDTO(List<TourDetailCommonDTO> tourDetail) {
-        this.tourDetailInfoList = tourDetail;
+    public TourDetailCommonItemDTO(List<TourDetailCommonDTO> tourDetailCommonList) {
+        this.tourDetailCommonList = tourDetailCommonList;
     }
 }

@@ -3,6 +3,7 @@ package com.kotu.koreatourism.controller;
 import com.kotu.koreatourism.domain.ContentType;
 import com.kotu.koreatourism.dto.tour.TourAreaCodeItemDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
+import com.kotu.koreatourism.dto.tour.TourDetailIntroItemDTO;
 import com.kotu.koreatourism.dto.tour.TourLocationBasedItemDTO;
 import com.kotu.koreatourism.service.TourDeserializerService;
 import com.kotu.koreatourism.service.TourLocationService;
@@ -41,7 +42,7 @@ public class DataApiController2 {
     private String dataType;
 
 
-    private final TourDeserializerService tourCodeService;
+    private final TourDeserializerService tourDeserializerService;
     private final TourLocationService tourLocationService;
 
     @GetMapping("/test")
@@ -89,7 +90,7 @@ public class DataApiController2 {
         String areaData = sb.toString();
         //log.info("공공데이터 API 호출 = {}", areaData );
 
-        TourAreaCodeItemDTO items = tourCodeService.parsingJsonObject(areaData, TourAreaCodeItemDTO.class);
+        TourAreaCodeItemDTO items = tourDeserializerService.parsingJsonObject(areaData, TourAreaCodeItemDTO.class);
 
         return new ResponseEntity<TourAreaCodeItemDTO>(items, HttpStatus.OK) ;
     }
@@ -117,7 +118,7 @@ public class DataApiController2 {
         session.setAttribute("latitude", latitude);
 
         String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
-        TourLocationBasedItemDTO tourLocationBased = tourCodeService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
+        TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
         log.info("location 공공데이터 API 호출 = {}", tourLocationBased);
 
         model.addAttribute("category", ContentType.values());
@@ -147,7 +148,7 @@ public class DataApiController2 {
         log.info("LC @RequestParam 찍어보자  Y = {}, X = {} ", latitude1, longitude1);
 
         String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, String.valueOf(contentTypeId), longitude, latitude);
-        TourLocationBasedItemDTO tourLocationBased = tourCodeService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
+        TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
         log.info("LC 공공데이터 API 호출 = {}", tourLocationBased);
 
         model.addAttribute("category", ContentType.values());
@@ -163,11 +164,18 @@ public class DataApiController2 {
                              @PathVariable("contentId") int contentId,
                              Model model) throws IOException {
 
-        String LocationCommonInfo = tourLocationService.detailCommonInfoAPI(callBackUrl, serviceKey, dataType, contentId);
-        TourDetailCommonItemDTO tourCommonInfo = tourCodeService.parsingJsonObject(LocationCommonInfo, TourDetailCommonItemDTO.class);
-//        log.info("공공데이터 API 호출 = {}", tourCommonInfo );
+        ContentType content = ContentType.fromUrlName(contentType);
+        int contentTypeId = content.getContentTypeId();
+
+        log.info("컨텐트 타입이 숫자일까 문자일까? = {}", contentType);
+        String locationCommonInfo = tourLocationService.detailCommonInfoAPI(callBackUrl, serviceKey, dataType, contentId);
+        String locationDetailIntro = tourLocationService.detailIntroAPI(callBackUrl, serviceKey, dataType, contentId, contentTypeId);
+        TourDetailCommonItemDTO tourCommonInfo = tourDeserializerService.parsingJsonObject(locationCommonInfo, TourDetailCommonItemDTO.class);
+        TourDetailIntroItemDTO tourDetailIntro = tourDeserializerService.parsingJsonObject(locationDetailIntro, TourDetailIntroItemDTO.class);
+        log.info("공공데이터 API 호출 = {}", tourDetailIntro );
 
         model.addAttribute("tourCommonInfo", tourCommonInfo);
+        model.addAttribute("tourDetailIntro", tourDetailIntro);
 
         return "tour/tourDetailInfo";
     }

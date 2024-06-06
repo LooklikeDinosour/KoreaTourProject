@@ -131,7 +131,7 @@
     </div>
     <div class="tourist-container" th:if="${tourLocationBased.tourLocations != null}">
         <div th:each="tour : ${tourLocationBased.tourLocations}" class="tourist-item">
-            <a th:href="@{/api/location/{content}()/detail-info/{contentId}(contentId=${tour.contentId})}">
+            <a th:href="@{/api/location/{contentType}/detail-info/{contentId}(contentType=${tour.contentTypeId}, contentId=${tour.contentId})}">
                 <img th:if="${tour.firstImage != null}" th:src="${tour.firstImage}" alt="Image">
                 <img th:unless="${tour.firstImage != null}" th:src="@{/images/default.jpg}" alt="Image">
                 <input type="hidden" name="contentId" th:value="${tour.contentId}">

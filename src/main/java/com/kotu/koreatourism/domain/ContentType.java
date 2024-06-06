@@ -35,5 +35,13 @@ public enum ContentType {
         throw new IllegalArgumentException(contentName + "는 존재하지 않는 컨텐츠입니다.");
     }
 
+    public static ContentType contentTypeIdToContentType (int contentTypeId) {
+        for(ContentType content : values()) {
+            if(content.contentTypeId == contentTypeId) {
+                return content;
+            }
+        }
+        throw new IllegalArgumentException(contentTypeId + "는 존재하지 않는 타입입니다.");
+    }
 
 }
