@@ -26,6 +26,7 @@ public enum ContentType {
         return contentName;
     }
 
+
     public static ContentType fromUrlName(String contentName) {
         for(ContentType content : values()) {
             if (content.name().equalsIgnoreCase(contentName.replace("-","_"))) {
@@ -35,6 +36,7 @@ public enum ContentType {
         throw new IllegalArgumentException(contentName + "는 존재하지 않는 컨텐츠입니다.");
     }
 
+    //ID를 해당 ContentType으로 변경
     public static ContentType contentTypeIdToContentType (int contentTypeId) {
         for(ContentType content : values()) {
             if(content.contentTypeId == contentTypeId) {

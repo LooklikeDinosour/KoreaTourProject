@@ -1,10 +1,8 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.ContentType;
-import com.kotu.koreatourism.dto.tour.TourAreaCodeItemDTO;
-import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
-import com.kotu.koreatourism.dto.tour.TourDetailIntroItemDTO;
-import com.kotu.koreatourism.dto.tour.TourLocationBasedItemDTO;
+import com.kotu.koreatourism.dto.tour.*;
+import com.kotu.koreatourism.service.TourCategoryService;
 import com.kotu.koreatourism.service.TourDeserializerService;
 import com.kotu.koreatourism.service.TourLocationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -44,6 +43,7 @@ public class DataApiController2 {
 
     private final TourDeserializerService tourDeserializerService;
     private final TourLocationService tourLocationService;
+    private final TourCategoryService tourCategoryService;
 
     @GetMapping("/test")
     @ResponseBody
@@ -157,8 +157,6 @@ public class DataApiController2 {
         return "tour/tourlocation";
     }
 
-
-
     @GetMapping("/location/{content-type}/detail-info/{contentId}")
     public String detailIntro(@PathVariable("content-type") String contentType,
                              @PathVariable("contentId") int contentId,
@@ -178,5 +176,50 @@ public class DataApiController2 {
         model.addAttribute("tourDetailIntro", tourDetailIntro);
 
         return "tour/tourDetailInfo";
+    }
+
+
+    @GetMapping("/getcategory")
+    @ResponseBody
+    public ResponseEntity<List<TourAreaCategoryDTO>> getCategory() {
+        List<TourAreaCategoryDTO> takeAreaCategory = tourCategoryService.takeCategory();
+        log.info("takeCategoryList = {}", takeAreaCategory);
+        return new ResponseEntity<>(takeAreaCategory, HttpStatus.OK);
+    }
+
+    @GetMapping("/getcategorychild/{gi}/{cl}/{cdo}")
+    @ResponseBody
+    public ResponseEntity<List<TourAreaCategoryDTO>> getCategoryChild(@PathVariable("gi") String groupId,
+                                                                      @PathVariable("cl") int categoryLv,
+                                                                      @PathVariable("cdo") int categoryDetailLv,
+                                                                      HttpServletRequest request) {
+
+
+        log.info("LC URL 확인하기 = {} ", request.getRequestURL());
+        log.info("LC URI 확인하기 = {} ", request.getRequestURI());
+        log.info("LC URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
+        log.info("gi = {}, cl = {}, cdo = {}", groupId, categoryLv, categoryDetailLv);
+        TourAreaCategoryDTO tourAreaCategoryDTO = new TourAreaCategoryDTO();
+        tourAreaCategoryDTO.setGroupId(groupId);
+        tourAreaCategoryDTO.setCategoryLv(categoryLv);
+        tourAreaCategoryDTO.setCategoryDetailOr(categoryDetailLv);
+
+        List<TourAreaCategoryDTO> responseAreaCategoryChild = tourCategoryService.takeCategoryChild(tourAreaCategoryDTO);
+
+        return new ResponseEntity<>(responseAreaCategoryChild, HttpStatus.OK);
+    }
+
+    @GetMapping("/area-based")
+    public String areaBased(Model model) throws IOException {
+        //tourCategoryService.takeCategory();
+
+        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType);
+        //일단 해당 항목이 같으니까 써보기
+        TourLocationBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourLocationBasedItemDTO.class);
+        log.info("AreaBased 데이터 = {}", tourAreaBased);
+
+        model.addAttribute("tourAreaBased", tourAreaBased);
+
+        return "tour/tourarea";
     }
 }

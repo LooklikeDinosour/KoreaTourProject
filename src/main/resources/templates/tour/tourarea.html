@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tourist Locations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .tourist-container-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .categoryListWrap {
+            display: flex;
+            justify-content: flex-start;
+            background-color: #333;
+        }
+        .categoryList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+        }
+        .categoryList li {
+            position: relative;
+        }
+        .categoryList a {
+            display: block;
+            padding: 10px 15px;
+            color: #f2f2f2;
+            text-decoration: none;
+            background-color: #333;
+            border-right: 1px solid #444;
+        }
+        .categoryList a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .categoryList ul {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 두 열로 설정 */
+        }
+        .categoryList li:hover > ul {
+            display: grid;
+        }
+        .categoryList ul a {
+            white-space: nowrap;
+            color: #333;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+        .categoryList ul a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+        .loading .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        </style>
+</head>
+<body>
+
+<div class="tourist-container-wrapper">
+    <input type="hidden" name="area_category" value=""> <!-- 히든 입력 필드 -->
+    <div class="loading">
+        <div class="loader"></div>
+        <div class="loading-overlay"></div>
+    </div>
+    <div class="categoryListWrap"></div> <!-- 카테고리 목록을 표시할 컨테이너 -->
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/getcategory')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                var category01 = "";
+                category01 += '<ul class="categoryList" style="position: relative;" onclick="getCategory_List(event);">';
+                data.forEach(function(item) {
+                    category01 += `<li><a href="#" data-set='${JSON.stringify(item)}'>${item.categoryDetailName}</a></li>`;
+                });
+                category01 += '</ul>';
+                console.log(category01);
+                document.querySelector(".categoryListWrap").innerHTML += category01;
+            })
+            .catch(err => {
+                alert('카테고리 조회에 문제가 생겼습니다. 관리자에게 문의해주세요.');
+                console.error('Error:', err);
+            });
+    });
+
+    function getCategory_List(e) {
+        e.preventDefault(); // 고유 이벤트 중지
+        if (e.target.tagName !== 'A') return; // 태그 검증
+        var obj = JSON.parse(e.target.getAttribute('data-set')); // 데이터셋을 가져옴
+        const groupId = obj.groupId;
+        const categoryLv = obj.categoryLv;
+        const categoryDetailOr = obj.categoryDetailOr;
+
+        console.log("Clicked category:", obj);
+
+        // 토글 색 처리
+        var categoryList = e.currentTarget;
+        Array.from(categoryList.querySelectorAll('a')).forEach(function(a) {
+            a.classList.remove('sub_menu_select');
+        });
+        e.target.classList.add('sub_menu_select');
+
+        // 태그 처리
+        if (obj.categoryLv == 1) {
+            console.log('1lv');
+            loading(); // 로딩
+            console.log(e.target);
+            removeSubCategories(); // 이전 카테고리 삭제
+
+
+            // Fetch를 사용하여 AJAX 호출 대체
+            fetch(`/api/getcategorychild/${groupId}/${categoryLv}/${categoryDetailOr}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("카테고리 아이들 : " + data);
+                    if (data.length > 0) {
+                        createSubCategories(data);
+                    }
+                })
+                .catch(err => {
+                    alert('카테고리 조회에 실패했습니다. 관리자에게 문의해주세요');
+                    console.error('Error:', err);
+                });
+        } else {
+                removeSubCategories(); // 중분류가 없을 경우 중분류 영역 비우기
+        }
+
+        category_set(e.target); // 히든 태그에 값을 저장, 클릭한 대상을 매개변수로 저장
+    }
+
+    function category_set(element) {
+        var obj = JSON.parse(element.getAttribute('data-set'));
+        var category_id = obj.categoryId;
+        var group_id = obj.groupId;
+        document.querySelector("input[name='area_category']").value = group_id + category_id; // name이 area_category인 곳에 추가
+    }
+
+    // 이전 중분류 삭제 함수
+    function removeSubCategories() {
+        var subCategories = document.querySelectorAll('.subCategoryList');
+        subCategories.forEach(function(subCategory) {
+            subCategory.remove();
+        });
+    }
+
+    // 다음 카테고리 생성 함수 수정
+    function createSubCategories(data) {
+        var category = '<ul class="categoryList subCategoryList" onclick="getCategory_List(event);">';
+        data.forEach(function(result) {
+            category += `<li><a href="#" data-set='${JSON.stringify(result)}'>${result.categoryDetailName}</a></li>`;
+        });
+        category += '</ul>';
+
+        document.querySelector('.categoryListWrap').appendChild(document.createRange().createContextualFragment(category));
+    }
+
+    function loading() {
+        var loadingElement = document.querySelector(".loading");
+        loadingElement.style.display = "block";
+        window.setTimeout(function() {
+            loadingElement.style.display = "none";
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
