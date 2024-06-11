@@ -2,6 +2,7 @@ package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.TourAreaCategory;
 import com.kotu.koreatourism.dto.tour.TourAreaCategoryDTO;
+import com.kotu.koreatourism.dto.tour.TourAreaSigunguDTO;
 import com.kotu.koreatourism.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +37,10 @@ public class TourCategoryServiceImpl implements TourCategoryService {
         tourAreaCategory.setCategoryLv(tourAreaCategoryDTO.getCategoryLv());
         tourAreaCategory.setCategoryDetailOr(tourAreaCategoryDTO.getCategoryDetailOr());
         return categoryMapper.takeCategoryChild(tourAreaCategory);
+    }
+
+    @Override
+    public int takeApiCodeNum(String groupId) {
+        return categoryMapper.takeApiCodeNum(groupId);
     }
 }

@@ -33,4 +33,10 @@
           and category_detail_parent_lv=#{categoryDetailOr}
     </select>
 
+    <select id="takeApiCodeNum">
+        select category_api_code
+        FROM AREA_CATEGORY_TB
+        where group_id=#{groupId} AND category_lv = 1
+    </select>
+
 </mapper>

@@ -1,5 +1,8 @@
 package com.kotu.koreatourism.service;
 
+import com.kotu.koreatourism.domain.TourAreaCategory;
+import com.kotu.koreatourism.dto.tour.TourAreaSigunguDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +15,10 @@ import java.net.URLEncoder;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TourLocationServiceImpl implements TourLocationService {
+
+    private final TourCategoryService tourCategoryService;
     @Override
     public String locationBasedAPI(String callBackUrl, String serviceKey, String dataType, String contentTypeId, String mapX, String mapY) throws IOException {
 
@@ -165,18 +171,28 @@ public class TourLocationServiceImpl implements TourLocationService {
     }
 
     @Override
-    public String areaBasedAPI(String callBackUrl, String serviceKey, String dataType) throws IOException {
-        // 1. URL을 만들기 위한 StringBuilder.
+    public String areaBasedAPI(String callBackUrl, String serviceKey, String dataType, TourAreaSigunguDTO areaSigunguCode) throws IOException {
+
+        int areaCode = tourCategoryService.takeApiCodeNum(areaSigunguCode.getGroupId());
+        int categoryParentLv = areaSigunguCode.getCategoryParentLv();
+        int sigunguCode = areaSigunguCode.getCategoryApiCode();
+
+        log.info("지역코드 = {}, 시군구 코드 = {} 부모카테고리레벨 = {}", areaCode, sigunguCode, categoryParentLv);
+
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/areaBasedList1"); /*URL*/
-        // 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + serviceKey); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("30", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("arrange","UTF-8") + "=" + URLEncoder.encode("A" , "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("listYN","UTF-8") + "=" + URLEncoder.encode("Y" , "UTF-8"));
 //        urlBuilder.append("&" + URLEncoder.encode("contentTypeId","UTF-8") + "=" + URLEncoder.encode("0" , "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("areaCode","UTF-8") + "=" + URLEncoder.encode("1" , "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("areaCode","UTF-8") + "=" + URLEncoder.encode(String.valueOf(areaCode) , "UTF-8"));
+        if(categoryParentLv != 0) {
+            urlBuilder.append("&" + URLEncoder.encode("sigunguCode","UTF-8") + "=" + URLEncoder.encode(String.valueOf(sigunguCode) , "UTF-8"));
+        }
 
         // 3. URL 객체 생성.
         URL url = new URL(urlBuilder.toString());

@@ -1,5 +1,7 @@
 package com.kotu.koreatourism.service;
 
+import com.kotu.koreatourism.dto.tour.TourAreaSigunguDTO;
+
 import java.io.IOException;
 
 public interface TourLocationService {
@@ -12,6 +14,6 @@ public interface TourLocationService {
     public String detailIntroAPI(String callBackUrl, String serviceKey, String dataType, int contentId, int contentType) throws IOException;
 
     //지역기반
-    public String areaBasedAPI(String callBackUrl, String serviceKey, String dataType) throws IOException;
+    public String areaBasedAPI(String callBackUrl, String serviceKey, String dataType, TourAreaSigunguDTO areaSigunguCode) throws IOException;
 
 }

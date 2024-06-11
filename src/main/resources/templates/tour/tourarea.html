@@ -10,7 +10,9 @@
             margin: 0;
             padding: 0;
         }
+
         .tourist-container-wrapper {
+            display: flex;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
@@ -18,80 +20,129 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .categoryListWrap {
             display: flex;
-            justify-content: flex-start;
-            background-color: #333;
+            flex-direction: column;
+            background-color: #fff; /* 흰색 배경 추가 */
+            border-radius: 8px; /* 둥근 모서리 추가 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+            margin-right: 20px; /* 오른쪽 메뉴와의 간격 조정 */
+            position: absolute; /* 절대 위치 */
+            top: 20px; /* 상단 여백 조정 */
+            left: 20px; /* 왼쪽 여백 조정 */
+            z-index: 1000; /* 다른 요소들 위에 표시 */
         }
+
         .categoryList {
             list-style-type: none;
             padding: 0;
             margin: 0;
-            display: flex;
-            flex-direction: row;
+            width: 200px;
         }
+
         .categoryList li {
             position: relative;
         }
+
         .categoryList a {
             display: block;
             padding: 10px 15px;
-            color: #f2f2f2;
-            text-decoration: none;
-            background-color: #333;
-            border-right: 1px solid #444;
-        }
-        .categoryList a:hover {
-            background-color: #007bff;
-            color: #fff;
-        }
-        .categoryList ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 두 열로 설정 */
-        }
-        .categoryList li:hover > ul {
-            display: grid;
-        }
-        .categoryList ul a {
-            white-space: nowrap;
             color: #333;
-            background-color: #fff;
+            text-decoration: none;
+            background-color: #f9f9f9;
             border-bottom: 1px solid #ccc;
         }
-        .categoryList ul a:hover {
+
+        .categoryList a:hover,
+        .categoryList a.sub_menu_select {
             background-color: #007bff;
             color: #fff;
         }
-        .loading {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
+
+        .subCategoryList {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
         }
-        .loading .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
+
+        .tourist-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            flex-grow: 1;
+            margin-left: 220px; /* 카테고리 목록과의 간격 조정 */
         }
+
+        .tourist-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            transition: transform 0.2s;
+            width: calc(33.33% - 20px);
+            box-sizing: border-box;
+        }
+
+        .tourist-item:hover {
+            transform: scale(1.05);
+        }
+
+        .tourist-item a img {
+            width: 100%;
+            height: 190px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .tourist-item a h2 {
+            color: #007bff;
+            font-size: 1.2em;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .tourist-item p {
+            margin: 5px 0;
+            text-align: center;
+            font-size: 0.9em;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .tourist-item a {
+            text-decoration: none;
+            color: inherit;
+            height: 283px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
         </style>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-
-<div class="tourist-container-wrapper">
+<div>
     <input type="hidden" name="area_category" value=""> <!-- 히든 입력 필드 -->
     <div class="loading">
         <div class="loader"></div>
@@ -100,20 +151,27 @@
     <div class="categoryListWrap"></div> <!-- 카테고리 목록을 표시할 컨테이너 -->
 </div>
 
+
+<div class="tourist-container-wrapper">
+    <div id="touristContainer" class="tourist-container">
+
+    </div>
+</div>
+
 <script>
+    //대분류
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('/api/getcategory')
+        fetch('/api/area1')
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                var category01 = "";
-                category01 += '<ul class="categoryList" style="position: relative;" onclick="getCategory_List(event);">';
+                let category = "";
+                category += '<ul class="categoryList" style="position: relative;" onclick="getCategory_List(event); handleAreaBasedAPIClick(event);">';
                 data.forEach(function(item) {
-                    category01 += `<li><a href="#" data-set='${JSON.stringify(item)}'>${item.categoryDetailName}</a></li>`;
+                    category += `<li><a href="#" data-set='${JSON.stringify(item)}'>${item.categoryDetailName}</a></li>`;
                 });
-                category01 += '</ul>';
-                console.log(category01);
-                document.querySelector(".categoryListWrap").innerHTML += category01;
+                category += '</ul>';
+                console.log("이거 대분류인데 과연 중분류? : ",  category);
+                document.querySelector(".categoryListWrap").innerHTML += category;
             })
             .catch(err => {
                 alert('카테고리 조회에 문제가 생겼습니다. 관리자에게 문의해주세요.');
@@ -121,33 +179,53 @@
             });
     });
 
-    function getCategory_List(e) {
-        e.preventDefault(); // 고유 이벤트 중지
-        if (e.target.tagName !== 'A') return; // 태그 검증
-        var obj = JSON.parse(e.target.getAttribute('data-set')); // 데이터셋을 가져옴
+    //대분류 클릭시 중분류 생성
+    function getCategory_List(event) {
+        event.preventDefault(); // 고유 이벤트 중지
+        if (event.target.tagName !== 'A') return; // 태그 검증 태그 호출은 대문자라서
+        var obj = JSON.parse(event.target.getAttribute('data-set')); // 데이터셋을 가져옴
         const groupId = obj.groupId;
         const categoryLv = obj.categoryLv;
         const categoryDetailOr = obj.categoryDetailOr;
+        var categoryApiCode = obj.categoryApiCode;
 
+        //대분류
+        //첫클릭시는 대분류 중분류 클릭하면 중분류 내용으로 바뀜
         console.log("Clicked category:", obj);
+        console.log("gi, cl, cdo, cac:", groupId, categoryLv, categoryDetailOr, categoryApiCode);
 
         // 토글 색 처리
-        var categoryList = e.currentTarget;
+        let categoryList = event.currentTarget;
         Array.from(categoryList.querySelectorAll('a')).forEach(function(a) {
             a.classList.remove('sub_menu_select');
         });
-        e.target.classList.add('sub_menu_select');
+        event.target.classList.add('sub_menu_select');
 
         // 태그 처리
         if (obj.categoryLv == 1) {
             console.log('1lv');
             loading(); // 로딩
-            console.log(e.target);
+            console.log(event.target);
             removeSubCategories(); // 이전 카테고리 삭제
+
+            //CSRF
+            let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
 
             // Fetch를 사용하여 AJAX 호출 대체
-            fetch(`/api/getcategorychild/${groupId}/${categoryLv}/${categoryDetailOr}`)
+            fetch(`/api/area2`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify({
+                    groupId: obj.groupId,
+                    categoryLv: obj.categoryLv,
+                    categoryDetailOr: obj.categoryDetailOr
+                    })
+                })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -168,35 +246,70 @@
                 removeSubCategories(); // 중분류가 없을 경우 중분류 영역 비우기
         }
 
-        category_set(e.target); // 히든 태그에 값을 저장, 클릭한 대상을 매개변수로 저장
+        //category_set(e.target); // 히든 태그에 값을 저장, 클릭한 대상을 매개변수로 저장
     }
 
-    function category_set(element) {
-        var obj = JSON.parse(element.getAttribute('data-set'));
-        var category_id = obj.categoryId;
-        var group_id = obj.groupId;
-        document.querySelector("input[name='area_category']").value = group_id + category_id; // name이 area_category인 곳에 추가
-    }
+    // function category_set(element) {
+    //     var obj = JSON.parse(element.getAttribute('data-set'));
+    //     var category_id = obj.categoryId;
+    //     var group_id = obj.groupId;
+    //     document.querySelector("input[name='area_category']").value = group_id + category_id; // name이 area_category인 곳에 추가
+    // }
 
-    // 이전 중분류 삭제 함수
-    function removeSubCategories() {
-        var subCategories = document.querySelectorAll('.subCategoryList');
-        subCategories.forEach(function(subCategory) {
-            subCategory.remove();
-        });
-    }
 
     // 다음 카테고리 생성 함수 수정
+    ///onclick event 제거함
     function createSubCategories(data) {
-        var category = '<ul class="categoryList subCategoryList" onclick="getCategory_List(event);">';
+        let category = '<ul class="categoryList subCategoryList">';
         data.forEach(function(result) {
-            category += `<li><a href="#" data-set='${JSON.stringify(result)}'>${result.categoryDetailName}</a></li>`;
+            category += `<li><a href="#" data-set='${JSON.stringify(result)}' onclick="handleAreaBasedAPIClick(event)">${result.categoryDetailName}</a></li>`;
         });
         category += '</ul>';
 
         document.querySelector('.categoryListWrap').appendChild(document.createRange().createContextualFragment(category));
     }
+    // 이전 중분류 삭제 함수
+    function removeSubCategories() {
+        let subCategories = document.querySelectorAll('.subCategoryList');
+        subCategories.forEach(function(subCategory) {
+            subCategory.remove();
+        });
+    }
 
+    //공공데이터 API를 호출
+    function handleAreaBasedAPIClick(event) {
+        event.preventDefault();
+        let target = event.target;
+        if(target.tagName !== 'A') return;
+
+        var obj = JSON.parse(target.getAttribute('data-set'));
+        console.log('Subcategory clicked:', obj);
+
+        //CSRF
+        let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/api/areabase', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader] : csrfToken
+            },
+            body: JSON.stringify({
+               groupId : obj.groupId,
+               categoryParentLv : obj.categoryParentLv,
+               categoryApiCode : obj.categoryApiCode
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('AreaBased API response:', data);
+                createTouristItems(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
     function loading() {
         var loadingElement = document.querySelector(".loading");
         loadingElement.style.display = "block";
@@ -204,6 +317,65 @@
             loadingElement.style.display = "none";
         }, 1000);
     }
+    function createTouristItems(responseData) {
+        const container = document.getElementById('touristContainer');
+        container.innerHTML = ''; // 기존 내용을 비움
+
+        const data = responseData.item; // 응답 데이터의 item 배열을 가져옴
+
+        data.forEach(tour => {
+            const item = document.createElement('div');
+            item.className = 'tourist-item';
+
+            const link = document.createElement('a');
+            link.href = `/api/location/${tour.contenttypeid}/detail-info/${tour.contentid}`;
+
+            const img = document.createElement('img');
+            img.src = tour.firstimage ? tour.firstimage : '/images/default.jpg';
+            img.alt = 'Image';
+            link.appendChild(img);
+
+            const title = document.createElement('h2');
+            title.textContent = tour.title;
+            link.appendChild(title);
+
+            const address = document.createElement('p');
+            address.textContent = `주소: ${tour.addr1} ${tour.addr2}`;
+            link.appendChild(address);
+
+            item.appendChild(link);
+
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'buttons';
+
+            const likeButton = document.createElement('button');
+            likeButton.className = 'button';
+            likeButton.textContent = '좋아요';
+            likeButton.onclick = () => like(tour.contentId);
+            buttonsDiv.appendChild(likeButton);
+
+            const saveButton = document.createElement('button');
+            saveButton.className = 'button';
+            saveButton.textContent = '저장하기';
+            saveButton.onclick = () => save(tour.contentId);
+            buttonsDiv.appendChild(saveButton);
+
+            item.appendChild(buttonsDiv);
+
+            container.appendChild(item);
+        });
+    }
+
+    function like(contentId) {
+        console.log('좋아요:', contentId);
+        // 좋아요 로직 추가
+    }
+
+    function save(contentId) {
+        console.log('저장하기:', contentId);
+        // 저장하기 로직 추가
+    }
+
 </script>
 
 </body>

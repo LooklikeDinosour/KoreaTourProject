@@ -95,6 +95,8 @@ public class DataApiController2 {
         return new ResponseEntity<TourAreaCodeItemDTO>(items, HttpStatus.OK) ;
     }
 
+    //위치기반 GPS 좌표 필요
+    //동기식 구성
     @GetMapping("/location")
     public String location(@RequestParam(value = "latitude", required = false) String latitude,
                            @RequestParam(value = "longitude", required = false) String longitude,
@@ -177,49 +179,63 @@ public class DataApiController2 {
 
         return "tour/tourDetailInfo";
     }
-
-
-    @GetMapping("/getcategory")
+    //지역기반
+    //비동기식 구성
+    //대분류
+    @GetMapping("/area1")
     @ResponseBody
-    public ResponseEntity<List<TourAreaCategoryDTO>> getCategory() {
-        List<TourAreaCategoryDTO> takeAreaCategory = tourCategoryService.takeCategory();
-        log.info("takeCategoryList = {}", takeAreaCategory);
-        return new ResponseEntity<>(takeAreaCategory, HttpStatus.OK);
+    public ResponseEntity<List<TourAreaCategoryDTO>> getArea1Category() {
+        List<TourAreaCategoryDTO> takeArea1Category = tourCategoryService.takeCategory();
+        log.info("takeCategoryList = {}", takeArea1Category);
+        return new ResponseEntity<>(takeArea1Category, HttpStatus.OK);
     }
 
-    @GetMapping("/getcategorychild/{gi}/{cl}/{cdo}")
+    //중분류
+    @PostMapping("/area2")
     @ResponseBody
-    public ResponseEntity<List<TourAreaCategoryDTO>> getCategoryChild(@PathVariable("gi") String groupId,
-                                                                      @PathVariable("cl") int categoryLv,
-                                                                      @PathVariable("cdo") int categoryDetailLv,
+    public ResponseEntity<List<TourAreaCategoryDTO>> getArea2Category(@RequestBody TourAreaCategoryDTO tourArea2,
                                                                       HttpServletRequest request) {
 
-
-        log.info("LC URL 확인하기 = {} ", request.getRequestURL());
         log.info("LC URI 확인하기 = {} ", request.getRequestURI());
-        log.info("LC URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
-        log.info("gi = {}, cl = {}, cdo = {}", groupId, categoryLv, categoryDetailLv);
-        TourAreaCategoryDTO tourAreaCategoryDTO = new TourAreaCategoryDTO();
-        tourAreaCategoryDTO.setGroupId(groupId);
-        tourAreaCategoryDTO.setCategoryLv(categoryLv);
-        tourAreaCategoryDTO.setCategoryDetailOr(categoryDetailLv);
+        TourAreaCategoryDTO tourArea2Category = new TourAreaCategoryDTO();
+        tourArea2Category.setGroupId(tourArea2.getGroupId());
+        tourArea2Category.setCategoryLv(tourArea2.getCategoryLv());
+        tourArea2Category.setCategoryDetailOr(tourArea2.getCategoryDetailOr());
 
-        List<TourAreaCategoryDTO> responseAreaCategoryChild = tourCategoryService.takeCategoryChild(tourAreaCategoryDTO);
+        List<TourAreaCategoryDTO> responseAreaCategoryChild = tourCategoryService.takeCategoryChild(tourArea2Category);
 
         return new ResponseEntity<>(responseAreaCategoryChild, HttpStatus.OK);
     }
 
-    @GetMapping("/area-based")
-    public String areaBased(Model model) throws IOException {
-        //tourCategoryService.takeCategory();
+    //공공데이터 API 호출
+    @PostMapping("/areabase")
+    @ResponseBody
+    public ResponseEntity<TourAreaBasedItemDTO> areaBasedAPI(@RequestBody TourAreaSigunguDTO areaSigunguCode) throws IOException {
 
-        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType);
+        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, areaSigunguCode);
         //일단 해당 항목이 같으니까 써보기
-        TourLocationBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourLocationBasedItemDTO.class);
+        TourAreaBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourAreaBasedItemDTO.class);
         log.info("AreaBased 데이터 = {}", tourAreaBased);
 
-        model.addAttribute("tourAreaBased", tourAreaBased);
+        return new ResponseEntity<>(tourAreaBased, HttpStatus.OK);
+    }
 
+    @GetMapping("/area-based")
+    public String areaBased() {
         return "tour/tourarea";
     }
+
+//    public String areaBasedAPI(Model model) throws IOException {
+//        //tourCategoryService.takeCategory();
+//        //지역코드  넘기기
+//
+//        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, araeCode, sigunguCode);
+//        //일단 해당 항목이 같으니까 써보기
+//        TourLocationBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourLocationBasedItemDTO.class);
+//        log.info("AreaBased 데이터 = {}", tourAreaBased);
+//
+//        model.addAttribute("tourAreaBased", tourAreaBased);
+//
+//        return "tour/tourarea";
+//    }
 }
