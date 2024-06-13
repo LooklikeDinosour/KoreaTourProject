@@ -41,19 +41,17 @@ public class TourLocationBasedDeserializer extends JsonDeserializer {
         //지역정보
             TourLocationBasedDTO[] tourLocationBasedArray = objectMapper.treeToValue(itemNode, TourLocationBasedDTO[].class);
             List<TourLocationBasedDTO> tourLocationBasedList = Arrays.asList(tourLocationBasedArray);
-            log.info("배열 정렬 = {}", tourLocationBasedList);
 
             //contentTypeId 숫자 -> content로 변경
         // ex) 12 -> attraction
         for (TourLocationBasedDTO tlbDTO : tourLocationBasedList) {
             int contentTypeIdNum = Integer.parseInt(tlbDTO.getContentTypeId());
             ContentType content = ContentType.contentTypeIdToContentType(contentTypeIdNum);
+            log.info("content타입 변경 전 = {}", String.valueOf(content));
             String contentName = String.valueOf(content).replace("_","-").toLowerCase();
-            log.info("content타입 문자로 변경 = {}", contentName);
+            log.info("content타입 변경 후 = {}", contentName);
             tlbDTO.setContentTypeId(contentName);
         }
-
-            log.info("content type 변경후  = {}", tourLocationBasedList.toString());
 
             return new TourLocationBasedItemDTO(tourLocationBasedList);
     }

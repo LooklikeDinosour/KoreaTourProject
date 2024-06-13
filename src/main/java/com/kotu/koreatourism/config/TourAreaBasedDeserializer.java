@@ -39,25 +39,23 @@ public class TourAreaBasedDeserializer extends JsonDeserializer {
             return new TourAreaBasedItemDTO(Collections.emptyList());
         }
 
-
         //지역정보
-            TourAreaBasedDTO[] tourLocationBasedArray = objectMapper.treeToValue(itemNode, TourAreaBasedDTO[].class);
-            List<TourAreaBasedDTO> tourLocationBasedList = Arrays.asList(tourLocationBasedArray);
-            log.info("배열 정렬 = {}", tourLocationBasedList);
+            TourAreaBasedDTO[] tourAreaBasedArray = objectMapper.treeToValue(itemNode, TourAreaBasedDTO[].class);
+            List<TourAreaBasedDTO> tourAreaBasedList = Arrays.asList(tourAreaBasedArray);
+            log.info("배열 정렬 = {}", tourAreaBasedList);
 
-            //contentTypeId 숫자 -> content로 변경
+        //    contentTypeId 숫자 -> content로 변경
         // ex) 12 -> attraction
-//        for (TourAreaBasedDTO tlbDTO : tourLocationBasedList) {
-//            int contentTypeIdNum = Integer.parseInt(tlbDTO.getContentTypeId());
-//            ContentType content = ContentType.contentTypeIdToContentType(contentTypeIdNum);
-//            String contentName = String.valueOf(content).replace("_","-").toLowerCase();
-//            log.info("content타입 문자로 변경 = {}", contentName);
-//            tlbDTO.setContentTypeId(contentName);
-//        }
+        for (TourAreaBasedDTO tlbDTO : tourAreaBasedList) {
+            int contentTypeIdNum = Integer.parseInt(tlbDTO.getContentTypeId());
+            ContentType content = ContentType.contentTypeIdToContentType(contentTypeIdNum);
+            String contentName = String.valueOf(content).replace("_","-").toLowerCase();
+            log.info("content타입 문자로 변경 = {}", contentName);
+            tlbDTO.setContentTypeId(contentName);
+        }
 
-            log.info("content type 변경후  = {}", tourLocationBasedList.toString());
-
-            return new TourAreaBasedItemDTO(tourLocationBasedList);
+            log.info("content type 변경후  = {}", tourAreaBasedList.toString());
+            return new TourAreaBasedItemDTO(tourAreaBasedList);
     }
 }
 

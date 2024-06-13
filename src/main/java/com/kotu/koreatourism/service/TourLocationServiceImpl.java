@@ -171,7 +171,11 @@ public class TourLocationServiceImpl implements TourLocationService {
     }
 
     @Override
-    public String areaBasedAPI(String callBackUrl, String serviceKey, String dataType, TourAreaSigunguDTO areaSigunguCode) throws IOException {
+    public String areaBasedAPI(String callBackUrl,
+                               String serviceKey,
+                               String dataType,
+                               int contentTypeId,
+                               TourAreaSigunguDTO areaSigunguCode) throws IOException {
 
         int areaCode = tourCategoryService.takeApiCodeNum(areaSigunguCode.getGroupId());
         int categoryParentLv = areaSigunguCode.getCategoryParentLv();
@@ -182,13 +186,15 @@ public class TourLocationServiceImpl implements TourLocationService {
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/areaBasedList1"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + serviceKey); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("30", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("2", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("arrange","UTF-8") + "=" + URLEncoder.encode("A" , "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("listYN","UTF-8") + "=" + URLEncoder.encode("Y" , "UTF-8"));
-//        urlBuilder.append("&" + URLEncoder.encode("contentTypeId","UTF-8") + "=" + URLEncoder.encode("0" , "UTF-8"));
+        if(contentTypeId != 0) {
+            urlBuilder.append("&" + URLEncoder.encode("contentTypeId","UTF-8") + "=" + URLEncoder.encode(String.valueOf(contentTypeId) , "UTF-8"));
+        }
         urlBuilder.append("&" + URLEncoder.encode("areaCode","UTF-8") + "=" + URLEncoder.encode(String.valueOf(areaCode) , "UTF-8"));
         if(categoryParentLv != 0) {
             urlBuilder.append("&" + URLEncoder.encode("sigunguCode","UTF-8") + "=" + URLEncoder.encode(String.valueOf(sigunguCode) , "UTF-8"));
