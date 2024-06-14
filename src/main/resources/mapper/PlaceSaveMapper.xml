@@ -7,31 +7,33 @@
         INSERT INTO PLACESAVE_TB (
             addr1,
             addr2,
-            areacode,
-            contentid,
-            contenttypeid,
-            firstimage,
-            firstimage2,
+            area_code,
+            content_id,
+            content_type_id,
+            first_image,
+            first_image2,
             mapx,
             mapy,
-            sigungucode,
+            sigungu_code,
             tel,
             title,
-            zipcode
+            zipcode,
+            overview
         ) VALUES (
-                     #{addr1},
-                     #{addr2},
-                     #{areaCode},
-                     #{contentId},
-                     #{contentTypeId},
-                     #{firstImage},
-                     #{firstImage2},
-                     #{mapX},
-                     #{mapY},
-                     #{sigunguCode},
-                     #{tel},
-                     #{title},
-                     #{zipCode}
+                     #{placeInfo.addr1},
+                     #{placeInfo.addr2},
+                     #{placeInfo.areaCode},
+                     #{placeInfo.contentId},
+                     #{placeInfo.contentTypeId},
+                     #{placeInfo.firstImage},
+                     #{placeInfo.firstImage2},
+                     #{placeInfo.mapX},
+                     #{placeInfo.mapY},
+                     #{placeInfo.sigunguCode},
+                     #{placeInfo.tel},
+                     #{placeInfo.title},
+                     #{placeInfo.zipcode},
+                     #{placeInfo.overview}
                  );
 
         <!-- 마지막으로 삽입된 place_id를 가져옴 -->

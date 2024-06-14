@@ -120,7 +120,8 @@ public class DataApiController2 {
         String locationDetailIntro = tourLocationService.detailIntroAPI(callBackUrl, serviceKey, dataType, contentId, contentTypeId);
         TourDetailCommonItemDTO tourCommonInfo = tourDeserializerService.parsingJsonObject(locationCommonInfo, TourDetailCommonItemDTO.class);
         TourDetailIntroItemDTO tourDetailIntro = tourDeserializerService.parsingJsonObject(locationDetailIntro, TourDetailIntroItemDTO.class);
-        log.info("공공데이터 API 호출 = {}", tourDetailIntro );
+        log.info("공공데이터 DCI API 호출 = {}", tourCommonInfo );
+        log.info("공공데이터 DII API 호출 = {}", tourDetailIntro );
 
         model.addAttribute("tourCommonInfo", tourCommonInfo);
         model.addAttribute("tourDetailIntro", tourDetailIntro);

@@ -1,5 +1,14 @@
 package com.kotu.koreatourism.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TourPlace {
 
     private int placeId;
@@ -15,5 +24,6 @@ public class TourPlace {
     private int sigunguCode;
     private String tel;
     private String title;
-    private int zipCode;
+    private int zipcode;
+    private String overview;
 }

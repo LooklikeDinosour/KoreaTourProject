@@ -9,10 +9,10 @@ import lombok.Data;
 public class TourDetailCommonDTO {
 
     @JsonProperty("contentid")
-    private String contentId;
+    private int contentId;
 
     @JsonProperty("contenttypeid")
-    private String contentTypeId;
+    private int contentTypeId;
 
     @JsonProperty("title")
     private String title;
@@ -45,10 +45,10 @@ public class TourDetailCommonDTO {
     private String cpyrhtDivCd;
 
     @JsonProperty("areacode")
-    private String areaCode;
+    private int areaCode;
 
     @JsonProperty("sigungucode")
-    private String sigunguCode;
+    private int sigunguCode;
 
     @JsonProperty("cat1")
     private String cat1;
@@ -66,13 +66,13 @@ public class TourDetailCommonDTO {
     private String addr2;
 
     @JsonProperty("zipcode")
-    private String zipcode;
+    private int zipcode;
 
     @JsonProperty("mapx")
-    private String mapX;
+    private Double mapX;
 
     @JsonProperty("mapy")
-    private String mapY;
+    private Double mapY;
 
     @JsonProperty("mlevel")
     private String mLevel;

@@ -115,13 +115,12 @@
             color: black;
         }
     </style>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 
 <div class="tourist-container-wrapper">
-    <div>
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-    </div>
     <div>
         <nav>
             <a th:href="@{/api/location/attraction}" th:text="'Home'"></a>
@@ -143,6 +142,7 @@
             </a>
             <div class="buttons">
                 <button class="button" th:attr="onclick='like(' + ${tour.contentId} + ')'">좋아요</button>
+                <button class="button" onclick="save([[${tour.contentId}]])">저장하기</button>
                 <button class="button" th:attr="onclick='save(' + ${tour.contentId} + ')'">저장하기</button>
             </div>
         </div>
@@ -153,6 +153,10 @@
 </div>
 
 <script>
+
+    //CSRF
+    let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
     let selectedContentType = '';
     function setContentType(contentType) {
@@ -166,8 +170,30 @@
     }
 
     function save(contentId) {
-        // 저장하기 버튼 클릭 시 처리할 로직
         console.log('저장하기:', contentId);
+
+        fetch('/place/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader] : csrfToken
+            },
+            body: JSON.stringify({ contentId: contentId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    console.log('장소 저장 성공:', data);
+                    alert('장소가 성공적으로 저장되었습니다.');
+                } else {
+                    console.log('장소 저장 실패:', data);
+                    alert('장소 저장에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('오류 발생:', error);
+                alert('저장하라면 로그인을 해주세요');
+            });
     }
 
     // 위치기반
