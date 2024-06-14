@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kotu.koreatourism.mapper.PlaceSaveMapper">
+
+    <insert id="savePlace">
+        INSERT INTO PLACESAVE_TB (
+            addr1,
+            addr2,
+            areacode,
+            contentid,
+            contenttypeid,
+            firstimage,
+            firstimage2,
+            mapx,
+            mapy,
+            sigungucode,
+            tel,
+            title,
+            zipcode
+        ) VALUES (
+                     #{addr1},
+                     #{addr2},
+                     #{areaCode},
+                     #{contentId},
+                     #{contentTypeId},
+                     #{firstImage},
+                     #{firstImage2},
+                     #{mapX},
+                     #{mapY},
+                     #{sigunguCode},
+                     #{tel},
+                     #{title},
+                     #{zipCode}
+                 );
+
+        <!-- 마지막으로 삽입된 place_id를 가져옴 -->
+        SET @placeId = LAST_INSERT_ID();
+
+        <!-- USER_PLACESAVE 테이블에 데이터 삽입 -->
+        INSERT INTO USER_PLACE_TB (user_id, place_id)
+        VALUES (#{userId}, @placeId);
+    </insert>
+
+</mapper>
