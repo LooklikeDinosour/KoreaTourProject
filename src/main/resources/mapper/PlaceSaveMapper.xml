@@ -44,4 +44,12 @@
         VALUES (#{userId}, @placeId);
     </insert>
 
+
+    <select id ="findAllPlace">
+        SELECT *
+        FROM PLACESAVE_TB AS PS
+        LEFT JOIN USER_PLACE_TB AS UP
+        ON PS.place_id = UP.user_place_id
+        WHERE UP.user_id = #{userId}
+    </select>
 </mapper>

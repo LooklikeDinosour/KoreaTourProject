@@ -29,7 +29,7 @@ public class TourLocationBasedDTO {
     @JsonProperty("cat3")
     private String cat3;
     @JsonProperty("contentid")
-    private String contentId;
+    private int contentId;
     @JsonProperty("contenttypeid")
     private String contentTypeId;
     @JsonProperty("createdtime")
@@ -43,9 +43,9 @@ public class TourLocationBasedDTO {
     @JsonProperty("cpyrhtDivCd")
     private String cpyrhtDivCd;
     @JsonProperty("mapx")
-    private float mapx;
+    private double mapx;
     @JsonProperty("mapy")
-    private float mapy;
+    private double mapy;
     @JsonProperty("mlevel")
     private int mlevel;
     @JsonProperty("modifiedtime")

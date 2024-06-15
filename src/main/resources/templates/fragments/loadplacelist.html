@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Saved Places Fragment</title>
+</head>
+<body>
+<div th:fragment="savedPlacesFragment">
+    <h2>저장한 글</h2>
+    <ul>
+        <li th:each="place : ${myPlaceList}">
+            <h3 th:text="${place.title}"></h3>
+            <img th:src="${place.firstImage}" alt="Place Image">
+        </li>
+    </ul>
+</div>
+</body>
+</html>

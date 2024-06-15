@@ -47,7 +47,6 @@ public class TourLocationBasedDeserializer extends JsonDeserializer {
         for (TourLocationBasedDTO tlbDTO : tourLocationBasedList) {
             int contentTypeIdNum = Integer.parseInt(tlbDTO.getContentTypeId());
             ContentType content = ContentType.contentTypeIdToContentType(contentTypeIdNum);
-            log.info("content타입 변경 전 = {}", String.valueOf(content));
             String contentName = String.valueOf(content).replace("_","-").toLowerCase();
             log.info("content타입 변경 후 = {}", contentName);
             tlbDTO.setContentTypeId(contentName);

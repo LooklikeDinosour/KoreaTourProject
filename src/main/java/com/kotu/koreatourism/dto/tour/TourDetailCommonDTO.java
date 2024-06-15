@@ -69,13 +69,13 @@ public class TourDetailCommonDTO {
     private int zipcode;
 
     @JsonProperty("mapx")
-    private Double mapX;
+    private double mapX;
 
     @JsonProperty("mapy")
-    private Double mapY;
+    private double mapY;
 
     @JsonProperty("mlevel")
-    private String mLevel;
+    private int mLevel;
 
     @JsonProperty("overview")
     private String overview;

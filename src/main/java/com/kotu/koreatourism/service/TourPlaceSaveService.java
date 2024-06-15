@@ -3,6 +3,7 @@ package com.kotu.koreatourism.service;
 import com.kotu.koreatourism.domain.TourPlace;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
+import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface TourPlaceSaveService {
 
     public void deletePlace(int placeId);
 
-    public List<TourPlace> findAllPlace(String userId);
+    public List<TourPlaceSaveDTO> findAllPlace(String userId);
 }

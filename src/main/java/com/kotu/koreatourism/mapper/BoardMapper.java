@@ -22,8 +22,11 @@ public interface BoardMapper {
     //글 제거하기
     public int deletePost(int bid);
 
-    //글 조회하기
+    //카테고리 별로 글 분류하기
     public List<Board> findAllPost(String boardCategory);
+
+    //내가 쓴 글 조회
+    public List<Board> findMyAllPost(String userId);
 
 
 }

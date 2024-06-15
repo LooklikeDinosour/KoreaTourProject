@@ -19,17 +19,17 @@ public class TourPlaceSaveDTO {
     @JsonProperty("areacode")
     private int areaCode;
     @JsonProperty("contentid")
-    private String contentId;
+    private int contentId;
     @JsonProperty("contenttypeid")
-    private String contentTypeId;
+    private int contentTypeId;
     @JsonProperty("firstimage")
     private String firstImage;
     @JsonProperty("firstimage2")
     private String firstImage2;
     @JsonProperty("mapx")
-    private float mapx;
+    private double mapx;
     @JsonProperty("mapy")
-    private float mapy;
+    private double mapy;
     @JsonProperty("sigungucode")
     private int sigunguCode;
     @JsonProperty("tel")
@@ -38,4 +38,6 @@ public class TourPlaceSaveDTO {
     private String title;
     @JsonProperty("zipcode")
     private int zipCode;
+    @JsonProperty("overview")
+    private String overview;
 }

@@ -3,11 +3,13 @@ package com.kotu.koreatourism.service;
 import com.kotu.koreatourism.domain.TourPlace;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
+import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.mapper.PlaceSaveMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -43,7 +45,30 @@ public class TourPlaceSaveServiceImpl implements TourPlaceSaveService{
     }
 
     @Override
-    public List<TourPlace> findAllPlace(String userId) {
-        return null;
+    public List<TourPlaceSaveDTO> findAllPlace(String userId) {
+        List<TourPlace> myPlaceList = placeSaveMapper.findAllPlace(userId);
+        TourPlaceSaveDTO tourPlaceSaveDTO = new TourPlaceSaveDTO();
+
+        List<TourPlaceSaveDTO> myPlaceListToDtoList = myPlaceList.stream()
+                .map(place -> {
+                    tourPlaceSaveDTO.setAddr1(place.getAddr1());
+                    tourPlaceSaveDTO.setAddr2(place.getAddr2());
+                    tourPlaceSaveDTO.setAreaCode(place.getAreaCode());
+                    tourPlaceSaveDTO.setContentId(place.getContentId());
+                    tourPlaceSaveDTO.setContentTypeId(place.getContentTypeId());
+                    tourPlaceSaveDTO.setFirstImage(place.getFirstImage());
+                    tourPlaceSaveDTO.setFirstImage2(place.getFirstImage2());
+                    tourPlaceSaveDTO.setMapx(place.getMapX());
+                    tourPlaceSaveDTO.setMapy(place.getMapY());
+                    tourPlaceSaveDTO.setSigunguCode(place.getSigunguCode());
+                    tourPlaceSaveDTO.setTel(place.getTel());
+                    tourPlaceSaveDTO.setTitle(place.getTitle());
+                    tourPlaceSaveDTO.setZipCode(place.getZipcode());
+                    tourPlaceSaveDTO.setOverview(place.getOverview());
+                    return tourPlaceSaveDTO;
+                })
+                .collect(Collectors.toList());
+
+        return myPlaceListToDtoList;
     }
 }

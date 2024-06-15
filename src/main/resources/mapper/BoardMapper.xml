@@ -50,4 +50,10 @@
         </where>
         order by regdate desc;
     </select>
+
+    <select id="findMyAllPost">
+        select * from
+        POST_TB
+        where author = #{userId};
+    </select>
 </mapper>

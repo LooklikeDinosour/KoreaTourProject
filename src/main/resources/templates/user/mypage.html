@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 80%;
+            max-width: 1200px;
+        }
+        .box {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .box h2 {
+            margin-top: 0;
+        }
+        .box button {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <div class="box" id="my-info">
+        <h2>내 정보</h2>
+        <p id="user-info"></p>
+        <button onclick="loadUserInfo()">정보 조회</button>
+    </div>
+    <div class="box" id="my-posts">
+        <h2>내가 쓴 글</h2>
+        <div class="box" th:replace="~{fragments/loadmypostlist :: findPostFragment}"></div>
 
+    </div>
+    <div class="box" id="my-messages">
+        <h2>내 쪽지</h2>
+        <ul id="user-messages"></ul>
+        <button onclick="loadUserMessages()">쪽지 조회</button>
+    </div>
+    <div class="box" id="saved-posts">
+        <h2>저장한 장소</h2>
+        <div class="box" th:replace="~{fragments/loadplacelist :: savedPlacesFragment}"></div>
+    </div>
+</div>
 </body>
 </html>

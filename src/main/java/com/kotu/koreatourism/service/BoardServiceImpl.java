@@ -44,4 +44,9 @@ public class BoardServiceImpl implements BoardService {
     public List<Board> findAllPost(String boardCategory) {
        return boardMapper.findAllPost(boardCategory);
     }
+
+    @Override
+    public List<Board> findMyAllPost(String userId) {
+        return boardMapper.findMyAllPost(userId);
+    }
 }

@@ -1,8 +1,8 @@
 package com.kotu.koreatourism.controller;
 
-import com.kotu.koreatourism.domain.TourPlace;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
+import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.service.TourDeserializerService;
 import com.kotu.koreatourism.service.TourLocationService;
 import com.kotu.koreatourism.service.TourPlaceSaveService;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -56,9 +57,12 @@ public class TourPlaceSaveController {
         tourPlaceSaveService.deletePlace(placeId);
     }
 
-    @GetMapping("/allPlace")
-    public List<TourPlace> findAllPlace(Principal principal) {
+    @GetMapping("/myplacelist")
+    public String findAllPlace(Principal principal, Model model) {
         String userId = principal.getName();
-        return tourPlaceSaveService.findAllPlace(userId);
+        log.info("접속유저 아이디 = {}", userId);
+        List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
+        model.addAttribute("myPlaceList", myPlaceList);
+        return "user/mypage";
     }
 }
