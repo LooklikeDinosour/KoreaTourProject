@@ -77,7 +77,7 @@ public class UserController {
         model.addAttribute("myPlaceList", myPlaceList);
 
         //문제 아이디가 작성자가 아닌 닉네임 작성임.. DB 수정
-        List<Board> myAllPost = boardService.findMyAllPost(userId);
+        List<Board> myAllPost = boardService.findMyAllPost("테쑷으");
         model.addAttribute("myAllPost", myAllPost);
 
         return "user/mypage";
