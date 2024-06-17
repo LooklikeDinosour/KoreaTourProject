@@ -40,6 +40,9 @@ public class DataApiController2 {
     @Value("${openApi.dataType}")
     private String dataType;
 
+    @Value("${googleMapApi}")
+    private String mapsKey;
+
     private final TourDeserializerService tourDeserializerService;
     private final TourLocationService tourLocationService;
     private final TourCategoryService tourCategoryService;
@@ -125,6 +128,7 @@ public class DataApiController2 {
 
         model.addAttribute("tourCommonInfo", tourCommonInfo);
         model.addAttribute("tourDetailIntro", tourDetailIntro);
+        model.addAttribute("mapsApiKey", mapsKey);
 
         return "tour/tourDetailInfo";
     }
