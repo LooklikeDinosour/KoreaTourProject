@@ -74,6 +74,8 @@ public class UserController {
         String userId = principal.getName();
         log.info("접속유저 아이디 = {}", userId);
         List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
+        log.info("저장한 장소 모음 = {}", myPlaceList.toString());
+
         model.addAttribute("myPlaceList", myPlaceList);
 
         //문제 아이디가 작성자가 아닌 닉네임 작성임.. DB 수정

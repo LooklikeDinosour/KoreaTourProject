@@ -47,10 +47,10 @@ public class TourPlaceSaveServiceImpl implements TourPlaceSaveService{
     @Override
     public List<TourPlaceSaveDTO> findAllPlace(String userId) {
         List<TourPlace> myPlaceList = placeSaveMapper.findAllPlace(userId);
-        TourPlaceSaveDTO tourPlaceSaveDTO = new TourPlaceSaveDTO();
 
         List<TourPlaceSaveDTO> myPlaceListToDtoList = myPlaceList.stream()
                 .map(place -> {
+                    TourPlaceSaveDTO tourPlaceSaveDTO = new TourPlaceSaveDTO();
                     tourPlaceSaveDTO.setAddr1(place.getAddr1());
                     tourPlaceSaveDTO.setAddr2(place.getAddr2());
                     tourPlaceSaveDTO.setAreaCode(place.getAreaCode());

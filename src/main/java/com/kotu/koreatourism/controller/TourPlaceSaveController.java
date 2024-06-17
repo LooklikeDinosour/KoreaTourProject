@@ -57,12 +57,12 @@ public class TourPlaceSaveController {
         tourPlaceSaveService.deletePlace(placeId);
     }
 
-    @GetMapping("/myplacelist")
-    public String findAllPlace(Principal principal, Model model) {
-        String userId = principal.getName();
-        log.info("접속유저 아이디 = {}", userId);
-        List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
-        model.addAttribute("myPlaceList", myPlaceList);
-        return "user/mypage";
-    }
+//    @GetMapping("/myplacelist")
+//    public String findAllPlace(Principal principal, Model model) {
+//        String userId = principal.getName();
+//        log.info("접속유저 아이디 = {}", userId);
+//        List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
+//        model.addAttribute("myPlaceList", myPlaceList);
+//        return "user/mypage";
+//    }
 }

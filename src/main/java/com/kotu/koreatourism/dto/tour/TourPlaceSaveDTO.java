@@ -40,4 +40,25 @@ public class TourPlaceSaveDTO {
     private int zipCode;
     @JsonProperty("overview")
     private String overview;
+
+    @Override
+    public String toString() {
+        return "TourPlaceSaveDTO{" +
+                "placeId=" + placeId +
+                ", addr1='" + addr1 + '\'' +
+                ", addr2='" + addr2 + '\'' +
+                ", areaCode=" + areaCode +
+                ", contentId=" + contentId +
+                ", contentTypeId=" + contentTypeId +
+                ", firstImage='" + firstImage + '\'' +
+                ", firstImage2='" + firstImage2 + '\'' +
+                ", mapx=" + mapx +
+                ", mapy=" + mapy +
+                ", sigunguCode=" + sigunguCode +
+                ", tel='" + tel + '\'' +
+                ", title='" + title + '\'' +
+                ", zipCode=" + zipCode +
+                ", overview='" + overview + '\'' +
+                '}';
+    }
 }

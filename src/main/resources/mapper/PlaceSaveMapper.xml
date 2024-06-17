@@ -51,5 +51,6 @@
         LEFT JOIN USER_PLACE_TB AS UP
         ON PS.place_id = UP.user_place_id
         WHERE UP.user_id = #{userId}
+        ORDER BY regdate desc
     </select>
 </mapper>

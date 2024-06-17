@@ -21,11 +21,10 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    //회원가입
     @Override
     public int signUp(SignUpFormDTO userInfo) {
 
-
-        //ID가 존재유무를 검증하는 로직 필요
         SiteUser newUserInfo = new SiteUser();
         newUserInfo.setUserId(userInfo.getUserId());
         newUserInfo.setUserPassword(bCryptPasswordEncoder.encode(userInfo.getUserPassword()));
@@ -56,6 +55,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    //ID중복확인
     @Override
     public boolean checkUserIdExist(String userId) {
         boolean existUserId = userMapper.checkUserIdExist(userId);
