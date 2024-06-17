@@ -162,11 +162,6 @@
 </head>
 <body>
 <div>
-    <input type="hidden" name="area_category" value=""> <!-- 히든 입력 필드 -->
-    <div class="loading">
-        <div class="loader"></div>
-        <div class="loading-overlay"></div>
-    </div>
     <div>
         <nav>
             <a th:href="@{/api/area-based/attraction}" th:text="'Home'"></a>
@@ -189,6 +184,10 @@
 </div>
 
 <script>
+
+    //CSRF
+    let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     //대분류
     document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/area1')
@@ -234,14 +233,8 @@
         // 태그 처리
         if (obj.categoryLv == 1) {
             console.log('1lv');
-            loading(); // 로딩
             console.log(event.target);
             removeSubCategories(); // 이전 카테고리 삭제
-
-            //CSRF
-            let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-            let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
 
             // Fetch를 사용하여 AJAX 호출 대체
             fetch(`/api/area2`, {
@@ -315,10 +308,6 @@
         var obj = JSON.parse(target.getAttribute('data-set'));
         console.log('Subcategory clicked:', obj);
 
-        //CSRF
-        let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
         fetch('/api/areabase', {
             method: 'POST',
             headers: {
@@ -340,13 +329,13 @@
                 console.error('Error:', error);
             });
     }
-    function loading() {
-        var loadingElement = document.querySelector(".loading");
-        loadingElement.style.display = "block";
-        window.setTimeout(function() {
-            loadingElement.style.display = "none";
-        }, 1000);
-    }
+    // function loading() {
+    //     var loadingElement = document.querySelector(".loading");
+    //     loadingElement.style.display = "block";
+    //     window.setTimeout(function() {
+    //         loadingElement.style.display = "none";
+    //     }, 1000);
+    //}
     function createTouristItems(responseData) {
         const container = document.getElementById('touristContainer');
         container.innerHTML = ''; // 기존 내용을 비움
@@ -381,13 +370,13 @@
             const likeButton = document.createElement('button');
             likeButton.className = 'button';
             likeButton.textContent = '좋아요';
-            likeButton.onclick = () => like(tour.contentId);
+            likeButton.onclick = () => like(tour.contentid);
             buttonsDiv.appendChild(likeButton);
 
             const saveButton = document.createElement('button');
             saveButton.className = 'button';
             saveButton.textContent = '저장하기';
-            saveButton.onclick = () => save(tour.contentId);
+            saveButton.onclick = () => save(tour.contentid);
             buttonsDiv.appendChild(saveButton);
 
             item.appendChild(buttonsDiv);
@@ -403,7 +392,29 @@
 
     function save(contentId) {
         console.log('저장하기:', contentId);
-        // 저장하기 로직 추가
+
+        fetch('/place/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader] : csrfToken
+            },
+            body: JSON.stringify({ contentId: contentId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    console.log('장소 저장 성공:', data);
+                    alert('장소가 성공적으로 저장되었습니다.');
+                } else {
+                    console.log('장소 저장 실패:', data);
+                    alert('장소 저장에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('오류 발생:', error);
+                alert('저장하려면 로그인을 해주세요');
+            });
     }
 
     let selectedContentType = '';
