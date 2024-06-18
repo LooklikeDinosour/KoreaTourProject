@@ -21,13 +21,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
         log.info("로그인 UserId = {}", userId);
-
         LoginDTO findUserId = userService.findByUserId(userId);
 
         if(findUserId == null) {
             throw new UsernameNotFoundException(userId + "는 없는 ID입니다.");
         }
-
         return new CustomUserDetails(findUserId);
     }
 }

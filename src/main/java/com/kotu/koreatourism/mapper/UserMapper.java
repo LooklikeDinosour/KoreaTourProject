@@ -10,7 +10,8 @@ public interface UserMapper {
 
     public int signUp(SiteUser newUserInfo);
 
-    public LoginDTO findByUserId(String userId);
+//    public LoginDTO findByUserId(String userId);
+    public SiteUser findByUserId(String userId);
 
     public boolean checkUserIdExist(String userId);
 

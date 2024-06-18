@@ -2,6 +2,7 @@ package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
+import com.kotu.koreatourism.domain.SiteUser;
 import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.mapper.MessageMapper;
@@ -34,7 +35,7 @@ public class MessageServiceImpl implements MessageService{
     public void sendMessage(MessageContent messageContent, Message message) {
         //존재하는 유저인지 검증
         String receivedUser = message.getReceivedUser();
-        LoginDTO userInfo = userMapper.findByUserId(receivedUser);
+        SiteUser userInfo = userMapper.findByUserId(receivedUser);
         log.info("쪽지 수신 유저 확인 = {}", userInfo);
         if(userInfo == null) {
            throw new RuntimeException("해당 ID" + receivedUser + "는 없는 아이디입니다.");

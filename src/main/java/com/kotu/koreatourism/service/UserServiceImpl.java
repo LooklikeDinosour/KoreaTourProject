@@ -38,7 +38,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginDTO findByUserId(String userId) {
-        return userMapper.findByUserId(userId);
+        SiteUser findUserInfo = userMapper.findByUserId(userId);
+        LoginDTO loginInfo = new LoginDTO();
+        loginInfo.setUserId(findUserInfo.getUserId());
+        loginInfo.setUserPassword(findUserInfo.getUserPassword());
+        loginInfo.setUserNickname(findUserInfo.getUserNickname());
+        loginInfo.setUserRole(findUserInfo.getUserRole());
+
+        return loginInfo;
     }
 
     @Override

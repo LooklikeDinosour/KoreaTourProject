@@ -2,6 +2,7 @@ package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Board;
 import com.kotu.koreatourism.domain.SiteUser;
+import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.SignUpFormDTO;
 import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.service.BoardService;
@@ -73,13 +74,14 @@ public class UserController {
     public String myPage(Model model, Principal principal) {
         String userId = principal.getName();
         log.info("접속유저 아이디 = {}", userId);
-        List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
-        log.info("저장한 장소 모음 = {}", myPlaceList.toString());
+        LoginDTO userInfo = userService.findByUserId(userId);
+        String userNickname = userInfo.getUserNickname();
 
+        List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
         model.addAttribute("myPlaceList", myPlaceList);
 
         //문제 아이디가 작성자가 아닌 닉네임 작성임.. DB 수정
-        List<Board> myAllPost = boardService.findMyAllPost("테쑷으");
+        List<Board> myAllPost = boardService.findMyAllPost(userNickname);
         model.addAttribute("myAllPost", myAllPost);
 
         return "user/mypage";
