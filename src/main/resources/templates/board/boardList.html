@@ -22,7 +22,7 @@
     <!-- 게시물 목록이 들어갈 자리 -->
     <tr th:each="post : ${allPosts}">
         <td th:text="${post.bid}"></td>
-        <td><a href="postdetail.html" th:href="@{readpost/{postbid}(postbid=${post.bid})}" th:text="${post.title}">제목</a></td>
+        <td><a href="postdetail.html" th:href="@{{board_category}/readpost/{postbid}(postbid=${post.bid}, board_category=${board_category})}" th:text="${post.title}">제목</a></td>
         <td th:text="${post.author}">작성자</td>
         <td th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd')}">작성일</td>
         <td th:text="${post.viewcount}"></td>
@@ -37,4 +37,18 @@
     </tbody>
 </table>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let msg = /*[[${msg}]]*/ null;
+    let errorMessage = /*[[${errorMessage}]]*/ null;
+
+    if (msg) {
+        alert(msg);
+    }
+
+    if (errorMessage) {
+        alert(errorMessage);
+    }
+    /*]]>*/
+</script>
 </html>

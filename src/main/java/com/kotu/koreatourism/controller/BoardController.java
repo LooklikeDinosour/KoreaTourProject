@@ -24,8 +24,6 @@ public class BoardController  {
 
     private final BoardService boardService;
 
-    private final UserService userService;
-
     //게시판 조회하기
     @GetMapping("/{board_category}")
     public String findAllBoard(Model model, @PathVariable("board_category") String boardCategory) {
@@ -41,7 +39,7 @@ public class BoardController  {
 
     //게시글 작성하기 폼으로 이동
     @GetMapping("/{board_category}/createpost")
-    public String createPostform(@PathVariable("board_category") String board_category, Model model) {
+    public String createPostForm(@PathVariable("board_category") String board_category, Model model) {
         log.info("board_category:createPost(Get) = {}", board_category);
         Board board = new Board();
         model.addAttribute("post", board);
@@ -51,7 +49,7 @@ public class BoardController  {
     @PostMapping("/{board_category}/createpost")
     public String createPost(@Validated @ModelAttribute("post") Board board,
                              BindingResult bindingResult,
-                             @PathVariable("board_category") String board_category,
+                             @PathVariable("board_category") String boardCategory,
                              RedirectAttributes redirectAttributes) {
 
         log.info("보드 카테고리 = {}", board.getBoardCategory());
@@ -69,28 +67,44 @@ public class BoardController  {
         Board createdPost = boardService.findPost(board.getBid());
         redirectAttributes.addAttribute("postbid", createdPost.getBid());
 
-        return "redirect:/board/readpost/{postbid}";
+        return "redirect:/board/" + boardCategory + "/readpost/{postbid}";
     }
     //게시글 상세보기
-    @GetMapping("/readpost/{postbid}")
-    public String readPost(@PathVariable("postbid") int postId, Principal principal, Model model) {
+    @GetMapping("{board_category}/readpost/{postbid}")
+    public String readPost(@PathVariable("postbid") int postId,
+                           @PathVariable("board_category") String boardCategory,
+                           RedirectAttributes redirectAttributes,
+                           Model model) {
         Board post = boardService.findPost(postId);
+        if(post == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "해당 게시글을 찾을 수 없습니다.");
+            return "redirect:/board/" + boardCategory; //전체 게시판으로 돌아가는.. 카테고리별로 돌아가야되는데
+        }
         log.info("readPost={}", post);
         model.addAttribute("post", post);
         return "board/postdetail";
     }
 
     //게시글 수정하기
-    @GetMapping("/{postbid}/update")
-    public String updateForm(@PathVariable("postbid") int postbid, Model model) {
+    @GetMapping("{board_category}/{postbid}/update")
+    public String updateForm(@PathVariable("postbid") int postbid,
+                             @PathVariable("board_category") String boardCategory,
+                             RedirectAttributes redirectAttributes,
+                             Model model) {
         Board post = boardService.findPost(postbid);
+
+        if(post == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "해당 게시글을 찾을 수 없습니다.");
+            return "redirect:/board/" + boardCategory; //전체 게시판으로 돌아가는.. 카테고리별로 돌아가야되는데
+        }
         model.addAttribute("post", post);
         return "board/updatePost";
     }
 
     //게시글 수정하기
-    @PostMapping("/{postbid}/update")
+    @PostMapping("{board_category}/{postbid}/update")
     public String updatePost(@PathVariable("postbid") int postbid,
+                             @PathVariable("board_category") String boardCategory,
                              @Validated @ModelAttribute("post") BoardUpdateDTO updateParam,
                              BindingResult bindingResult) {
 
@@ -101,26 +115,24 @@ public class BoardController  {
 
         log.info("updateParam.title ={}", updateParam.getTitle());
         boardService.updatePost(postbid, updateParam);
-        return "redirect:/board/readpost/{postbid}";
+        return "redirect:/board/" + boardCategory + "/readpost/{postbid}";
     }
 
     //게시글 삭제
-    @GetMapping("/{postbid}/delete")
-    public String deletePost(@PathVariable("postbid") int postbid, RedirectAttributes redirectAttributes) {
+    @GetMapping("{board_category}/{postbid}/delete")
+    public String deletePost(@PathVariable("postbid") int postbid,
+                             @PathVariable("board_category") String boardCategory,
+                             RedirectAttributes redirectAttributes) {
 
-        log.info("삭제 요청이 들어왔습니다.");
-        //삭제 전에 조회해서 테이블 카테고리만 가져오기
-        Board loadedPost = boardService.findPost(postbid);
-        String loadedPostCategory = loadedPost.getBoardCategory();
+        log.info("삭제 요청 게시글 ID: {}, 게시판 카테고리: {}", postbid, boardCategory);
 
         //삭제
         boardService.deletePost(postbid);
 
         //해당 게시판으로 리다이렉트하기 위해서 카테고리값 넣어주기
-        redirectAttributes.addAttribute("board_category", loadedPostCategory);
         redirectAttributes.addFlashAttribute("msg", "삭제됐습니다.");
-        log.info("삭제 완료");
+        log.info("삭제 완료 게시글 ID: {}, 게시판 카테고리: {}", postbid, boardCategory);
 
-        return "redirect:/board/{board_category}";
+        return "redirect:/board/"+boardCategory;
     }
 }

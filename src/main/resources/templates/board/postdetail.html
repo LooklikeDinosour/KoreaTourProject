@@ -4,6 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세보기</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function confirmAction(action, url) {
+            if (confirm(action + ' 하시겠습니까?')) {
+                location.href = url;
+            }
+        }
+        /*]]>*/
+    </script>
 </head>
 <body>
 
@@ -18,15 +27,13 @@
             type="button">목록</button>
     <div th:if="${#authentication.name == post.userId}">
         <button
-                th:onclick="|location.href='@{/board/{postbid}/update(postbid=${post.bid})}'|"
+                th:onclick="|confirmAction('수정', '@{/board/{board_category}/{postbid}/update(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
                 type="button">수정</button>
         <button
-                th:onclick="|location.href='@{/board/{postbid}/delete(postbid=${post.bid})}'|"
+                th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/delete(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
                 type="button">삭제</button>
     </div>
 </div>
 </body>
-<script th:inline="javascript">
 
-</script>
 </html>
