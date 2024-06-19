@@ -2,88 +2,95 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Main Page</title>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <title>Main</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            color: #333;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 10px 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1.1em;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .auth-links div {
+            margin: 10px 0;
+        }
+        .auth-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1.1em;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Swiper -->
-<!--<div class="swiper-container">-->
-<!--    <div class="swiper-wrapper">-->
-<!--        &lt;!&ndash; Your dynamic posts here. Example static post: &ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="swiper-slide"><img src="" alt="Post 1"/></div>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="swiper-slide"><img src="" alt="Post 2"/></div>&ndash;&gt;-->
-<!--        &lt;!&ndash; Add more slides as needed &ndash;&gt;-->
-<!--    </div>-->
-<!--    &lt;!&ndash; Add Pagination &ndash;&gt;-->
-<!--    <div class="swiper-pagination"></div>-->
-<!--    &lt;!&ndash; Add Navigation &ndash;&gt;-->
-<!--    <div class="swiper-button-prev"></div>-->
-<!--    <div class="swiper-button-next"></div>-->
+<div class="container">
+    <h3 sec:authorize="isAuthenticated()" sec:authentication="name"></h3>
 
-<!--</div>-->
-
-
-
-<div>
-    <h3 sec:authentication="name"></h3>
-    <h3 th:text="${role}"></h3>
-
-    <div><a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></div>
-    <div><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></div>
-    <div><a th:href="@{/signup}">회원가입</a></div>
+    <div class="auth-links">
+        <div><a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></div>
+        <div><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></div>
+        <div><a th:href="@{/signup}">회원가입</a></div>
+    </div>
     <nav>
         <ul>
-            <li><a th:href="@{/mypage}">마이 페이지</a> </li>
+            <li><a th:href="@{/mypage}">마이 페이지</a></li>
             <li><a th:href="@{/message}">쪽지</a></li>
             <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
             <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
             <li><a th:href="@{/api/test1234}"></a></li>
             <li><a th:href="@{/api/area-based}">지역기반관광정보</a></li>
-            <li><a th:href="@{/api/location}">주변 정보 찾아보기</a></li>
+            <li><a id="location-link" href="javascript:void(0);">주변 정보 찾아보기</a></li>
         </ul>
     </nav>
 </div>
 
-<!-- Swiper JS -->
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
 <script th:inline="javascript">
-    var swiper = new Swiper('.swiper-container', {
-        // Optional parameters
-        direction: 'horizontal',
-        loop: true,
-        // If you need pagination
-        pagination: {
-            el: '.swiper-pagination',
-        },
-        // Navigation arrows
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
+
 
     // 위치기반
     document.addEventListener("DOMContentLoaded",function () {
-        if(navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function() {
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
 
-                const url = document.querySelector('a[href*="api/location"]');
-                url.href = `/api/location?latitude=${latitude}&longitude=${longitude}`
-
-                fetch(url.href, {
-                    method: 'GET',
-                })
-                    .then(response => response.json())
-                    .then(data => console.log('Success:', data))
-                    .catch((error) => console.error('Error:', error));
-            });
-        } else {
-            console.log("지원하지 않는 브라우저입니다.")
-        }
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
     });
 </script>
 

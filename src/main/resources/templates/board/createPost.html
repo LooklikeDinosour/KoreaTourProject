@@ -8,8 +8,9 @@
 <body>
 <form action="createPost.html" th:action th:object="${post}" method="post">
     <div>
-        <input type="hidden" th:value="${board_category}" th:name="boardCategory">
-        <input type="hidden" th:value="${#authentication.principal.user.userNickname}" name="author">
+        <input type="hidden" name="boardCategory" th:value="${board_category}">
+        <input type="hidden" name="userId" th:value="${#authentication.principal.user.userId}">
+        <input type="hidden" name="author" th:value="${#authentication.principal.user.userNickname}">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}">
     </div>
     <div>

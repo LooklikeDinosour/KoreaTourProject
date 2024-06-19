@@ -25,6 +25,7 @@ public class Board {
     @NotBlank(message = "내용을 입력하세요!")
     private String content; // 작성내용
     private int viewcount; // 조회수
+    private String userId; // 유저아이디
 
 
 }

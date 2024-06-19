@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 
 @Slf4j
@@ -41,7 +35,7 @@ public class DataApiController2 {
     private String dataType;
 
     @Value("${googleMapApi}")
-    private String mapsKey;
+    private String googleMapsApiKey;
 
     private final TourDeserializerService tourDeserializerService;
     private final TourLocationService tourLocationService;
@@ -50,15 +44,11 @@ public class DataApiController2 {
     //위치기반 GPS 좌표 필요
     //동기식 구성
     @GetMapping("/location")
-    public String location(@RequestParam(value = "latitude", required = false) String latitude,
-                           @RequestParam(value = "longitude", required = false) String longitude,
+    public String location(@RequestParam(value = "latitude", required = true) String latitude,
+                           @RequestParam(value = "longitude", required = true) String longitude,
                            HttpSession session,
                            HttpServletRequest request,
                            Model model) throws IOException {
-
-//        for (ContentType value : ContentType.values()) {
-//            log.info("Enum type 보기 = {}", value);
-//        }
 
         // contentType만 불러오면 된다. => 이거를 백엔드에서 검증하기 위해서 백엔드에서 먼저 보내서 그 걸로 프론트를 구성하고
         // 다시 받아서 enum으로 검증해서 넣으면 교차 검증되는것 아닌가?
@@ -71,19 +61,34 @@ public class DataApiController2 {
         session.setAttribute("longitude", longitude);
         session.setAttribute("latitude", latitude);
 
-        String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
-        TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
-        log.info("location 공공데이터 API 호출 = {}", tourLocationBased);
+        if (latitude == null || longitude == null) {
+            log.error("위도, 경도 누락되었습니다.");
+            model.addAttribute("errorMessage", "위도, 경도 누락되었습니다.");
+            return "error";
+        }
 
-        model.addAttribute("category", ContentType.values());
-        model.addAttribute("tourLocationBased", tourLocationBased);
+        try {
 
-        return "tour/tourlocation";
+            String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
+            TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
+            log.info("location 공공데이터 API 호출 = {}", tourLocationBased);
+
+            model.addAttribute("category", ContentType.values());
+            model.addAttribute("tourLocationBased", tourLocationBased);
+
+            return "tour/tourlocation";
+        } catch (Exception e) {
+            log.error("Error occurred while processing location data", e);
+            model.addAttribute("errorMessage", "An error occurred while processing location data.");
+            return "error";
+        }
+
+
    }
     @GetMapping("/location/{content-type}")
     public String locationCategory(@PathVariable("content-type") String contentType,
-                                   @RequestParam(value = "latitude", required = false) String latitude1,
-                                   @RequestParam(value = "longitude", required = false) String longitude1,
+//                                   @RequestParam(value = "latitude", required = false) String latitude1,
+//                                   @RequestParam(value = "longitude", required = false) String longitude1,
                                    HttpServletRequest request,
                                    HttpSession session,
                                    Model model) throws IOException {
@@ -99,7 +104,7 @@ public class DataApiController2 {
         String longitude = (String)session.getAttribute("longitude");
         String latitude = (String)session.getAttribute("latitude");
         log.info("LC 좌표찍어보자  Y = {}, X = {} ", latitude, longitude);
-        log.info("LC @RequestParam 찍어보자  Y = {}, X = {} ", latitude1, longitude1);
+//        log.info("LC @RequestParam 찍어보자  Y = {}, X = {} ", latitude1, longitude1);
 
         String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, String.valueOf(contentTypeId), longitude, latitude);
         TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
@@ -128,7 +133,7 @@ public class DataApiController2 {
 
         model.addAttribute("tourCommonInfo", tourCommonInfo);
         model.addAttribute("tourDetailIntro", tourDetailIntro);
-        model.addAttribute("mapsApiKey", mapsKey);
+        model.addAttribute("mapsApiKey", googleMapsApiKey);
 
         return "tour/tourDetailInfo";
     }

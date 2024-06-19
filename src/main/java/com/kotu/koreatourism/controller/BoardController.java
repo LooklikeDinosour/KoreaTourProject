@@ -3,6 +3,7 @@ package com.kotu.koreatourism.controller;
 import com.kotu.koreatourism.domain.Board;
 import com.kotu.koreatourism.dto.BoardUpdateDTO;
 import com.kotu.koreatourism.service.BoardService;
+import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -21,6 +23,8 @@ import java.util.List;
 public class BoardController  {
 
     private final BoardService boardService;
+
+    private final UserService userService;
 
     //게시판 조회하기
     @GetMapping("/{board_category}")
@@ -53,6 +57,8 @@ public class BoardController  {
         log.info("보드 카테고리 = {}", board.getBoardCategory());
         log.info("보드 카테고리 = {}", board.getAuthor());
         log.info("보드 카테고리 = {}", board.getTitle());
+        log.info("보드 카테고리 = {}", board.getUserId());
+
 
         if(bindingResult.hasErrors()) {
             log.info("게시글 작성 에러 = {}", bindingResult);
@@ -67,8 +73,7 @@ public class BoardController  {
     }
     //게시글 상세보기
     @GetMapping("/readpost/{postbid}")
-    public String readPost(@PathVariable("postbid") int postId, Model model) {
-
+    public String readPost(@PathVariable("postbid") int postId, Principal principal, Model model) {
         Board post = boardService.findPost(postId);
         log.info("readPost={}", post);
         model.addAttribute("post", post);

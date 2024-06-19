@@ -6,17 +6,18 @@
     <insert id="createPost" useGeneratedKeys="true" keyProperty="bid">
         insert into
             POST_TB
-            (board_category, title, author, content, area)
+            (board_category, title, author, content, area, user_id)
         values (#{boardCategory},
                 #{title},
                 #{author},
                 #{content},
-                #{area}
+                #{area},
+                #{userId}
                )
     </insert>
 
     <select id="findPost" resultType="Board">
-        select bid, board_category, title, regdate, author, content, viewcount
+        select bid, board_category, title, regdate, author, content, viewcount, user_id
         from POST_TB
         where bid = #{bid}
     </select>
