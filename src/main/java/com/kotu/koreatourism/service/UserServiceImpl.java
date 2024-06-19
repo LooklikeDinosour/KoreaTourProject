@@ -5,6 +5,7 @@ import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.SignUpFormDTO;
 import com.kotu.koreatourism.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.signUp(newUserInfo);
     }
 
+    //로그인용
     @Override
     public LoginDTO findByUserId(String userId) {
         SiteUser findUserInfo = userMapper.findByUserId(userId);
@@ -65,10 +68,19 @@ public class UserServiceImpl implements UserService {
     //ID확인
     @Override
     public boolean checkUserIdExist(String userId) {
-        boolean existUserId = userMapper.checkUserIdExist(userId);
+        String extractId = extractId(userId);
+        log.info("추출 아이디 = {}", extractId);
+        boolean existUserId = userMapper.checkUserIdExist(extractId);
         if(existUserId == false) {
             return false;
         }
         return true;
+    }
+
+    private String extractId(String userId) {
+        if (userId.contains("(") && userId.contains(")")) {
+            return userId.substring(userId.indexOf("(") + 1, userId.indexOf(")"));
+        }
+        return userId;
     }
 }

@@ -38,6 +38,10 @@ public class MessageServiceImpl implements MessageService{
         Integer messageContentId = sendMessageContent(messageContent);
         log.info("메시지콘텐츠 PK 값 = {}", messageContentId);
         message.setMessageContentId(messageContentId);
+        //게시글 쪽지보내기로 보낼 시 ID 분류
+        String receivedUser = message.getReceivedUser();
+        String extractId = extractId(receivedUser);
+        message.setReceivedUser(extractId);
         messageMapper.sendMessage(message);
     }
     private Integer sendMessageContent(MessageContent messageContent) {
@@ -66,5 +70,12 @@ public class MessageServiceImpl implements MessageService{
     public void readMessage(int messageContentId) {
         String currentUserName = userService.getCurrentUserName();
         messageMapper.readMessage(messageContentId, currentUserName);
+    }
+
+    private String extractId(String userId) {
+        if (userId.contains("(") && userId.contains(")")) {
+            return userId.substring(userId.indexOf("(") + 1, userId.indexOf(")"));
+        }
+        return userId;
     }
 }

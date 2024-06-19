@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세보기</title>
+    <style>
+
+
+    </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
         function confirmAction(action, url) {
@@ -11,20 +15,28 @@
                 location.href = url;
             }
         }
+
+        function openMessageWindow() {
+            const url = /*[[@{/message/messagewindows}]]*/ '/sendmessagepage';
+            const receiver = /*[[${post.userId}]]*/ 'defaultReceiver';
+            const fullUrl = `${url}?receiver=${receiver}`;
+            window.open(fullUrl, '쪽지 보내기', 'width=600,height=400');
+        }
         /*]]>*/
     </script>
 </head>
 <body>
 
 <h1 th:text="${post.title}"></h1>
-<p th:text="${post.author}"><b>작성자:</b></p>
-<p th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"><b>작성일:</b></p>
+<p><b>작성자:</b><span th:text="${post.author}"></span></p>
+<p><b>작성일:</b><span th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"></span></p>
 <div th:text="${post.content}"></div>
-    <div th:text="${post.userId}"></div>
+<div th:text="${post.userId}" style="display: none;"></div>
 <div>
     <button
             th:onclick="|location.href='@{/board/{board_category}(board_category=${post.boardCategory})}'|"
             type="button">목록</button>
+    <button type="button" onclick="openMessageWindow()" th:if="${post.boardCategory == 'tc'}">쪽지 보내기</button>
     <div th:if="${#authentication.name == post.userId}">
         <button
                 th:onclick="|confirmAction('수정', '@{/board/{board_category}/{postbid}/update(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
@@ -34,6 +46,6 @@
                 type="button">삭제</button>
     </div>
 </div>
-</body>
 
+</body>
 </html>

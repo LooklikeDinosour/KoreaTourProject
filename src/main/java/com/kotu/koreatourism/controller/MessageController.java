@@ -10,6 +10,7 @@ import com.kotu.koreatourism.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.cfg.defs.CreditCardNumberDef;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,13 @@ public class MessageController {
         List<Message> receivedMessages = messageService.findAllMessage("Received", userId);
         model.addAttribute("receivedMessages", receivedMessages);
         return "message/messageBoard";
+    }
+    @GetMapping("/messagewindows")
+    public String createMessageWindow(@RequestParam(required = true) String receiver, Model model) {
+        model.addAttribute("receiver", receiver);
+        model.addAttribute("message", new Message());
+        model.addAttribute("messageContent", new MessageContent());
+        return "message/createMessageWindowsForm";
     }
 
     @GetMapping("/createmessage")
@@ -63,6 +71,7 @@ public class MessageController {
             return "redirect:/message/createmessage";
         }
         messageService.sendMessage(messageContent, message);
+        redirectAttributes.addFlashAttribute("successMessage", "쪽지 발송에 성공했습니다.");
         return "redirect:/message";
     }
 

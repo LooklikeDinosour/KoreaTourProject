@@ -89,6 +89,7 @@ public class UserController {
 
     @GetMapping("/checkuseridexist")
     public ResponseEntity<Boolean> checkIdExist(@RequestParam("user_id") String userId) {
+
         boolean isUserId = userService.checkUserIdExist(userId);
         return ResponseEntity.ok(isUserId);
     }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>쪽지 발송</title>
+    <style>
+    </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener("DOMContentLoaded", function() {
+            /* 성공 메시지 처리 */
+            let successMessage = /*[[${successMessage != null ? '"' + successMessage + '"' : 'null'}]]*/ null;
+            let errorMessage = /*[[${errorMessage != null ? '"' + errorMessage + '"' : 'null'}]]*/ null;
+
+            if (successMessage !== null && successMessage !== 'null') {
+                alert(successMessage);
+                window.close();
+            }
+
+            /* 오류 메시지 처리 */
+            if (errorMessage !== null && errorMessage !== 'null') {
+                alert(errorMessage);
+            }
+        });
+        /*]]>*/
+    </script>
+</head>
+<body>
+<form id="messageForm" th:action="@{/message/sendmessage}" method="post">
+    <div>
+        <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
+        <input type="hidden" th:value="Sent" name="sentReceivedIdentifier">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    </div>
+    <div>
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:field="*{message.title}">
+    </div>
+    <div>
+        <label for="receivedUser">받는사람 </label>
+        <input type="text" id="receivedUser" name="receivedUser" th:value="${#authentication.principal.user.userNickname + '(' + receiver + ')'}" readonly>
+    </div>
+    <div>
+        <label for="messageContent">내용 </label>
+        <textarea id="messageContent" name="messageContent" th:field="*{messageContent.messageContent}"></textarea>
+    </div>
+    <button type="submit">보내기</button>
+</form>
+</body>
+</html>

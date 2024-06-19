@@ -1,6 +1,8 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.Message;
+import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.BoardUpdateDTO;
 import com.kotu.koreatourism.service.BoardService;
 import com.kotu.koreatourism.service.UserService;
@@ -81,6 +83,8 @@ public class BoardController  {
             return "redirect:/board/" + boardCategory; //전체 게시판으로 돌아가는.. 카테고리별로 돌아가야되는데
         }
         log.info("readPost={}", post);
+        model.addAttribute("message", new Message());
+        model.addAttribute("messageContent", new MessageContent());
         model.addAttribute("post", post);
         return "board/postdetail";
     }
