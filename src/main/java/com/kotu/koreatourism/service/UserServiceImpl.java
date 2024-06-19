@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    //ID중복확인
+    //ID확인
     @Override
     public boolean checkUserIdExist(String userId) {
         boolean existUserId = userMapper.checkUserIdExist(userId);

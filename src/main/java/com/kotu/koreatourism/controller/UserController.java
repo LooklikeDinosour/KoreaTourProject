@@ -87,6 +87,12 @@ public class UserController {
         return "user/mypage";
     }
 
+    @GetMapping("/checkuseridexist")
+    public ResponseEntity<Boolean> checkIdExist(@RequestParam("user_id") String userId) {
+        boolean isUserId = userService.checkUserIdExist(userId);
+        return ResponseEntity.ok(isUserId);
+    }
+
 
 
     @GetMapping("/admin")

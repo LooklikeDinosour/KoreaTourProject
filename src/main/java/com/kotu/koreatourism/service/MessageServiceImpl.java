@@ -33,13 +33,6 @@ public class MessageServiceImpl implements MessageService{
     @Override
     @Transactional
     public void sendMessage(MessageContent messageContent, Message message) {
-        //존재하는 유저인지 검증
-        String receivedUser = message.getReceivedUser();
-        SiteUser userInfo = userMapper.findByUserId(receivedUser);
-        log.info("쪽지 수신 유저 확인 = {}", userInfo);
-        if(userInfo == null) {
-           throw new RuntimeException("해당 ID" + receivedUser + "는 없는 아이디입니다.");
-        }
 
         //키값을 불러오기 위해서 기존과 다른 방식으로 진행
         Integer messageContentId = sendMessageContent(messageContent);

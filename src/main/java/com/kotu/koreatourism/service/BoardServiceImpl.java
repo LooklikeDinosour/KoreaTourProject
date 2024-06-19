@@ -33,7 +33,6 @@ public class BoardServiceImpl implements BoardService {
         post.setArea(updateParam.getArea());
         boardMapper.updatePost(bid, post);
     }
-
     @Override
     public void deletePost(int bid) {
         //삭제기능은 본인 글이 맞아야 하는 로직

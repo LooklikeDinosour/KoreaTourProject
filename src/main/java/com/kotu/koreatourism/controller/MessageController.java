@@ -2,6 +2,8 @@ package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
+import com.kotu.koreatourism.domain.SiteUser;
+import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -42,15 +45,28 @@ public class MessageController {
 
     @PostMapping("/sendmessage")
     public String sendMessage(@ModelAttribute MessageContent messageContent,
-                              @ModelAttribute Message message) {
+                              @ModelAttribute Message message,
+                              RedirectAttributes redirectAttributes) {
         log.info("message.sentUser ={}", message.getSentUser());
         log.info("message.receivedUser ={}", message.getReceivedUser());
         log.info("message.Identifier = {}", message.getSentReceivedIdentifier());
         log.info("messageContent.content ={}", messageContent.getMessageContent());
+
+
+        //존재하는 유저인지 검증
+        String receivedUser = message.getReceivedUser();
+        boolean isUserInfo = userService.checkUserIdExist(receivedUser);
+//        SiteUser userInfo = userMapper.findByUserId(receivedUser);
+        log.info("쪽지 수신 유저 확인 = {}", isUserInfo);
+        if(!isUserInfo) {
+            redirectAttributes.addFlashAttribute("errorMessage", receivedUser + "는 없는 아이디입니다.");
+            return "redirect:/message/createmessage";
+        }
         messageService.sendMessage(messageContent, message);
         return "redirect:/message";
     }
 
+    //받은 쪽지
     @GetMapping("/received")
     public String receivedMessages(Model model, Principal principal) {
         //String userId = session.getId();
@@ -61,6 +77,7 @@ public class MessageController {
         return "message/messageBoard";
     }
 
+    //보낸 쪽지
     @GetMapping("/sent")
     public String sentMessages(Model model, Principal principal) {
         String userId = principal.getName();
@@ -70,6 +87,7 @@ public class MessageController {
         return "message/sentMessagesBoard";
     }
 
+    //쪽지 내용
     @GetMapping("/detail/{messageId}")
     public String messageDetail(Model model,
                                 @PathVariable("messageId") int messageId,
