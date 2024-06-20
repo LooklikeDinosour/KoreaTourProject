@@ -35,6 +35,22 @@
         </td>
     </tr>
     </tbody>
+    <div class="page">
+        <ul>
+            <!-- 첫 페이지 -->
+            <li><a th:href="@{board/{board_category}(page = 1,
+                                                     board_category=${board_category},
+                                                     amount=${pageDTO.amount})}"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
+            <!-- 이전 버튼 -->
+
+
+            <!--마지막 페이지-->
+            <li><a th:href="@{board/{board_category}(page = ${pageDTO.realEnd},
+                                                     board_category=${board_category},
+                                                     amount=${pageDTO.amount})}"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+
+        </ul>
+    </div>
 </table>
 </body>
 <script th:inline="javascript">

@@ -28,5 +28,7 @@ public interface BoardMapper {
     //내가 쓴 글 조회
     public List<Board> findMyAllPost(String userId);
 
+    public int findTotalPost(String boardCategory);
+
 
 }

@@ -1,9 +1,11 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.BoardUpdateDTO;
+import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.service.BoardService;
 import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +30,18 @@ public class BoardController  {
 
     //게시판 조회하기
     @GetMapping("/{board_category}")
-    public String findAllBoard(Model model, @PathVariable("board_category") String boardCategory) {
+    public String findAllBoard(Model model, Criteria criteria, @PathVariable("board_category") String boardCategory) {
 
         log.info("board_category = {}", boardCategory);
+
+        int total = boardService.findTotalPost(boardCategory);
+        PageDTO pageDTO = new PageDTO(criteria, total);
         List<Board> allPosts = boardService.findAllPost(boardCategory);
         log.info("allposts = {}", allPosts);
+
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("board_category", boardCategory);
+        model.addAttribute("pageDTO", pageDTO);
 
         return "board/boardList";
     }

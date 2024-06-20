@@ -27,5 +27,7 @@ public class Board {
     private int viewcount; // 조회수
     private String userId; // 유저아이디
 
+    private int total; // 전체게시글 수
+
 
 }

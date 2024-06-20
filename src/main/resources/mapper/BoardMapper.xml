@@ -52,6 +52,12 @@
         order by regdate desc;
     </select>
 
+    <select id="findTotalPost">
+        select count(*) as total
+        from POST_TB
+        where board_category = #{boardCategory};
+    </select>
+
     <select id="findMyAllPost">
         select * from
         POST_TB
