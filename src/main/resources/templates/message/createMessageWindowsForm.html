@@ -9,24 +9,41 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener("DOMContentLoaded", function() {
-            /* 성공 메시지 처리 */
-            let successMessage = /*[[${successMessage != null ? '"' + successMessage + '"' : 'null'}]]*/ null;
-            let errorMessage = /*[[${errorMessage != null ? '"' + errorMessage + '"' : 'null'}]]*/ null;
+            // 성공 메시지 처리
+            var successMessage = /*[[${successMessage != null ? '"' + successMessage + '"' : '""'}]]*/ "";
+            var errorMessage = /*[[${errorMessage != null ? '"' + errorMessage + '"' : '""'}]]*/ "";
 
-            if (successMessage !== null && successMessage !== 'null') {
-                alert(successMessage);
-                window.close();
+            console.log("Success Message:", successMessage);
+            console.log("Error Message:", errorMessage);
+
+            if (successMessage !== "") {
+                showToast(successMessage);
+                setTimeout(function() {
+                    window.close();
+                }, 3000); // 3초 후에 창 닫기
             }
 
-            /* 오류 메시지 처리 */
-            if (errorMessage !== null && errorMessage !== 'null') {
-                alert(errorMessage);
+            // 오류 메시지 처리
+            if (errorMessage !== "") {
+                showToast(errorMessage);
             }
         });
+
+        function showToast(message) {
+            var toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "show";
+            setTimeout(function() {
+                toast.className = toast.className.replace("show", "");
+            }, 3000); // 3초 후에 알림 사라짐
+        }
         /*]]>*/
     </script>
+
 </head>
 <body>
+<div id="toast"></div>
+
 <form id="messageForm" th:action="@{/message/sendmessage}" method="post">
     <div>
         <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
