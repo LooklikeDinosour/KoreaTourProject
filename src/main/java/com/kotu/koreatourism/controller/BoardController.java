@@ -32,8 +32,9 @@ public class BoardController  {
     @GetMapping("/{board_category}")
     public String findAllBoard(Model model, Criteria criteria, @PathVariable("board_category") String boardCategory) {
 
-        log.info("Criteria 과연 무엇을 가지고 있나 = {}", criteria.toString());
-        log.info("Criteria 현재 페이지 = {}, 페이지 시작 값 확인 = {}, 페이지당 게시글 숫자 = {}", criteria.getPage(), criteria.getPageStart(), criteria.getAmount());
+        log.info("Received Criteria: page = {}, amount = {}, searchType = {}, searchKeyword = {}",
+                criteria.getPage(), criteria.getAmount(), criteria.getSearchType(), criteria.getSearchKeyword());
+
         PageDTO pageDTO = boardService.getPageDTO(boardCategory, criteria);
 //        int totalPost = boardService.findTotalPost(boardCategory);
 //        PageDTO pageDTO = new PageDTO(criteria, totalPost);
@@ -46,6 +47,7 @@ public class BoardController  {
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("board_category", boardCategory);
         model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("criteria", criteria);
 
         return "board/boardList";
     }

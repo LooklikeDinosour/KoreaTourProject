@@ -16,10 +16,10 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/login","/checkid","/signup","/loginProc","/api/**","/static/**","/js/**","/css/**","/images/**","/fragments/**").permitAll()
+                        .requestMatchers("/","/login","/checkid","/signup","/loginProc","/api/**","/board/**","/static/**","/js/**","/css/**","/images/**","/fragments/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/place/save","user/mypage").authenticated()
-                        .requestMatchers("/board/**","/message/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/message/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()// 특정한 경로에 작업하고 싶으면 설정하는 메서드
                        );
 

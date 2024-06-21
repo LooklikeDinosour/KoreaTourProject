@@ -39,16 +39,20 @@
     <select id="findAllPost">
         select bid, title, regdate, author, content, viewcount
         from POST_TB
-        <where>
+        where board_category = #{boardCategory}
+        <if test="cri.searchType != null and cri.searchKeyword != null and cri.searchKeyword != ''">
             <choose>
-                <when test="boardCategory == 'tc'">
-                   board_category = 'tc'
+                <when test="cri.searchType == 'title'">
+                    AND title LIKE CONCAT('%', #{cri.searchKeyword}, '%')
                 </when>
-                <when test="boardCategory == 'tl'">
-                   board_category = 'tl'
+                <when test="cri.searchType == 'content'">
+                    AND content LIKE CONCAT('%', #{cri.searchKeyword}, '%')
+                </when>
+                <when test="cri.searchType == 'author'">
+                    AND author LIKE CONCAT('%', #{cri.searchKeyword}, '%')
                 </when>
             </choose>
-        </where>
+        </if>
         order by regdate desc
         limit #{cri.pageStart}, #{cri.amount};
     </select>

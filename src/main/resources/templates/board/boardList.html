@@ -4,6 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판 목록</title>
+    <style>
+        .select_component {
+            position: relative;
+            display: inline-block;
+            width: 144px;
+        }
+        .select_box {
+            display: block;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #fff;
+        }
+        .select_list {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            z-index: 1;
+            width: 100%;
+        }
+        .select_list li {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .select_list li:hover {
+            background-color: #f1f1f1;
+        }
+        .is_open .select_list {
+            display: block;
+        }
+    </style>
+
 </head>
 <body>
 <h1 th:if="${board_category == 'tc'}">동행 게시판</h1>
@@ -12,6 +50,23 @@
 <form name="searchForm" th:action="@{/board/{board_category}(board_category=${board_category})}" method="get" >
 <input type="hidden" name="page" value="1">
 <input type="hidden" name="amount" th:value="${pageDTO.amount}">
+    <div class="select_component" id="divSearchByTop">
+        <a href="#" onclick="toggleDropdown('divSearchByTop'); return false;" id="currentSearchByTop" class="select_box"
+           th:text="${pageDTO.criteria.searchType == 'title' ? '제목' : (pageDTO.criteria.searchType == 'author' ? '작성자' : '내용')}">제목</a>
+        <ul class="select_list" id="sl_general">
+            <li><a href="#" onclick="setSearchOption('제목', 'title'); return false;">제목</a></li>
+            <li><a href="#" onclick="setSearchOption('작성자', 'author'); return false;">작성자</a></li>
+            <li><a href="#" onclick="setSearchOption('내용', 'content'); return false;">내용</a></li>
+        </ul>
+    </div>
+    <input type="hidden" name="searchType" id="searchType" th:value="${criteria.searchType}">
+    <div>
+        <span class="search_th">검색어</span>
+        <input type="text" class="" placeholder="검색어" name="searchKeyword" th:value="${pageDTO.criteria.searchKeyword}">
+    </div>
+    <div>
+        <button type="submit">검색</button>
+    </div>
 <table>
     <select class="" onchange="handleChange(event)">
         <option value="10" th:selected="${pageDTO.amount == 10}">10개 보기</option>
@@ -53,7 +108,9 @@
                 <li style="margin-right: 5px;">
                     <a th:href="@{/board/{board_category}(page=${pageDTO.start - 1},
                                                          board_category=${board_category},
-                                                         amount=${pageDTO.amount})}">
+                                                         amount=${pageDTO.amount},
+                                                         searchType=${pageDTO.criteria.searchType},
+                                                         searchKeyword=${pageDTO.criteria.searchKeyword})}">
                         <i class="fa fa-angle-left" aria-hidden="true"></i>이전
                     </a>
                 </li>
@@ -63,7 +120,9 @@
             <li>
                 <a th:href="@{/board/{board_category}(page = 1,
                                                      board_category=${board_category},
-                                                     amount=${pageDTO.amount})}">
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
                 <i class="fa fa-angle-double-left" aria-hidden="true"></i>
                 </a>
             </li>
@@ -73,7 +132,9 @@
                 <li th:class="${pageDTO.page == page ? 'on' : ''}">
                     <a th:href="@{/board/{board_category}(page=${page},
                                                          board_category=${board_category},
-                                                         amount=${pageDTO.amount})}">
+                                                         amount=${pageDTO.amount},
+                                                         searchType=${pageDTO.criteria.searchType},
+                                                         searchKeyword=${pageDTO.criteria.searchKeyword})}">
                         [[${page}]]
                     </a>
 
@@ -84,7 +145,9 @@
             <li>
                 <a th:href="@{/board/{board_category}(page = ${pageDTO.realEnd},
                                                      board_category=${board_category},
-                                                     amount=${pageDTO.amount})}">
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
                 <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </a>
             </li>
@@ -94,7 +157,9 @@
                 <li style="margin-left: 5px;">
                     <a th:href="@{/board/{board_category}(page=${pageDTO.end + 1},
                                                          board_category=${board_category},
-                                                         amount=${pageDTO.amount})}">
+                                                         amount=${pageDTO.amount},
+                                                         searchType=${pageDTO.criteria.searchType},
+                                                         searchKeyword=${pageDTO.criteria.searchKeyword})}">
                         <i class="fa fa-angle-right" aria-hidden="true"></i>다음
                     </a>
                 </li>
@@ -108,6 +173,25 @@
     function handleChange(event) {
         document.searchForm.amount.value = event.target.value;
         document.searchForm.submit();
+    }
+
+    //검색버튼
+    let searchBtn = document.getElementById('searchBtn');
+    searchBtn.onclick = function () {
+        event.preventDefault();
+        document.searchForm.submit();
+    }
+
+    //검색조건
+    function toggleDropdown(id) {
+        let element = document.getElementById(id);
+        element.classList.toggle('is_open');
+    }
+
+    function setSearchOption(displayText, searchTypeValue) {
+        document.getElementById('currentSearchByTop').innerText = displayText;
+        document.getElementById('searchType').value = searchTypeValue;
+        toggleDropdown('divSearchByTop');
     }
 
 </script>
