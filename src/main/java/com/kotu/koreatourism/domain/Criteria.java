@@ -1,8 +1,10 @@
 package com.kotu.koreatourism.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Criteria {
 
     private int page; // 조회 페이지
@@ -22,5 +24,13 @@ public class Criteria {
     //페이지 시작 지정
     public int getPageStart() {
         return (page - 1) * amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Criteria{" +
+                "page=" + page +
+                ", amount=" + amount +
+                '}';
     }
 }

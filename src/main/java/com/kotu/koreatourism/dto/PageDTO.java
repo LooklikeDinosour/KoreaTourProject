@@ -2,12 +2,14 @@ package com.kotu.koreatourism.dto;
 
 import com.kotu.koreatourism.domain.Criteria;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Getter
+@Setter
 public class PageDTO {
 
     private int start; //페이지네이션 시작숫자
@@ -25,6 +27,7 @@ public class PageDTO {
     private List<Integer> pageList; // 페이지네이션 리스트로 저장
 
     public PageDTO(Criteria criteria, int total) {
+        this.criteria = criteria;
         this.page = criteria.getPage();
         this.amount = criteria.getAmount();
         this.total = total;
@@ -56,4 +59,20 @@ public class PageDTO {
 
     }
 
+    @Override
+    public String toString() {
+        return "PageDTO{" +
+                "start=" + start +
+                ", end=" + end +
+                ", prev=" + prev +
+                ", next=" + next +
+                ", total=" + total +
+                ", realEnd=" + realEnd +
+                ", page=" + page +
+                ", amount=" + amount +
+                ", criteria=" + criteria +
+                ", pnCount=" + pnCount +
+                ", pageList=" + pageList +
+                '}';
+    }
 }

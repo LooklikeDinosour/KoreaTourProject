@@ -1,7 +1,9 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.dto.BoardUpdateDTO;
+import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,13 +42,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAllPost(String boardCategory) {
-       return boardMapper.findAllPost(boardCategory);
+    public List<Board> findAllPost(String boardCategory, Criteria criteria) {
+       return boardMapper.findAllPost(boardCategory, criteria);
     }
 
     @Override
     public int findTotalPost(String boardCategory) {
         return boardMapper.findTotalPost(boardCategory);
+    }
+
+    @Override
+    public PageDTO getPageDTO(String boardCategory, Criteria criteria) {
+        int totalPost = findTotalPost(boardCategory);
+        return new PageDTO(criteria, totalPost);
     }
 
     @Override

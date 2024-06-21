@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Board;
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.dto.BoardUpdateDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,7 +24,8 @@ public interface BoardMapper {
     public int deletePost(int bid);
 
     //카테고리 별로 글 분류하기
-    public List<Board> findAllPost(String boardCategory);
+    public List<Board> findAllPost(@Param("boardCategory") String boardCategory,
+                                   @Param("cri") Criteria criteria);
 
     //내가 쓴 글 조회
     public List<Board> findMyAllPost(String userId);

@@ -32,12 +32,16 @@ public class BoardController  {
     @GetMapping("/{board_category}")
     public String findAllBoard(Model model, Criteria criteria, @PathVariable("board_category") String boardCategory) {
 
-        log.info("board_category = {}", boardCategory);
+        log.info("Criteria 과연 무엇을 가지고 있나 = {}", criteria.toString());
+        log.info("Criteria 현재 페이지 = {}, 페이지 시작 값 확인 = {}, 페이지당 게시글 숫자 = {}", criteria.getPage(), criteria.getPageStart(), criteria.getAmount());
+        PageDTO pageDTO = boardService.getPageDTO(boardCategory, criteria);
+//        int totalPost = boardService.findTotalPost(boardCategory);
+//        PageDTO pageDTO = new PageDTO(criteria, totalPost);
+        log.info("페이지DTO 현재 페이지 = {}, 페이지당 게시글 숫자 = {}", pageDTO.getCriteria().getPage(), pageDTO.getAmount());
+        List<Board> allPosts = boardService.findAllPost(boardCategory, criteria);
+        log.info("allPosts = {}", allPosts);
 
-        int total = boardService.findTotalPost(boardCategory);
-        PageDTO pageDTO = new PageDTO(criteria, total);
-        List<Board> allPosts = boardService.findAllPost(boardCategory);
-        log.info("allposts = {}", allPosts);
+        log.info("PageDTO 계산 값 출력 = {}", pageDTO.toString());
 
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("board_category", boardCategory);
