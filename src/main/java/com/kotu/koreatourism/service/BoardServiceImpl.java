@@ -47,13 +47,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int findTotalPost(String boardCategory) {
-        return boardMapper.findTotalPost(boardCategory);
+    public int findTotalPost(String boardCategory, Criteria criteria) {
+        return boardMapper.findTotalPost(boardCategory, criteria);
     }
 
     @Override
     public PageDTO getPageDTO(String boardCategory, Criteria criteria) {
-        int totalPost = findTotalPost(boardCategory);
+        int totalPost = findTotalPost(boardCategory, criteria);
         return new PageDTO(criteria, totalPost);
     }
 

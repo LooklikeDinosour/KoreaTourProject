@@ -25,7 +25,7 @@ public interface BoardService {
     //boardtype이 다른데 어떻게 조회를 해오나.. class는 상속받아야하나?? 흠.. 잠시 보류
     public List<Board> findAllPost(String boardCategory, Criteria criteria);
 
-    public int findTotalPost(String boardCategory);
+    public int findTotalPost(String boardCategory, Criteria criteria);
 
     public PageDTO getPageDTO(String boardCategory, Criteria criteria);
 

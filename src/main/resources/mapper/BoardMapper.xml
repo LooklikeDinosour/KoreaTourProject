@@ -60,7 +60,20 @@
     <select id="findTotalPost">
         select count(*) as total
         from POST_TB
-        where board_category = #{boardCategory};
+        where board_category = #{boardCategory}
+        <if test="cri.searchType != null and cri.searchKeyword != null and cri.searchKeyword != ''">
+            <choose>
+                <when test="cri.searchType == 'title'">
+                    AND title LIKE CONCAT('%', #{cri.searchKeyword}, '%')
+                </when>
+                <when test="cri.searchType == 'content'">
+                    AND content LIKE CONCAT('%', #{cri.searchKeyword}, '%')
+                </when>
+                <when test="cri.searchType == 'author'">
+                    AND author LIKE CONCAT('%', #{cri.searchKeyword}, '%')
+                </when>
+            </choose>
+        </if>
     </select>
 
     <select id="findMyAllPost">
