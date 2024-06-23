@@ -156,7 +156,7 @@
             color: black;
         }
 
-    </style>
+        </style>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
@@ -188,12 +188,6 @@
     //CSRF
     let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-    // 페이지네이션 변수
-    let page = 0;
-    const size = 10;
-    let isLoading = false;
-
     //대분류
     document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/area1')
@@ -253,8 +247,8 @@
                     groupId: obj.groupId,
                     categoryLv: obj.categoryLv,
                     categoryDetailOr: obj.categoryDetailOr
+                    })
                 })
-            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -272,7 +266,7 @@
                     console.error('Error:', err);
                 });
         } else {
-            removeSubCategories(); // 중분류가 없을 경우 중분류 영역 비우기
+                removeSubCategories(); // 중분류가 없을 경우 중분류 영역 비우기
         }
 
         //category_set(e.target); // 히든 태그에 값을 저장, 클릭한 대상을 매개변수로 저장
@@ -305,56 +299,47 @@
         });
     }
 
-    // 공공데이터 API를 호출하여 데이터를 로드하는 함수
-    function loadAreaBasedData(groupId, categoryParentLv, categoryApiCode) {
-        if (isLoading) return;
+    //공공데이터 API를 호출
+    function handleAreaBasedAPIClick(event) {
+        event.preventDefault();
+        let target = event.target;
+        if(target.tagName !== 'A') return;
 
-        isLoading = true;
+        var obj = JSON.parse(target.getAttribute('data-set'));
+        console.log('Subcategory clicked:', obj);
 
-        fetch(`/api/areabase?page=${page}&numOfRows=${size}`, {
+        fetch('/api/areabase', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
+                [csrfHeader] : csrfToken
             },
             body: JSON.stringify({
-                groupId: groupId,
-                categoryParentLv: categoryParentLv,
-                categoryApiCode: categoryApiCode
+               groupId : obj.groupId,
+               categoryParentLv : obj.categoryParentLv,
+               categoryApiCode : obj.categoryApiCode
             })
         })
             .then(response => response.json())
             .then(data => {
                 console.log('AreaBased API response:', data);
-                appendTouristItems(data);
-                page++;
-                isLoading = false;
+                createTouristItems(data);
             })
             .catch(error => {
                 console.error('Error:', error);
-                isLoading = false;
             });
     }
-
-    // 공공데이터 API를 호출
-    function handleAreaBasedAPIClick(event) {
-        event.preventDefault();
-        let target = event.target;
-        if (target.tagName !== 'A') return;
-
-        var obj = JSON.parse(target.getAttribute('data-set'));
-        console.log('Subcategory clicked:', obj);
-
-        // 새로운 카테고리가 클릭되면 페이지 번호를 초기화하고 데이터를 로드
-        page = 0;
+    // function loading() {
+    //     var loadingElement = document.querySelector(".loading");
+    //     loadingElement.style.display = "block";
+    //     window.setTimeout(function() {
+    //         loadingElement.style.display = "none";
+    //     }, 1000);
+    //}
+    function createTouristItems(responseData) {
         const container = document.getElementById('touristContainer');
-        container.innerHTML = '';
+        container.innerHTML = ''; // 기존 내용을 비움
 
-        loadAreaBasedData(obj.groupId, obj.categoryParentLv, obj.categoryApiCode);
-    }
-
-    function appendTouristItems(responseData) {
-        const container = document.getElementById('touristContainer');
         const data = responseData.item; // 응답 데이터의 item 배열을 가져옴
 
         data.forEach(tour => {
@@ -412,7 +397,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
+                [csrfHeader] : csrfToken
             },
             body: JSON.stringify({ contentId: contentId })
         })
@@ -454,30 +439,19 @@
     }
 
     function takeContentData() {
-        const url = document.querySelector('a[href*="api/area-based"]');
-        url.href = `/api/area-based/${selectedContentType}`;
+                const url = document.querySelector('a[href*="api/area-based"]');
+                url.href = `/api/area-based/${selectedContentType}`;
 
-        fetch(url.href, {
-            method: 'GET',
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                appendTouristItems(data);
-            })
-            .catch((error) => console.error('Error:', error));
-    }
-
-    // 무한 스크롤 로직
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && !isLoading) {
-            const currentCategory = document.querySelector('.sub_menu_select');
-            if (currentCategory) {
-                const obj = JSON.parse(currentCategory.getAttribute('data-set'));
-                loadAreaBasedData(obj.groupId, obj.categoryParentLv, obj.categoryApiCode);
+                fetch(url.href , {
+                    method: 'GET',
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        createTouristItems(data);
+                    })
+                    .catch((error) => console.error('Error:', error));
             }
-        }
-    });
 </script>
 
 </body>

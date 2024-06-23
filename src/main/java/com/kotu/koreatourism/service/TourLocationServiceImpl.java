@@ -176,6 +176,8 @@ public class TourLocationServiceImpl implements TourLocationService {
                                String serviceKey,
                                String dataType,
                                int contentTypeId,
+                               String numOfRows,
+                               String pageNo,
                                TourAreaSigunguDTO areaSigunguCode) throws IOException {
 
         int areaCode = tourCategoryService.takeApiCodeNum(areaSigunguCode.getGroupId());
@@ -186,8 +188,8 @@ public class TourLocationServiceImpl implements TourLocationService {
 
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/areaBasedList1"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + serviceKey); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("30", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("2", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));

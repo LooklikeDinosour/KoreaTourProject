@@ -169,11 +169,13 @@ public class DataApiController2 {
     @PostMapping("/areabase")
     @ResponseBody
     public ResponseEntity<TourAreaBasedItemDTO> areaBasedAPI(@RequestBody TourAreaSigunguDTO areaSigunguCode,
+                                                             @RequestParam String pageNo,
+                                                             @RequestParam String numOfRows,
                                                              HttpSession session) throws IOException {
 
         session.setAttribute("areaSigungu", areaSigunguCode);
 
-        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, 0, areaSigunguCode);
+        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, 0, numOfRows, pageNo, areaSigunguCode);
         TourAreaBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourAreaBasedItemDTO.class);
         log.info("AreaBased 데이터 = {}", tourAreaBased);
 
@@ -190,6 +192,8 @@ public class DataApiController2 {
     @GetMapping("/area-based/{content-type}")
     @ResponseBody
     public ResponseEntity<TourAreaBasedItemDTO> areaCategory(@PathVariable("content-type") String contentType,
+                               String pageNo,
+                               String numOfRows,
                                HttpServletRequest request,
                                HttpSession session,
                                Model model) throws IOException {
@@ -203,7 +207,7 @@ public class DataApiController2 {
         log.info("LC ContentTypeId 인증 검사 = {}", contentTypeId);
         TourAreaSigunguDTO areaSigungu = (TourAreaSigunguDTO)session.getAttribute("areaSigungu");
 
-        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, contentTypeId, areaSigungu);
+        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, contentTypeId, numOfRows, pageNo, areaSigungu);
         TourAreaBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourAreaBasedItemDTO.class);
         log.info("LC 공공데이터 API 호출 = {}", tourAreaBased);
 
