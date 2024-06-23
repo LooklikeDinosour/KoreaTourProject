@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class CommentServiceImpl implements CommentService{
         comment.setAuthor(commentDTO.getAuthor());
         comment.setComment(commentDTO.getComment());
         comment.setBid(commentDTO.getBid());
+        comment.setUserId(commentDTO.getUserId());
 
         commentMapper.saveComment(comment);
     }
@@ -30,8 +32,23 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> findAllComment(int bid) {
-        return null;
+    public List<CommentDTO> findAllComment(int bid) {
+
+        List<Comment> allComment = commentMapper.findAllComment(bid);
+
+        List<CommentDTO> findAllCommentToCommentDTOList = allComment.stream()
+                .map( comment -> {
+                    CommentDTO commentDTO = new CommentDTO();
+                    commentDTO.setBid(comment.getBid());
+                    commentDTO.setAuthor(comment.getAuthor());
+                    commentDTO.setComment(comment.getComment());
+                    commentDTO.setRegdate(comment.getRegdate());
+                    commentDTO.setUserId(comment.getUserId());
+                    return commentDTO;
+                })
+                .collect(Collectors.toList());
+
+        return findAllCommentToCommentDTOList;
     }
 
     @Override

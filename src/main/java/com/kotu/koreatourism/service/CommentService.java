@@ -11,7 +11,7 @@ public interface CommentService {
 
     public void deleteComment(int commentId);
 
-    public List<Comment> findAllComment(int bid);
+    public List<CommentDTO> findAllComment(int bid);
 
     public void updateComment(Comment comment);
 }

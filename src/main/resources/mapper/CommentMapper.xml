@@ -15,6 +15,12 @@
                )
     </insert>
 
+    <select id="findAllComment">
+        select *
+        from COMMENT_TB
+        where bid = #{bid}
+    </select>
+
 
 
 

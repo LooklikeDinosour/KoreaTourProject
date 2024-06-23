@@ -5,8 +5,10 @@ import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.BoardUpdateDTO;
+import com.kotu.koreatourism.dto.CommentDTO;
 import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.service.BoardService;
+import com.kotu.koreatourism.service.CommentService;
 import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,8 @@ import java.util.List;
 public class BoardController  {
 
     private final BoardService boardService;
+
+    private final CommentService commentService;
 
     //게시판 조회하기
     @GetMapping("/{board_category}")
@@ -95,10 +99,13 @@ public class BoardController  {
             redirectAttributes.addFlashAttribute("errorMessage", "해당 게시글을 찾을 수 없습니다.");
             return "redirect:/board/" + boardCategory; //전체 게시판으로 돌아가는.. 카테고리별로 돌아가야되는데
         }
+        List<CommentDTO> allCommentList = commentService.findAllComment(postId);
+
         log.info("readPost={}", post);
         model.addAttribute("message", new Message());
         model.addAttribute("messageContent", new MessageContent());
         model.addAttribute("post", post);
+        model.addAttribute("comments", allCommentList);
         return "board/postdetail";
     }
 
