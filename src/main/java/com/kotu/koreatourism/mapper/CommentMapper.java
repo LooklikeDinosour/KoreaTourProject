@@ -1,17 +1,19 @@
-package com.kotu.koreatourism.service;
+package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Comment;
-import com.kotu.koreatourism.dto.CommentDTO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-public interface CommentService {
+@Mapper
+public interface CommentMapper {
 
-    public void saveComment(CommentDTO commentDTO);
+    public int saveComment(Comment comment);
 
     public void deleteComment(int commentId);
 
     public List<Comment> findAllComment(int bid);
 
     public void updateComment(Comment comment);
+
 }

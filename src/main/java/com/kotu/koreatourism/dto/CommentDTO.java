@@ -1,7 +1,14 @@
 package com.kotu.koreatourism.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.sql.Timestamp;
 
+@Getter
+@Setter
+@ToString
 public class CommentDTO {
 
     private int commentId; //PK
@@ -10,5 +17,6 @@ public class CommentDTO {
     private String comment; //댓글 내용
     private int bid; // 게시글 연걸 FK
     private String userId;
+
 
 }

@@ -1,7 +1,13 @@
 package com.kotu.koreatourism.domain;
 
+import lombok.*;
+
 import java.sql.Timestamp;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
     private int commentId; //PK

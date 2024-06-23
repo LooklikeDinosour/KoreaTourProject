@@ -68,6 +68,7 @@
 <body>
 
 <h1 th:text="${post.title}"></h1>
+<input type="hidden" th:value="${post.bid}">
 <p><b>작성자:</b><span th:text="${post.author}"></span></p>
 <p><b>작성일:</b><span th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"></span></p>
 <div th:text="${post.content}"></div>
@@ -85,6 +86,19 @@
                 th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/delete(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
                 type="button">삭제</button>
     </div>
+</div>
+<div th:if="${#authentication.authenticated}">
+    <form th:action="@{/board/{board_category}/readpost/{postbid}/comment/save(postbid=${post.bid}, board_category=${post.boardCategory})}" method="post">
+        <input type="hidden" name="userId" th:value="${post.userId}">
+        <input type="hidden" name="bid" th:value="${post.bid}">
+        <input type="hidden" name="author" th:value="${post.author}">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <textarea name="comment" placeholder="댓글을 입력하세요"></textarea>
+        <button type="submit">댓글 등록</button>
+    </form>
+</div>
+<div th:if="${!#authentication.authenticated}">
+    <p>댓글을 등록하려면 로그인 해주세요.</p>
 </div>
 
 </body>
