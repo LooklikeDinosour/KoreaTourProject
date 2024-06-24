@@ -99,7 +99,9 @@ public class BoardController  {
             redirectAttributes.addFlashAttribute("errorMessage", "해당 게시글을 찾을 수 없습니다.");
             return "redirect:/board/" + boardCategory; //전체 게시판으로 돌아가는.. 카테고리별로 돌아가야되는데
         }
+        //댓글 불러오기
         List<CommentDTO> allCommentList = commentService.findAllComment(postId);
+        log.info("댓글 불러오기 = {}", allCommentList.toString());
 
         log.info("readPost={}", post);
         model.addAttribute("message", new Message());

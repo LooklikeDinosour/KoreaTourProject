@@ -87,7 +87,7 @@
                 type="button">삭제</button>
     </div>
 </div>
-<div th:if="${#authentication.authenticated}">
+<div sec:authorize="isAuthenticated()">
     <form th:action="@{/board/{board_category}/readpost/{postbid}/comment/save(postbid=${post.bid}, board_category=${post.boardCategory})}" method="post">
         <input type="hidden" name="userId" th:value="${post.userId}">
         <input type="hidden" name="bid" th:value="${post.bid}">
@@ -97,7 +97,7 @@
         <button type="submit">댓글 등록</button>
     </form>
 </div>
-<div th:if="${!#authentication.authenticated}">
+<div sec:authorize="!isAuthenticated()">
     <p>댓글을 등록하려면 로그인 해주세요.</p>
 </div>
 
@@ -109,9 +109,9 @@
         <p th:text="${#temporals.format(comment.regdate, 'yyyy-MM-dd HH:mm')}"></p>
         <!-- 댓글 수정 및 삭제 버튼들 -->
         <div th:if="${#authentication.name == comment.userId}">
-            <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.id})}')|"
+            <button th:onclick="|confirmAction('수정', '@{/board/{board_category}/{postbid}/comment/{commentId}/update(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
                     type="button">수정</button>
-            <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.id})}')|"
+            <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
                     type="button">삭제</button>
         </div>
     </div>
