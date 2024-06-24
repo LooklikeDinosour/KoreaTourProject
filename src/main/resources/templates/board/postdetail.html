@@ -102,16 +102,17 @@
 </div>
 
 <div>
-    <h3>댓글</h3>
     <div th:each="comment : ${comments}">
+        <input type="hidden" th:value="${comment.commentId}">
+        <p th:text="${comment.commentId}"></p>
         <p th:text="${comment.author}"></p>
         <p th:text="${comment.comment}"></p>
         <p th:text="${#temporals.format(comment.regdate, 'yyyy-MM-dd HH:mm')}"></p>
         <!-- 댓글 수정 및 삭제 버튼들 -->
         <div th:if="${#authentication.name == comment.userId}">
-            <button th:onclick="|confirmAction('수정', '@{/board/{board_category}/{postbid}/comment/{commentId}/update(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
+            <button th:onclick="|confirmAction('수정', '@{/board/{board_category}/readpost/{postbid}/comment/{commentId}/update(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
                     type="button">수정</button>
-            <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
+            <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/readpost/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
                     type="button">삭제</button>
         </div>
     </div>

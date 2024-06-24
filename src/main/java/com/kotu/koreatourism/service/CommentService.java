@@ -9,9 +9,9 @@ public interface CommentService {
 
     public void saveComment(CommentDTO commentDTO);
 
-    public void deleteComment(int commentId);
+    public void deleteComment(int commentId, int bid);
 
     public List<CommentDTO> findAllComment(int bid);
 
-    public void updateComment(Comment comment);
+    public void updateComment(CommentDTO commentDTO);
 }

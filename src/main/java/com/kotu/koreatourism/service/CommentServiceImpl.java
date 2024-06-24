@@ -27,8 +27,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void deleteComment(int commentId) {
-
+    public void deleteComment(int commentId, int bid) {
+        commentMapper.deleteComment(bid, commentId);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService{
         List<CommentDTO> findAllCommentToCommentDTOList = allComment.stream()
                 .map( comment -> {
                     CommentDTO commentDTO = new CommentDTO();
+                    commentDTO.setCommentId(comment.getCommentId());
                     commentDTO.setBid(comment.getBid());
                     commentDTO.setAuthor(comment.getAuthor());
                     commentDTO.setComment(comment.getComment());
@@ -52,7 +53,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void updateComment(Comment comment) {
+    public void updateComment(CommentDTO commentDTO) {
+
 
     }
 }

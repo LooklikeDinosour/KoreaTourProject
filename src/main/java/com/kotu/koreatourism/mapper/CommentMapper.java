@@ -2,6 +2,7 @@ package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Comment;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,7 +11,8 @@ public interface CommentMapper {
 
     public int saveComment(Comment comment);
 
-    public void deleteComment(int commentId);
+    public void deleteComment(@Param("bid") int bid,
+                              @Param("commentId") int commentId);
 
     public List<Comment> findAllComment(int bid);
 

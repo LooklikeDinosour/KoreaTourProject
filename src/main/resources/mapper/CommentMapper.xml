@@ -21,6 +21,17 @@
         where bid = #{bid}
     </select>
 
+    <delete id="deleteComment">
+        delete from COMMENT_TB
+        where bid = #{bid} and comment_id = #{commentId}
+    </delete>
+
+    <update id="updateComment">
+        update COMMENT_TB
+        set
+            comment = #{comment}
+        where bid = #{bid} and comment_id = #{commentId}
+    </update>
 
 
 

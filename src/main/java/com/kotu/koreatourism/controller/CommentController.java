@@ -21,8 +21,7 @@ public class CommentController {
     @PostMapping("/save")
     public String saveComment(@PathVariable("board_category") String boardCategory,
                               @PathVariable("postbid") int bid,
-                              CommentDTO commentDTO,
-                              Principal principal) {
+                              CommentDTO commentDTO) {
         log.info("boardCat={}", boardCategory);
         log.info("게시글 pk={}", bid);
 
@@ -32,5 +31,16 @@ public class CommentController {
         return "redirect:/board/"+ boardCategory +"/readpost/" + bid;
     }
 
+    @GetMapping("/{commentId}/delete")
+    public String deleteComment(@PathVariable("board_category") String boardCategory,
+                                @PathVariable("commentId") int commentId,
+                                @PathVariable("postbid") int bid) {
+        log.info("boardCat={}", boardCategory);
+        log.info("게시글 pk={}", bid);
+        log.info("댓글 ID = {}", commentId);
 
+        commentService.deleteComment(commentId, bid);
+
+        return "redirect:/board/"+ boardCategory +"/readpost/" + bid;
+    }
 }
