@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세보기</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <style>
         #toast {
             visibility: hidden;
@@ -49,6 +51,8 @@
         }
     </style>
     <script th:inline="javascript">
+        var boardCategory = /*[[${post.boardCategory}]]*/ 'defaultCategory';
+        var postBid = /*[[${post.bid}]]*/ 'defaultBid';
         /*<![CDATA[*/
         function confirmAction(action, url) {
             if (confirm(action + ' 하시겠습니까?')) {
@@ -63,6 +67,70 @@
             window.open(fullUrl, '쪽지 보내기', 'width=600,height=400');
         }
         /*]]>*/
+
+        function showUpdateForm(commentId) {
+            console.log("댓글 번호: ", commentId)
+            let updateFormContainer = document.getElementById('update-form-' + commentId);
+
+            // 이미 폼이 표시되어 있다면 숨김
+            if (updateFormContainer.style.display === 'block') {
+                updateFormContainer.style.display = 'none';
+                updateFormContainer.innerHTML = '';
+                return;
+            }
+
+            // 기존에 표시된 다른 폼을 숨김
+            let forms = document.querySelectorAll('[id^="update-form-"]');
+            forms.forEach(function (form) {
+                form.style.display = 'none';
+                form.innerHTML = '';
+            });
+
+            let commentContent = document.getElementById('comment-content-' + commentId).innerText;
+            let updateFormHtml = `
+        <form>
+            <input type="hidden" name="commentId" value="${commentId}">
+            <textarea name="comment" id="update-comment-${commentId}">${commentContent}</textarea>
+            <button type="button" onclick="updateComment(${commentId})">저장</button>
+            <button type="button" onclick="cancelEdit(${commentId})">취소</button>
+        </form>
+    `;
+            updateFormContainer.innerHTML = updateFormHtml;
+            updateFormContainer.style.display = 'block';
+        }
+
+        function updateComment(commentId) {
+            let newContent = document.getElementById('update-comment-' + commentId).value;
+            let csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+            let csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+
+            fetch(`/board/${boardCategory}/readpost/${postBid}/comment/${commentId}/update`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    [csrfHeader]: csrfToken
+                },
+                body: `commentId=${commentId}&comment=${encodeURIComponent(newContent)}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        let commentElement = document.getElementById('comment-content-' + commentId);
+                        commentElement.innerText = newContent;
+                        cancelEdit(commentId);
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                })
+                .catch(error => {
+                    alert('댓글 수정에 실패했습니다: ' + error.message);
+                });
+        }
+
+        function cancelEdit(commentId) {
+            let updateFormContainer = document.getElementById('update-form-' + commentId);
+            updateFormContainer.style.display = 'none';
+            updateFormContainer.innerHTML = '';
+        }
     </script>
 </head>
 <body>
@@ -88,33 +156,29 @@
     </div>
 </div>
 <div sec:authorize="isAuthenticated()">
-    <form th:action="@{/board/{board_category}/readpost/{postbid}/comment/save(postbid=${post.bid}, board_category=${post.boardCategory})}" method="post">
-        <input type="hidden" name="userId" th:value="${post.userId}">
-        <input type="hidden" name="bid" th:value="${post.bid}">
-        <input type="hidden" name="author" th:value="${post.author}">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-        <textarea name="comment" placeholder="댓글을 입력하세요"></textarea>
-        <button type="submit">댓글 등록</button>
-    </form>
+    <div th:if="${formType == 'save'}" th:replace="fragments/save-comment-form :: commentForm(@{/board/{board_category}/readpost/{postbid}/comment/save(postbid=${post.bid}, board_category=${post.boardCategory})},
+     ${#authentication.name}, ${post.bid}, ${#authentication.principal.user.userNickname}, '')">
+    </div>
 </div>
 <div sec:authorize="!isAuthenticated()">
     <p>댓글을 등록하려면 로그인 해주세요.</p>
 </div>
 
-<div>
+<div id="comment-list">
     <div th:each="comment : ${comments}">
-        <input type="hidden" th:value="${comment.commentId}">
+        <input type="hidden" th:value="${comment.commentId}" id="comment-[[${comment.commentId}]]">
         <p th:text="${comment.commentId}"></p>
         <p th:text="${comment.author}"></p>
-        <p th:text="${comment.comment}"></p>
+        <p th:text="${comment.comment}" th:id="'comment-content-' + ${comment.commentId}"></p>
         <p th:text="${#temporals.format(comment.regdate, 'yyyy-MM-dd HH:mm')}"></p>
         <!-- 댓글 수정 및 삭제 버튼들 -->
         <div th:if="${#authentication.name == comment.userId}">
-            <button th:onclick="|confirmAction('수정', '@{/board/{board_category}/readpost/{postbid}/comment/{commentId}/update(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
+            <button th:onclick="'showUpdateForm(' + ${comment.commentId} + ')'"
                     type="button">수정</button>
             <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/readpost/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
                     type="button">삭제</button>
         </div>
+        <div th:id="'update-form-' + ${comment.commentId}" style="display:none;"></div>
     </div>
 </div>
 

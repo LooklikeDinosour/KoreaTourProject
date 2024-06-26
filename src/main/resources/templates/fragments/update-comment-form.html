@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Comment Form</title>
+</head>
+<body>
+<div th:fragment="updateCommentForm(commentUrl, userId, bid, author, comment)">
+    <form th:action="|${commentUrl}|" method="post">
+        <input type="hidden" name="userId" th:value="${userId}">
+        <input type="hidden" name="bid" th:value="${bid}">
+        <input type="hidden" name="author" th:value="${author}">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <textarea name="comment" placeholder="댓글을 입력하세요" th:text="${comment}"></textarea>
+        <button type="submit">수정</button>
+    </form>
+</div>
+
+
+
+</body>
+</html>

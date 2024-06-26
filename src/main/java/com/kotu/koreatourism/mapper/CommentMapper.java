@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Comment;
+import com.kotu.koreatourism.dto.CommentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +18,7 @@ public interface CommentMapper {
     public List<Comment> findAllComment(int bid);
 
     public void updateComment(Comment comment);
+
+    public Comment findCommentById(int commentId);
 
 }

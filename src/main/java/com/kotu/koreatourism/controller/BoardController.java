@@ -104,6 +104,7 @@ public class BoardController  {
         log.info("댓글 불러오기 = {}", allCommentList.toString());
 
         log.info("readPost={}", post);
+        model.addAttribute("formType", "save");
         model.addAttribute("message", new Message());
         model.addAttribute("messageContent", new MessageContent());
         model.addAttribute("post", post);

@@ -55,6 +55,23 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void updateComment(CommentDTO commentDTO) {
 
+        Comment commentById = commentMapper.findCommentById(commentDTO.getCommentId());
+        commentById.setComment(commentDTO.getComment());
+        commentMapper.updateComment(commentById);
+    }
 
+    @Override
+    public CommentDTO findCommentById(int commentId) {
+
+        Comment commentById = commentMapper.findCommentById(commentId);
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentId(commentById.getCommentId());
+        commentDTO.setAuthor(commentById.getAuthor());
+        commentDTO.setBid(commentById.getBid());
+        commentDTO.setRegdate(commentById.getRegdate());
+        commentDTO.setComment(commentById.getComment());
+        commentDTO.setUserId(commentById.getUserId());
+
+        return commentDTO;
     }
 }

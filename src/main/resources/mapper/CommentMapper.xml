@@ -33,6 +33,11 @@
         where bid = #{bid} and comment_id = #{commentId}
     </update>
 
+    <select id="findCommentById">
+        select * from COMMENT_TB
+        where comment_id = #{commentId}
+    </select>
+
 
 
 </mapper>
