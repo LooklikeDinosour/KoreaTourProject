@@ -13,7 +13,7 @@ public interface CommentService {
 
     public List<CommentDTO> findAllComment(int bid);
 
-    public void updateComment(CommentDTO commentDTO);
+    public int updateComment(CommentDTO commentDTO);
 
     public CommentDTO findCommentById(int commentId);
 }

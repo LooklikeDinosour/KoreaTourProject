@@ -5,10 +5,11 @@ import com.kotu.koreatourism.dto.CommentDTO;
 import com.kotu.koreatourism.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @Slf4j
@@ -63,16 +64,10 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/update")
-    public String updateComment(@PathVariable("board_category") String boardCategory,
-                                @PathVariable("postbid") int bid,
-                                @ModelAttribute CommentDTO commentDTO,
-                                RedirectAttributes redirectAttributes) {
+    public ResponseEntity<CommentDTO> updateComment(@ModelAttribute CommentDTO commentDTO) {
 
         log.info("코멘트 수정 내용 = {}", commentDTO.getComment());
-
-        commentService.updateComment(commentDTO);
-        redirectAttributes.addFlashAttribute("message", "댓글이 수정되었습니다.");
-        return "redirect:/board/"+ boardCategory +"/readpost/" + bid;
-
+        return (commentService.updateComment(commentDTO) == 1) ? new ResponseEntity<>(commentDTO, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

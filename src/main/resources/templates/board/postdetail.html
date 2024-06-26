@@ -107,26 +107,31 @@
             fetch(`/board/${boardCategory}/readpost/${postBid}/comment/${commentId}/update`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken
                 },
-                body: `commentId=${commentId}&comment=${encodeURIComponent(newContent)}`
-            })
-                .then(response => {
-                    if (response.ok) {
-                        let commentElement = document.getElementById('comment-content-' + commentId);
-                        commentElement.innerText = newContent;
-                        cancelEdit(commentId);
-                    } else {
-                        return response.text().then(text => { throw new Error(text); });
-                    }
+                body: JSON.stringify({
+                    commentId: commentId,
+                    comment: newContent
                 })
-                .catch(error => {
-                    alert('댓글 수정에 실패했습니다: ' + error.message);
-                });
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('서버 응답이 실패했습니다.');
+                }
+            }).then(data => {
+                let commentElement = document.getElementById('comment-content-' + commentId);
+                commentElement.innerText = data.comment; // 서버에서 반환한 업데이트된 댓글 내용
+                cancelEdit(commentId);
+            })
+            .catch(error => {
+                alert('댓글 수정에 실패했습니다: ' + error.message);
+            });
         }
 
-        function cancelEdit(commentId) {
+        function cancelEdit(commentId) {// 서버에서 반환한 업데이트된 댓글 내용
             let updateFormContainer = document.getElementById('update-form-' + commentId);
             updateFormContainer.style.display = 'none';
             updateFormContainer.innerHTML = '';

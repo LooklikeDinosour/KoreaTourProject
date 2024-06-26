@@ -53,11 +53,11 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void updateComment(CommentDTO commentDTO) {
+    public int updateComment(CommentDTO commentDTO) {
 
         Comment commentById = commentMapper.findCommentById(commentDTO.getCommentId());
         commentById.setComment(commentDTO.getComment());
-        commentMapper.updateComment(commentById);
+        return commentMapper.updateComment(commentById);
     }
 
     @Override

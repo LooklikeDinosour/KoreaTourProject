@@ -17,7 +17,7 @@ public interface CommentMapper {
 
     public List<Comment> findAllComment(int bid);
 
-    public void updateComment(Comment comment);
+    public int updateComment(Comment comment);
 
     public Comment findCommentById(int commentId);
 
