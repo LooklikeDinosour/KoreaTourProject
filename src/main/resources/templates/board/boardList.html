@@ -180,7 +180,7 @@
         }
     </style>
 </head>
-<body>
+<body th:replace="layouts/layout :: content">
 <h1 th:if="${board_category == 'tc'}">동행 게시판</h1>
 <h1 th:if="${board_category == 'tl'}">여행로그 게시판</h1>
 
