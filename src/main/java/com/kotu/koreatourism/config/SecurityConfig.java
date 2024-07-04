@@ -19,7 +19,7 @@ public class SecurityConfig {
 //                .csrf(csrf -> csrf
 //                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 CSRF토큰을 저장한다.
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/login","/checkid","/signup","/loginProc","/api/**","/board/**","/static/**","/js/**","/css/**","/images/**","/fragments/**").permitAll()
+                        .requestMatchers("/","/login","/checkid","/signup","/loginProc","/api/**","/board/**","/static/**","/js/**","/css/**","/images/**","/fragments/**","/layouts/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/place/save","user/mypage","comment/save").authenticated()
                         .requestMatchers("/message/**").hasAnyRole("ADMIN", "USER")
