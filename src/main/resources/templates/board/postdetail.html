@@ -138,7 +138,8 @@
         }
     </script>
 </head>
-<body th:replace="layouts/layout :: content">
+<body>
+<div th:replace="~{layouts/layout :: menu}"></div>
 
 <h1 th:text="${post.title}"></h1>
 <input type="hidden" th:value="${post.bid}">

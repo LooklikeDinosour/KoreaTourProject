@@ -14,7 +14,8 @@
         }
     </style>
 </head>
-<body th:replace="layouts/layout :: content">
+<body>
+<div th:replace="~{layouts/layout :: menu}"></div>
 
 <form action="updatePost.html" th:action th:object="${post}" method="post">
 

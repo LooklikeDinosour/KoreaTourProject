@@ -27,6 +27,7 @@
     </style>
 </head>
 <body>
+<div th:replace="~{layouts/layout :: menu}"></div>
 <div style="display: flex;">
     <div>
         <nav>
@@ -58,12 +59,6 @@
         </tbody>
 
     </table>
-    <div class="page">
-        <ul>
-            <!--첫 페이지            -->
-            <li><a th:href="@{}"></a></li>
-        </ul>
-    </div>
 </div>
 </body>
 </html>

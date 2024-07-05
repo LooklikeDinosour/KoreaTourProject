@@ -10,7 +10,8 @@
         var simplemde = new SimpleMDE({ element: document.getElementById("markdown") });
     </script>
 </head>
-<body th:replace="layouts/layout :: content">
+<body>
+<div th:replace="~{layouts/layout :: menu}"></div>
 <form action="createPost.html" th:action th:object="${post}" method="post">
     <div>
         <input type="hidden" name="boardCategory" th:value="${board_category}">
