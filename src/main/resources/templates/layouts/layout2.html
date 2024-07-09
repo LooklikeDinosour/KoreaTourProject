@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Main layout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+            width: 250px;
+            padding-right: 20px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 10px 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1.1em;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-links div {
+            margin: 10px 0;
+        }
+
+        .auth-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1.1em;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="content" th:fragment="menu">
+
+    <div class="container">
+        <div class="sidebar">
+            <h3 sec:authorize="isAuthenticated()" sec:authentication="name"></h3>
+
+            <div class="auth-links">
+                <div><a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></div>
+                <div><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></div>
+                <div><a sec:authorize="!isAuthenticated()" th:href="@{/signup}">회원가입</a></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/mypage}">마이 페이지</a></li>
+                    <li><a th:href="@{/message}">쪽지</a></li>
+                    <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
+                    <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
+                    <li><a th:href="@{/api/area-based}">지역기반관광정보</a></li>
+                    <li><a id="location-link" href="javascript:void(0);">주변 정보 찾아보기</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    // 위치기반
+    document.addEventListener("DOMContentLoaded", function () {
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

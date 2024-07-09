@@ -3,62 +3,63 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Received Messages</title>
-    <style>
-        /* 사이드 메뉴 스타일 */
-        nav {
-            width: 200px; /* 너비 설정 */
-            height: 100%; /* 전체 높이 */
-            border-right: 1px solid #ccc; /* 오른쪽 테두리 */
-            padding: 10px; /* 패딩 */
-        }
-        ul {
-            list-style-type: none; /* 리스트 기호 없애기 */
-            padding: 0; /* 내부 여백 제거 */
-        }
-        li {
-            padding: 8px; /* 각 아이템 패딩 */
-            margin-bottom: 5px; /* 아래 여백 */
-            background-color: #f8f8f8; /* 배경색 */
-        }
-        li:hover {
-            background-color: #e8e8e8; /* 마우스 오버 시 배경색 변경 */
-        }
-        .message-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .message-card {
-            width: 300px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .message-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-        .message-title {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .message-info {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        .message-content {
-            font-size: 16px;
-            color: #444;
-        }
-    </style>
+    <title>Messages</title>
+    <link rel="stylesheet" th:href="@{/css/message-style.css}">
+<!--    <style>-->
+<!--        /* 사이드 메뉴 스타일 */-->
+<!--        nav {-->
+<!--            width: 200px; /* 너비 설정 */-->
+<!--            height: 100%; /* 전체 높이 */-->
+<!--            border-right: 1px solid #ccc; /* 오른쪽 테두리 */-->
+<!--            padding: 10px; /* 패딩 */-->
+<!--        }-->
+<!--        ul {-->
+<!--            list-style-type: none; /* 리스트 기호 없애기 */-->
+<!--            padding: 0; /* 내부 여백 제거 */-->
+<!--        }-->
+<!--        li {-->
+<!--            padding: 8px; /* 각 아이템 패딩 */-->
+<!--            margin-bottom: 5px; /* 아래 여백 */-->
+<!--            background-color: #f8f8f8; /* 배경색 */-->
+<!--        }-->
+<!--        li:hover {-->
+<!--            background-color: #e8e8e8; /* 마우스 오버 시 배경색 변경 */-->
+<!--        }-->
+<!--        .message-container {-->
+<!--            display: flex;-->
+<!--            flex-wrap: wrap;-->
+<!--            gap: 20px;-->
+<!--            padding: 20px;-->
+<!--            background-color: #f4f4f4;-->
+<!--        }-->
+<!--        .message-card {-->
+<!--            width: 300px;-->
+<!--            padding: 15px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 8px;-->
+<!--            background-color: #fff;-->
+<!--            box-shadow: 0 2px 5px rgba(0,0,0,0.1);-->
+<!--        }-->
+<!--        .message-card:hover {-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.15);-->
+<!--        }-->
+<!--        .message-title {-->
+<!--            font-size: 18px;-->
+<!--            color: #333;-->
+<!--            margin-bottom: 5px;-->
+<!--        }-->
+<!--        .message-info {-->
+<!--            font-size: 14px;-->
+<!--            color: #666;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--        .message-content {-->
+<!--            font-size: 16px;-->
+<!--            color: #444;-->
+<!--        }-->
+<!--    </style>-->
 </head>
-
+<header th:replace="~{layouts/layout :: header}"></header>
 <div style="display: flex;">
     <div>
         <nav>

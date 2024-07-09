@@ -161,7 +161,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<div th:replace="~{layouts/layout :: menu}"></div>
+<header th:replace="~{layouts/layout :: header}"></header>
 <div>
     <div>
         <nav>
@@ -406,6 +406,7 @@
         // 좋아요 로직 추가
     }
 
+    // 장소 저장하기
     function save(contentId) {
         console.log('저장하기:', contentId);
 
@@ -470,15 +471,15 @@
     }
 
     // 무한 스크롤 로직
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && !isLoading) {
-            const currentCategory = document.querySelector('.sub_menu_select');
-            if (currentCategory) {
-                const obj = JSON.parse(currentCategory.getAttribute('data-set'));
-                loadAreaBasedData(obj.groupId, obj.categoryParentLv, obj.categoryApiCode);
-            }
-        }
-    });
+    // window.addEventListener('scroll', () => {
+    //     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && !isLoading) {
+    //         const currentCategory = document.querySelector('.sub_menu_select');
+    //         if (currentCategory) {
+    //             const obj = JSON.parse(currentCategory.getAttribute('data-set'));
+    //             loadAreaBasedData(obj.groupId, obj.categoryParentLv, obj.categoryApiCode);
+    //         }
+    //     }
+    // });
 </script>
 
 </body>
