@@ -19,7 +19,7 @@
     </style>
 </head>
 <body>
-<header th:replace="~{layouts/layout :: header}"></header>
+<header th:replace="~{layouts/header :: header}"></header>
 <div th:if="${tourCommonInfo.getTourDetailCommonList != null}">
     <div th:each="commonInfo : ${tourCommonInfo.getTourDetailCommonList}" class="tourist-item">
         <img th:if="${commonInfo.firstImage}" th:src="${commonInfo.firstImage}" alt="Image">

@@ -11,7 +11,7 @@
     </script>
 </head>
 <body>
-<header th:replace="~{layouts/layout :: header}"></header>
+<header th:replace="~{layouts/header :: header}"></header>
 <form action="createPost.html" th:action th:object="${post}" method="post">
     <div>
         <input type="hidden" name="boardCategory" th:value="${board_category}">

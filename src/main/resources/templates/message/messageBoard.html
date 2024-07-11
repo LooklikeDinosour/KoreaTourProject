@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Message</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/message-style.css}">
 </head>
 <body>
-<header th:replace="~{layouts/layout :: header}"></header>
+<header th:replace="~{layouts/header :: header}"></header>
 <div style="display: flex;">
     <div class="nav-container">
         <nav>
@@ -42,5 +43,24 @@
         </table>
     </div>
 </div>
+<script th:inline="javascript">
+    // 위치기반
+    document.addEventListener("DOMContentLoaded", function () {
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+    });
+</script>
 </body>
 </html>

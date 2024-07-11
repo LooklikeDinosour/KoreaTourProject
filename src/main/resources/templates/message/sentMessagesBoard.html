@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sent Messages</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/message-style.css}">
 <!--    <style>-->
 <!--        /* 사이드 메뉴 스타일 */-->
@@ -28,7 +29,7 @@
 <!--    </style>-->
 </head>
 <body>
-<header th:replace="~{layouts/layout :: header}"></header>
+<header th:replace="~{layouts/header :: header}"></header>
 <div style="display: flex;">
     <div>
         <nav>

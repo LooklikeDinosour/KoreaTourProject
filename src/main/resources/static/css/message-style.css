@@ -22,6 +22,7 @@ main {
     border-left: 1px solid #ccc;
     padding: 10px;
     background-color: #f8f8f8;
+    margin-top: 65px;
 }
 
 .message-nav-links {
@@ -44,6 +45,17 @@ main {
 .table-container {
     flex: 1;
     padding: 20px;
+    margin-top: 65px;
+}
+
+.form-container {
+    width: 300px;
+    margin-left: 20px;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 65px;
 }
 
 table {
@@ -107,7 +119,7 @@ label {
 }
 
 input[type="text"], textarea {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
