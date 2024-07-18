@@ -3,138 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Tourist Locations</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .tourist-container-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .tourist-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .tourist-container h1 {
-            grid-column: span 4;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        .tourist-item {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            background-color: #fff;
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-        }
-        .tourist-item:hover {
-            transform: scale(1.05);
-        }
-        .tourist-item a img {
-            width: 100%;
-            height: 190px;
-            border-bottom: 1px solid #ccc;
-        }
-        .tourist-item a h2 {
-            color: #007bff;
-            font-size: 1.2em;
-            margin: 10px 0;
-            text-align: center;
-        }
-        .tourist-item p {
-            margin: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-        .tourist-item a {
-            text-decoration: none;
-            color: inherit;
-            height: 283px;
-        }
-        .no-locations {
-            grid-column: span 4;
-            text-align: center;
-            font-size: 1.2em;
-            color: #999;
-        }
-        .buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        .button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 1em;
-            transition: background-color 0.2s;
-        }
-        .button:hover {
-            background-color: #0056b3;
-
-
-        }
-
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-
-        nav a {
-            float: left;
-            display: block;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/tour.css}">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
+
+<div class="tour-page">
+    <nav class="tour-nav">
+        <a th:each="topic : ${menu}"
+           th:href="@{'/api/location/' + ${topic.name().replace('_','-').toLowerCase()}}"
+           th:text="${topic.contentName}"
+           onclick="setContentType(${topic.name().replace('_','-').toLowerCase()});"></a>
+    </nav>
+</div>
 <div class="tourist-container-wrapper">
-    <div>
-        <nav>
-            <a th:href="@{/}" th:text="'Home'"></a>
-            <a th:each="topic : ${category}"
-               th:href="@{'/api/location/' + ${topic.name().replace('_','-').toLowerCase()}}"
-               th:text="${topic.contentName}"
-               onclick="setContentType(${topic.name().replace('_','-').toLowerCase()});"></a>
-        </nav>
-    </div>
     <div class="tourist-container" th:if="${tourLocationBased.tourLocations != null}">
         <div th:each="tour : ${tourLocationBased.tourLocations}" class="tourist-item">
             <a th:href="@{/api/location/{contentType}/detail-info/{contentId}(contentType=${tour.contentTypeId}, contentId=${tour.contentId})}">
-                <img th:if="${tour.firstImage != null}" th:src="${tour.firstImage}" alt="Image">
-                <img th:unless="${tour.firstImage != null}" th:src="@{/images/default.jpg}" alt="Image">
+                <img th:src="${tour.firstImage != '' ? tour.firstImage : '/images/default.jpg'}" alt="Image">
                 <input type="hidden" name="contentId" th:value="${tour.contentId}">
                 <h2 th:text="${tour.title}">Title</h2>
                 <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
@@ -145,8 +34,8 @@
             </div>
         </div>
     </div>
-    <div th:if="${tourLocationBased.tourLocations == null}" class="no-locations">
-        <p>No tourist locations available.</p>
+    <div class="no-locations" th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" >
+        <p>해당 지역에는 관련된 위치정보가 없습니다.</p>
     </div>
 </div>
 
@@ -157,10 +46,6 @@
     let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
     let selectedContentType = '';
-    function setContentType(contentType) {
-        selectedContentType = contentType;
-        console.log(selectedContentType);
-    }
 
     function like(contentId) {
         // 좋아요 버튼 클릭 시 처리할 로직
@@ -174,9 +59,9 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                [csrfHeader] : csrfToken
+                [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({ contentId: contentId })
+            body: JSON.stringify({contentId: contentId})
         })
             .then(response => response.json())
             .then(data => {
@@ -194,48 +79,184 @@
             });
     }
 
-    // 위치기반
-    // function takeLocationData() {
-    //     if(navigator.geolocation) {
+    //
+    // function setContentType(contentType) {
+    //     const contentDiv = document.querySelector('.content'); // 콘텐츠를 로드할 div
+    //     const url = `/api/location/${contentType}`;
+    //
+    //     fetch(url, {
+    //         method: 'GET',
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log('Success:', data);
+    //             // 이 부분에서 data를 이용하여 contentDiv를 업데이트합니다.
+    //             contentDiv.innerHTML = ''; // 이전 콘텐츠 삭제
+    //             data.forEach(item => {
+    //                 const itemDiv = document.createElement('div');
+    //                 itemDiv.textContent = item.name; // 예시, 실제로는 data의 구조에 맞게 수정
+    //                 contentDiv.appendChild(itemDiv);
+    //             });
+    //         })
+    //         .catch((error) => console.error('Error:', error.message));
+    // }
+    //
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     if (navigator.geolocation) {
     //         navigator.geolocation.getCurrentPosition(function (position) {
-    //             console.log("takeLocationData 실행");
+    //             const latitude = position.coords.latitude;
+    //             const longitude = position.coords.longitude;
+    //
+    //             const links = document.querySelectorAll('a[href*="api/location"]');
+    //             links.forEach(link => {
+    //                 const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
+    //                 link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
+    //
+    //                 // 링크 클릭 이벤트 리스너 추가
+    //                 link.addEventListener('click', function (event) {
+    //                     event.preventDefault(); // 기본 링크 동작 방지
+    //                     const contentType = link.getAttribute('href').split('/')[3]; // URL에서 contentType 추출
+    //                     console.log(contentType);
+    //                     setContentType(contentType);
+    //                 });
+    //             });
+    //         });
+    //     } else {
+    //         console.log("지원하지 않는 브라우저입니다.")
+    //     }
+    // });
+    // // 위치기반
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(function (position) {
     //             const latitude = position.coords.latitude;
     //             const longitude = position.coords.longitude;
     //
     //             const url = document.querySelector('a[href*="api/location"]');
     //             url.href = `/api/location/${selectedContentType}?latitude=${latitude}&longitude=${longitude}`;
     //
-    //             fetch(url.href , {
+    //             fetch(url.href, {
     //                 method: 'GET',
     //             })
     //                 .then(response => response.json())
     //                 .then(data => console.log('Success:', data))
-    //                 .catch((error) => console.error('Error:', error));
+    //                 .catch((error) => console.error('Error:', error.message));
     //         });
     //     } else {
     //         console.log("지원하지 않는 브라우저입니다.")
     //     }
+    // });
+
+    // function setContentType(contentType) {
+    //     selectedContentType = contentType;
+    //     console.log(selectedContentType);
     // }
-    document.addEventListener("DOMContentLoaded", function() {
-        if(navigator.geolocation) {
+
+
+    // // 위치기반
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(function (position) {
+    //             const latitude = position.coords.latitude;
+    //             const longitude = position.coords.longitude;
+    //
+    //             const links = document.querySelectorAll('a[href*="api/location"]');
+    //             links.forEach(link => {
+    //                 const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
+    //                 console.log("basehref" + baseHref);
+    //                 // link.href = `${baseHref}`;
+    //                 link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
+    //             });
+    //
+    //             // Fetch를 각 링크에서 클릭 시 실행하도록 설정 (선택 사항)
+    //             links.forEach(link => {
+    //                 link.addEventListener('click', function (event) {
+    //                     event.preventDefault(); // 링크의 기본 동작 막기
+    //                     fetch(link.href, {
+    //                         method: 'GET',
+    //                     })
+    //                         .then(response => response.json())
+    //                         .then(data => console.log('Success:', data))
+    //                         .catch((error) => console.error('Error:', error.message));
+    //                 });
+    //             });
+    //         });
+    //     } else {
+    //         console.log("지원하지 않는 브라우저입니다.")
+    //     }
+    // });
+    let tourLocations = /*[[${tourLocationBased.tourLocations}]]*/ [];
+    let csrfToken = /*[[${_csrf.token}]]*/ '';
+    let csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+
+    document.addEventListener("DOMContentLoaded", function () {
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
 
-                const url = document.querySelector('a[href*="api/location"]');
-                url.href = `/api/location/${selectedContentType}?latitude=${latitude}&longitude=${longitude}`;
+                const links = document.querySelectorAll('a[href*="api/location"]');
+                links.forEach(link => {
+                    const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
+                    link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
 
-                    fetch(url.href , {
-                    method: 'GET',
-                })
-                    .then(response => response.json())
-                    .then(data => console.log('Success:', data))
-                    .catch((error) => console.error('Error:', error.message));
+                    // 링크 클릭 이벤트 리스너 추가
+                    link.addEventListener('click', function (event) {
+                        event.preventDefault(); // 기본 링크 동작 방지
+                        const contentType = baseHref.split('/')[3]; // URL에서 contentType 추출
+                        console.log(contentType);
+                        setContentType(contentType, latitude, longitude);
+                    });
+                });
+
+                if (tourLocations.length > 0) {
+                    updateContent(tourLocations);
+                }
             });
         } else {
             console.log("지원하지 않는 브라우저입니다.")
         }
     });
+
+    function setContentType(contentType, latitude, longitude) {
+        const url = `/api/location/${contentType}?latitude=${latitude}&longitude=${longitude}`;
+        fetch(url, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                updateContent(data);
+            })
+            .catch((error) => console.error('Error:', error.message));
+    }
+
+    function updateContent(data) {
+        const contentDiv = document.querySelector('.tourist-container-wrapper');
+        contentDiv.innerHTML = ''; // 이전 콘텐츠 삭제
+        if (data && data.length > 0) {
+            data.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('tourist-item');
+                itemDiv.innerHTML = `
+                    <a href="/api/location/detail-info/${item.contentId}">
+                        <img src="${item.firstImage ? item.firstImage : '/images/default.jpg'}" alt="Image">
+                        <input type="hidden" name="contentId" value="${item.contentId}">
+                        <h2>${item.title}</h2>
+                        <p>주소: ${item.addr1} ${item.addr2}</p>
+                    </a>
+                    <div class="buttons">
+                        <button class="button" onclick="like(${item.contentId})">좋아요</button>
+                        <button class="button" onclick="save(${item.contentId})">저장하기</button>
+                    </div>
+                `;
+                contentDiv.appendChild(itemDiv);
+            });
+        } else {
+            contentDiv.innerHTML = '<div class="no-locations"><p>No tourist locations available.</p></div>';
+        }
+    }
+
 </script>
 
 </body>

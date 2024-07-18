@@ -68,22 +68,20 @@ public class DataApiController2 {
         }
 
         try {
-
             String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
             TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
             log.info("location 공공데이터 API 호출 = {}", tourLocationBased);
-
-            model.addAttribute("category", ContentType.values());
+            log.info("컨텐츠 메뉴 = {}", ContentType.values());
+            model.addAttribute("menu", ContentType.values());
             model.addAttribute("tourLocationBased", tourLocationBased);
 
             return "tour/tourlocation";
+
         } catch (Exception e) {
             log.error("Error occurred while processing location data", e);
             model.addAttribute("errorMessage", "An error occurred while processing location data.");
             return "error";
         }
-
-
    }
     @GetMapping("/location/{content-type}")
     public String locationCategory(@PathVariable("content-type") String contentType,
@@ -110,7 +108,7 @@ public class DataApiController2 {
         TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
         log.info("LC 공공데이터 API 호출 = {}", tourLocationBased);
 
-        model.addAttribute("category", ContentType.values());
+        model.addAttribute("menu", ContentType.values());
         model.addAttribute("tourLocationBased", tourLocationBased);
 
         return "tour/tourlocation";
@@ -189,6 +187,12 @@ public class DataApiController2 {
         return "tour/tourarea";
     }
 
+    @GetMapping("/area-based-test")
+    public String areaBasedTest(Model model) {
+
+        model.addAttribute("category", ContentType.values());
+        return "tour/tourarea1";
+    }
     @GetMapping("/area-based/{content-type}")
     @ResponseBody
     public ResponseEntity<TourAreaBasedItemDTO> areaCategory(@PathVariable("content-type") String contentType,
@@ -197,6 +201,34 @@ public class DataApiController2 {
                                HttpServletRequest request,
                                HttpSession session,
                                Model model) throws IOException {
+
+        //Enum 목록에 있는 건지 다시 검증
+        ContentType content = ContentType.fromUrlName(contentType);
+        int contentTypeId = content.getContentTypeId();
+        log.info("LC URL 확인하기 = {} ", request.getRequestURL());
+        log.info("LC URI 확인하기 = {} ", request.getRequestURI());
+        log.info("LC URL 쿼리스트링 확인하기 = {} ", request.getQueryString());
+        log.info("LC ContentTypeId 인증 검사 = {}", contentTypeId);
+        TourAreaSigunguDTO areaSigungu = (TourAreaSigunguDTO)session.getAttribute("areaSigungu");
+
+        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, contentTypeId, numOfRows, pageNo, areaSigungu);
+        TourAreaBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourAreaBasedItemDTO.class);
+        log.info("LC 공공데이터 API 호출 = {}", tourAreaBased);
+
+        model.addAttribute("category", ContentType.values());
+        //model.addAttribute("tourLocationBased", tourAreaBased);
+
+        return new ResponseEntity<>(tourAreaBased, HttpStatus.OK);
+    }
+
+    @GetMapping("/area-based-test/{content-type}")
+    @ResponseBody
+    public ResponseEntity<TourAreaBasedItemDTO> areaCategoryTest(@PathVariable("content-type") String contentType,
+                                                             String pageNo,
+                                                             String numOfRows,
+                                                             HttpServletRequest request,
+                                                             HttpSession session,
+                                                             Model model) throws IOException {
 
         //Enum 목록에 있는 건지 다시 검증
         ContentType content = ContentType.fromUrlName(contentType);

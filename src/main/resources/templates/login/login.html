@@ -3,33 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 
 </head>
 <body>
-                <h2>LOGIN</h2>
-                <p>서비스를 사용하려면 로그인을 해주세요!</p>
+<div class="login-container">
 
-                <div>
-                    <form th:action="@{/loginProc}" th:object="${LoginDTO}" method="POST">
-                        <div>
-                            <label for="userId">아이디</label>
-                            <input type="text" id="userId" th:field="*{userId}" th:errorclass="field-error" class="form-control">
-                        </div>
-                        <div>
-                            <label for="userPassword">비밀번호</label>
-                            <input type="password" id="userPassword" th:field="*{userPassword}" th:errorclass="field-error" class="form-control">
-                        </div>
-                        <div class="field-error" th:errors="*{userId}">
-                            아이디를 입력해주세요.
-                        </div>
-                        <div class="field-error" th:errors="*{userPassword}">
-                            비밀번호를 입력해주세요.
-                        </div>
-                        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-                        <button type="submit">로그인</button>
-                    </form>
+    <h2>LOGIN</h2>
 
-                    <button type="button" th:onclick="|location.href='@{/signup}'|">회원가입</button>
-                </div>
+    <div>
+        <form th:action="@{/loginProc}" th:object="${LoginDTO}" method="POST">
+            <div>
+                <input type="text" id="userId" th:field="*{userId}" th:errorclass="field-error" class="form-control"
+                       placeholder="아이디">
+            </div>
+            <div>
+                <input type="password" id="userPassword" th:field="*{userPassword}" th:errorclass="field-error"
+                       class="form-control" placeholder="비밀번호">
+            </div>
+            <div class="field-error" th:errors="*{userId}">
+                아이디를 입력해주세요.
+            </div>
+            <div class="field-error" th:errors="*{userPassword}">
+                비밀번호를 입력해주세요.
+            </div>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+            <button type="submit">로그인</button>
+        </form>
+
+        <button type="button" class="signup-button" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+    </div>
+</div>
 </body>
 </html>

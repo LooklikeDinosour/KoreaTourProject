@@ -1,3 +1,4 @@
+/* message-style.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -5,11 +6,24 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding: 20px;
 }
 
 main {
     display: flex;
     flex: 1;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto 0; /* 헤더의 높이를 고려하여 상단 마진을 줌 */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .content {
@@ -38,6 +52,11 @@ main {
     transition: background-color 0.3s;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
 .message-nav-links li:hover {
     background-color: #e8e8e8;
 }
@@ -49,7 +68,7 @@ main {
 }
 
 .form-container {
-    width: 300px;
+    width: 100%;
     margin-left: 20px;
     background-color: #f8f8f8;
     padding: 20px;
@@ -124,6 +143,11 @@ input[type="text"], textarea {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+textarea {
+    height: 200px;
+    resize: none;
 }
 
 button {

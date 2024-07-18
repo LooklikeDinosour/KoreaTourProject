@@ -4,52 +4,127 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 수정</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
     <style>
-        .container {
-            max-width: 560px;
+        .form-container {
+            max-width: 1000px; /* 동일한 너비 설정 */
+            margin: 20px auto; /* 가운데 정렬 */
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 98%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none; /*넓히는 버튼 제거*/
+        }
+
+        #content {
+            height: 300px; /* 높이를 3배로 고정 */
+        }
+
         .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            text-align: center; /* 가운데 정렬 */
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="button"] {
+            background-color: #6c757d;
+        }
+
+        button[type="button"]:hover {
+            background-color: #5a6268;
         }
     </style>
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
-
-<form action="updatePost.html" th:action th:object="${post}" method="post">
-
-    <div>
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-    </div>
-    <div>
-        <label for="title">제목:</label>
-        <input type="text" id="title" placeholder="제목을 입력하세요" th:field="*{title}"
-        th:errorclass="field-error" class="form-control">
-        <div class="field-error" th:errors="*{title}">
-            제목을 입력하세요.
+<div class="form-container">
+    <form th:action th:object="${post}" method="post">
+        <div>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
         </div>
-    </div>
-
-    <div>
-        <label for="regdate">작성일:</label>
-        <input type="text" id="regdate" name="regdate" th:value="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm:ss')}" readonly class="form-control">
-    </div>
-
-    <div>
-        <label for="content">내용:</label>
-        <textarea id="content" th:field="*{content}"
-        th:errorclass="field-error" class="form-control"
-        placeholder="내용을 작성해주세요">
-        </textarea>
-        <div class="field-error" th:errors="*{content}">
-            내용을 입력하세요
+        <div class="form-group">
+            <label for="title">제목:</label>
+            <input type="text" id="title" placeholder="제목을 입력하세요" th:field="*{title}"
+                   th:errorclass="field-error" class="form-control">
+            <div class="field-error" th:errors="*{title}">
+                제목을 입력하세요.
+            </div>
         </div>
-    </div>
-    <button type="submit">글 저장</button>
-    <button
-            th:onclick="|location.href='@{/board/{board_category}(board_category=${post.boardCategory})}'|"
-            type="button">취소하기</button>
-</form>
+
+        <div class="form-group">
+            <label for="regdate">작성일:</label>
+            <input type="text" id="regdate" name="regdate"
+                   th:value="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm:ss')}" readonly class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="content">내용:</label>
+            <textarea id="content" th:field="*{content}"
+                      th:errorclass="field-error" class="form-control"
+                      placeholder="내용을 작성해주세요">
+            </textarea>
+            <div class="field-error" th:errors="*{content}">
+                내용을 입력하세요
+            </div>
+        </div>
+        <div class="button-container">
+            <button type="submit">글 저장</button>
+            <button
+                    th:onclick="|location.href='@{/board/{board_category}(board_category=${post.boardCategory})}'|"
+                    type="button">취소하기
+            </button>
+        </div>
+    </form>
+</div>
+<script th:inline="javascript">
+    // 위치기반
+    document.addEventListener("DOMContentLoaded", function () {
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+    });
+</script>
 </body>
 </html>

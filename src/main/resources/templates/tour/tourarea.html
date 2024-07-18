@@ -2,161 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tourist Locations</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .tourist-container-wrapper {
-            display: flex;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .categoryListWrap {
-            display: flex;
-            flex-direction: column;
-            background-color: #fff; /* 흰색 배경 추가 */
-            border-radius: 8px; /* 둥근 모서리 추가 */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-            margin-right: 20px; /* 오른쪽 메뉴와의 간격 조정 */
-            position: absolute; /* 절대 위치 */
-            top: 20px; /* 상단 여백 조정 */
-            left: 20px; /* 왼쪽 여백 조정 */
-            z-index: 1000; /* 다른 요소들 위에 표시 */
-        }
-
-        .categoryList {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            width: 200px;
-        }
-
-        .categoryList li {
-            position: relative;
-        }
-
-        .categoryList a {
-            display: block;
-            padding: 10px 15px;
-            color: #333;
-            text-decoration: none;
-            background-color: #f9f9f9;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .categoryList a:hover,
-        .categoryList a.sub_menu_select {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .subCategoryList {
-            margin-left: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tourist-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            flex-grow: 1;
-            margin-left: 220px; /* 카테고리 목록과의 간격 조정 */
-        }
-
-        .tourist-item {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            background-color: #fff;
-            transition: transform 0.2s;
-            width: calc(33.33% - 20px);
-            box-sizing: border-box;
-        }
-
-        .tourist-item:hover {
-            transform: scale(1.05);
-        }
-
-        .tourist-item a img {
-            width: 100%;
-            height: 190px;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .tourist-item a h2 {
-            color: #007bff;
-            font-size: 1.2em;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .tourist-item p {
-            margin: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        .tourist-item a {
-            text-decoration: none;
-            color: inherit;
-            height: 283px;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px 0;
-        }
-
-        .button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 1em;
-            transition: background-color 0.2s;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-
-        nav a {
-            float: left;
-            display: block;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-    </style>
+    <title>Tourist Area</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/tour.css}">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
@@ -165,7 +13,6 @@
 <div>
     <div>
         <nav>
-            <a th:href="@{/api/area-based/attraction}" th:text="'Home'"></a>
             <a th:each="topic : ${category}"
                th:href="@{'/api/area-based/' + ${topic.name().replace('_','-').toLowerCase()}}"
                th:text="${topic.contentName}"
@@ -189,24 +36,18 @@
     //CSRF
     let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-    // 페이지네이션 변수
-    let page = 0;
-    const size = 10;
-    let isLoading = false;
-
     //대분류
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         fetch('/api/area1')
             .then(response => response.json())
             .then(data => {
                 let category = "";
                 category += '<ul class="categoryList" style="position: relative;" onclick="getCategory_List(event); handleAreaBasedAPIClick(event);">';
-                data.forEach(function(item) {
+                data.forEach(function (item) {
                     category += `<li><a href="#" data-set='${JSON.stringify(item)}'>${item.categoryDetailName}</a></li>`;
                 });
                 category += '</ul>';
-                console.log("이거 대분류인데 과연 중분류? : ",  category);
+                console.log("이거 대분류인데 과연 중분류? : ", category);
                 document.querySelector(".categoryListWrap").innerHTML += category;
             })
             .catch(err => {
@@ -232,7 +73,7 @@
 
         // 토글 색 처리
         let categoryList = event.currentTarget;
-        Array.from(categoryList.querySelectorAll('a')).forEach(function(a) {
+        Array.from(categoryList.querySelectorAll('a')).forEach(function (a) {
             a.classList.remove('sub_menu_select');
         });
         event.target.classList.add('sub_menu_select');
@@ -291,53 +132,23 @@
     ///onclick event 제거함
     function createSubCategories(data) {
         let category = '<ul class="categoryList subCategoryList">';
-        data.forEach(function(result) {
+        data.forEach(function (result) {
             category += `<li><a href="#" data-set='${JSON.stringify(result)}' onclick="handleAreaBasedAPIClick(event)">${result.categoryDetailName}</a></li>`;
         });
         category += '</ul>';
 
         document.querySelector('.categoryListWrap').appendChild(document.createRange().createContextualFragment(category));
     }
+
     // 이전 중분류 삭제 함수
     function removeSubCategories() {
         let subCategories = document.querySelectorAll('.subCategoryList');
-        subCategories.forEach(function(subCategory) {
+        subCategories.forEach(function (subCategory) {
             subCategory.remove();
         });
     }
 
-    // 공공데이터 API를 호출하여 데이터를 로드하는 함수
-    function loadAreaBasedData(groupId, categoryParentLv, categoryApiCode) {
-        if (isLoading) return;
-
-        isLoading = true;
-
-        fetch(`/api/areabase?page=${page}&numOfRows=${size}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
-            },
-            body: JSON.stringify({
-                groupId: groupId,
-                categoryParentLv: categoryParentLv,
-                categoryApiCode: categoryApiCode
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('AreaBased API response:', data);
-                appendTouristItems(data);
-                page++;
-                isLoading = false;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                isLoading = false;
-            });
-    }
-
-    // 공공데이터 API를 호출
+    //공공데이터 API를 호출
     function handleAreaBasedAPIClick(event) {
         event.preventDefault();
         let target = event.target;
@@ -346,16 +157,32 @@
         var obj = JSON.parse(target.getAttribute('data-set'));
         console.log('Subcategory clicked:', obj);
 
-        // 새로운 카테고리가 클릭되면 페이지 번호를 초기화하고 데이터를 로드
-        page = 0;
-        const container = document.getElementById('touristContainer');
-        container.innerHTML = '';
-
-        loadAreaBasedData(obj.groupId, obj.categoryParentLv, obj.categoryApiCode);
+        fetch('/api/areabase', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                groupId: obj.groupId,
+                categoryParentLv: obj.categoryParentLv,
+                categoryApiCode: obj.categoryApiCode
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('AreaBased API response:', data);
+                createTouristItems(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
-    function appendTouristItems(responseData) {
+    function createTouristItems(responseData) {
         const container = document.getElementById('touristContainer');
+        container.innerHTML = ''; // 기존 내용을 비움
+
         const data = responseData.item; // 응답 데이터의 item 배열을 가져옴
 
         data.forEach(tour => {
@@ -406,7 +233,6 @@
         // 좋아요 로직 추가
     }
 
-    // 장소 저장하기
     function save(contentId) {
         console.log('저장하기:', contentId);
 
@@ -416,7 +242,7 @@
                 'Content-Type': 'application/json',
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({ contentId: contentId })
+            body: JSON.stringify({contentId: contentId})
         })
             .then(response => {
                 console.log(response.status)
@@ -450,6 +276,7 @@
     }
 
     let selectedContentType = '';
+
     function setContentType(contentType) {
         selectedContentType = contentType;
         console.log(selectedContentType);
@@ -465,21 +292,28 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                appendTouristItems(data);
+                createTouristItems(data);
             })
             .catch((error) => console.error('Error:', error));
     }
 
-    // 무한 스크롤 로직
-    // window.addEventListener('scroll', () => {
-    //     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && !isLoading) {
-    //         const currentCategory = document.querySelector('.sub_menu_select');
-    //         if (currentCategory) {
-    //             const obj = JSON.parse(currentCategory.getAttribute('data-set'));
-    //             loadAreaBasedData(obj.groupId, obj.categoryParentLv, obj.categoryApiCode);
-    //         }
-    //     }
-    // });
+    // 위치기반
+    document.addEventListener("DOMContentLoaded", function () {
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+    });
 </script>
 
 </body>

@@ -56,7 +56,6 @@ public class CommentController {
 
         CommentDTO findCommentDTO = commentService.findCommentById(commentId);
         log.info("댓글 찾아오기 = {}", findCommentDTO);
-        model.addAttribute("formType", "update");
         model.addAttribute("commentDTO", findCommentDTO);
         model.addAttribute("postbid", bid);
         model.addAttribute("boardCategory", boardCategory);

@@ -4,55 +4,109 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세보기</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/comment-form.css}">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <style>
-        #toast {
-            visibility: hidden;
-            max-width: 50%;
-            margin: 0 auto;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-            transform: translateX(-50%);
+        .content-container {
+            max-width: 1000px; /* 동일한 너비 설정 */
+            margin: 20px auto; /* 가운데 정렬 */
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        #toast.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        .post-details {
+            margin-bottom: 20px;
         }
 
-        @-webkit-keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
+        .post-details p {
+            margin: 5px 0;
         }
 
-        @keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
+        .separator {
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
         }
 
-        @-webkit-keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
+        .button-container {
+            text-align: center; /* 가운데 정렬 */
+            margin-top: 20px;
         }
 
-        @keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-container button[type="button"] {
+            background-color: #6c757d;
+        }
+
+        .button-container button[type="button"]:hover {
+            background-color: #5a6268;
+        }
+
+        .comment-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-container p {
+            margin: 5px 0;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+
+        .comment-actions {
+            text-align: right;
+        }
+
+        .comment-actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        .comment-actions button:hover {
+            background-color: #0056b3;
+        }
+
+        .post-content {
+            white-space: pre-wrap; /* 줄 바꿈과 공백을 유지 해서 데이터 불러오기 */
         }
     </style>
     <script th:inline="javascript">
         var boardCategory = /*[[${post.boardCategory}]]*/ 'defaultCategory';
         var postBid = /*[[${post.bid}]]*/ 'defaultBid';
+
         /*<![CDATA[*/
         function confirmAction(action, url) {
             if (confirm(action + ' 하시겠습니까?')) {
@@ -66,6 +120,7 @@
             const fullUrl = `${url}?receiver=${receiver}`;
             window.open(fullUrl, '쪽지 보내기', 'width=600,height=400');
         }
+
         /*]]>*/
 
         function showUpdateForm(commentId) {
@@ -91,8 +146,10 @@
         <form>
             <input type="hidden" name="commentId" value="${commentId}">
             <textarea name="comment" id="update-comment-${commentId}">${commentContent}</textarea>
-            <button type="button" onclick="updateComment(${commentId})">저장</button>
-            <button type="button" onclick="cancelEdit(${commentId})">취소</button>
+            <div class="comment-actions">
+                <button type="button" onclick="updateComment(${commentId})">저장</button>
+                <button type="button" onclick="cancelEdit(${commentId})">취소</button>
+            </div>
         </form>
     `;
             updateFormContainer.innerHTML = updateFormHtml;
@@ -101,6 +158,7 @@
 
         function updateComment(commentId) {
             let newContent = document.getElementById('update-comment-' + commentId).value;
+            console.log("댓글수정 : ", newContent);
             let csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
             let csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
 
@@ -115,20 +173,20 @@
                     comment: newContent
                 })
             })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('서버 응답이 실패했습니다.');
-                }
-            }).then(data => {
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('서버 응답이 실패했습니다.');
+                    }
+                }).then(data => {
                 let commentElement = document.getElementById('comment-content-' + commentId);
                 commentElement.innerText = data.comment; // 서버에서 반환한 업데이트된 댓글 내용
                 cancelEdit(commentId);
             })
-            .catch(error => {
-                alert('댓글 수정에 실패했습니다: ' + error.message);
-            });
+                .catch(error => {
+                    alert('댓글 수정에 실패했습니다: ' + error.message);
+                });
         }
 
         function cancelEdit(commentId) {// 서버에서 반환한 업데이트된 댓글 내용
@@ -141,52 +199,86 @@
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
 
-<h1 th:text="${post.title}"></h1>
-<input type="hidden" th:value="${post.bid}">
-<p><b>작성자:</b><span th:text="${post.author}"></span></p>
-<p><b>작성일:</b><span th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"></span></p>
-<div th:text="${post.content}"></div>
-<div th:text="${post.userId}" style="display: none;"></div>
-<div>
-    <button
-            th:onclick="|location.href='@{/board/{board_category}(board_category=${post.boardCategory})}'|"
-            type="button">목록</button>
-    <button type="button" onclick="openMessageWindow()" th:if="${post.boardCategory == 'tc'}">쪽지 보내기</button>
-    <div th:if="${#authentication.name == post.userId}">
-        <button
-                th:onclick="|confirmAction('수정', '@{/board/{board_category}/{postbid}/update(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
-                type="button">수정</button>
-        <button
-                th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/delete(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
-                type="button">삭제</button>
+<div class="content-container">
+    <h1 th:text="${post.title}"></h1>
+    <input type="hidden" th:value="${post.bid}">
+    <div class="post-details">
+        <p><b>작성자:</b><span th:text="${post.author}"></span></p>
+        <p><b>작성일:</b><span th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd HH:mm')}"></span></p>
     </div>
-</div>
-<div sec:authorize="isAuthenticated()">
-    <div th:if="${formType == 'save'}" th:replace="fragments/save-comment-form :: commentForm(@{/board/{board_category}/readpost/{postbid}/comment/save(postbid=${post.bid}, board_category=${post.boardCategory})},
-     ${#authentication.name}, ${post.bid}, ${#authentication.principal.user.userNickname}, '')">
-    </div>
-</div>
-<div sec:authorize="!isAuthenticated()">
-    <p>댓글을 등록하려면 로그인 해주세요.</p>
-</div>
-
-<div id="comment-list">
-    <div th:each="comment : ${comments}">
-        <input type="hidden" th:value="${comment.commentId}" id="comment-[[${comment.commentId}]]">
-        <p th:text="${comment.commentId}"></p>
-        <p th:text="${comment.author}"></p>
-        <p th:text="${comment.comment}" th:id="'comment-content-' + ${comment.commentId}"></p>
-        <p th:text="${#temporals.format(comment.regdate, 'yyyy-MM-dd HH:mm')}"></p>
-        <!-- 댓글 수정 및 삭제 버튼들 -->
-        <div th:if="${#authentication.name == comment.userId}">
-            <button th:onclick="'showUpdateForm(' + ${comment.commentId} + ')'"
-                    type="button">수정</button>
-            <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/readpost/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
-                    type="button">삭제</button>
+    <div class="separator"></div>
+    <div class="post-content" th:text="${post.content}"></div>
+    <div th:text="${post.userId}" style="display: none;"></div>
+    <div class="button-container">
+        <button
+                th:onclick="|location.href='@{/board/{board_category}(board_category=${post.boardCategory})}'|"
+                type="button">목록
+        </button>
+        <button type="button" onclick="openMessageWindow()" th:if="${post.boardCategory == 'tc'}">쪽지 보내기</button>
+        <div th:if="${#authentication.name == post.userId}">
+            <button
+                    th:onclick="|confirmAction('수정', '@{/board/{board_category}/{postbid}/update(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
+                    type="button">수정
+            </button>
+            <button
+                    th:onclick="|confirmAction('삭제', '@{/board/{board_category}/{postbid}/delete(postbid=${post.bid}, board_category=${post.boardCategory})}')|"
+                    type="button">삭제
+            </button>
         </div>
-        <div th:id="'update-form-' + ${comment.commentId}" style="display:none;"></div>
     </div>
 </div>
 
+<div class="comment-container">
+
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${formType == 'save'}" th:replace="~{fragments/save-comment-form :: commentForm(@{/board/{board_category}/readpost/{postbid}/comment/save(postbid=${post.bid}, board_category=${post.boardCategory})},
+     ${#authentication.name}, ${post.bid}, ${#authentication.principal.user.userNickname}, '')}">
+        </div>
+    </div>
+    <div sec:authorize="!isAuthenticated()">
+        <p>댓글을 등록하려면 로그인 해주세요.</p>
+    </div>
+    <div class="separator"></div>
+
+    <div id="comment-list">
+        <div th:each="comment : ${comments}">
+            <input type="hidden" th:value="${comment.commentId}" id="comment-[[${comment.commentId}]]">
+            <p th:text="${comment.commentId}" style="display: none"></p>
+            <p th:text="${comment.author}"></p>
+            <p th:text="${comment.comment}" th:id="'comment-content-' + ${comment.commentId}"></p>
+            <p th:text="${#temporals.format(comment.regdate, 'yyyy-MM-dd HH:mm')}"></p>
+            <!-- 댓글 수정 및 삭제 버튼들 -->
+            <div th:if="${#authentication.name == comment.userId}">
+                <button th:onclick="'showUpdateForm(' + ${comment.commentId} + ')'"
+                        type="button">수정
+                </button>
+                <button th:onclick="|confirmAction('삭제', '@{/board/{board_category}/readpost/{postbid}/comment/{commentId}/delete(postbid=${post.bid}, board_category=${post.boardCategory}, commentId=${comment.commentId})}')|"
+                        type="button">삭제
+                </button>
+            </div>
+            <div th:id="'update-form-' + ${comment.commentId}" style="display:none;"></div>
+            <div class="separator"></div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    // 위치기반
+    document.addEventListener("DOMContentLoaded", function () {
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+    });
+</script>
 </body>
 </html>

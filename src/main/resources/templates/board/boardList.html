@@ -4,186 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판 목록</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/board.css}">
 
-        .search-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-container > div {
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-container > div:last-child {
-            margin-right: 0;
-        }
-
-        .select_component {
-            position: relative;
-            display: inline-block;
-            width: 200px;
-        }
-
-        .select_box {
-            display: block;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #fff;
-            text-align: center;
-            width: 100%;
-        }
-
-        .select_list {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-            z-index: 1;
-            width: 100%;
-        }
-
-        .select_list li {
-            padding: 8px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .select_list li:hover {
-            background-color: #f1f1f1;
-        }
-
-        .is_open .select_list {
-            display: block;
-        }
-
-        .search_th {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 200px;
-        }
-
-        button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            white-space: nowrap;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .page {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .page ul {
-            list-style-type: none;
-            padding: 0;
-            display: inline-block;
-        }
-
-        .page li {
-            display: inline;
-            margin: 0 5px;
-        }
-
-        .page a {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .page a:hover {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .page .on a {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .write-post-btn {
-            background-color: #28a745;
-        }
-
-        .write-post-btn:hover {
-            background-color: #218838;
-        }
-    </style>
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
 
-<div>
+<div class="container">
 
     <h1 th:if="${board_category == 'tc'}">동행 게시판</h1>
     <h1 th:if="${board_category == 'tl'}">여행로그 게시판</h1>
@@ -193,34 +22,34 @@
               method="get">
             <input type="hidden" name="page" value="1">
             <input type="hidden" name="amount" th:value="${pageDTO.amount}">
-            <div class="select_component" id="divSearchByTop">
-                <a href="#" onclick="toggleDropdown('divSearchByTop'); return false;" id="currentSearchByTop"
-                   class="select_box"
-                   th:text="${pageDTO.criteria.searchType == 'title' ? '제목' : (pageDTO.criteria.searchType == 'author' ? '작성자' : '내용')}">제목</a>
-                <ul class="select_list" id="sl_general">
-                    <li><a href="#" onclick="setSearchOption('제목', 'title'); return false;">제목</a></li>
-                    <li><a href="#" onclick="setSearchOption('작성자', 'author'); return false;">작성자</a></li>
-                    <li><a href="#" onclick="setSearchOption('내용', 'content'); return false;">내용</a></li>
-                </ul>
-            </div>
-            <input type="hidden" name="searchType" id="searchType" th:value="${criteria.searchType}">
-            <div>
-                <span class="search_th">검색어</span>
-                <input type="text" class="" placeholder="검색어" name="searchKeyword"
-                       th:value="${pageDTO.criteria.searchKeyword}">
-            </div>
-            <div>
-                <button type="submit">검색</button>
-            </div>
-            <div>
-
-                <select class="" onchange="handleChange(event)">
-                    <option value="10" th:selected="${pageDTO.amount == 10}">10개 보기</option>
-                    <option value="20" th:selected="${pageDTO.amount == 20}">20개 보기</option>
-                    <option value="30" th:selected="${pageDTO.amount == 30}">30개 보기</option>
-                    <option value="40" th:selected="${pageDTO.amount == 40}">40개 보기</option>
-                    <option value="50" th:selected="${pageDTO.amount == 50}">50개 보기</option>
-                </select>
+            <div class="search-bar">
+                <div class="select_component" id="divSearchByTop">
+                    <a href="#" onclick="toggleDropdown('divSearchByTop'); return false;" id="currentSearchByTop"
+                       class="select_box"
+                       th:text="${pageDTO.criteria.searchType == 'title' ? '제목' : (pageDTO.criteria.searchType == 'author' ? '작성자' : '내용')}">제목</a>
+                    <ul class="select_list" id="sl_general">
+                        <li><a href="#" onclick="setSearchOption('제목', 'title'); return false;">제목</a></li>
+                        <li><a href="#" onclick="setSearchOption('작성자', 'author'); return false;">작성자</a></li>
+                        <li><a href="#" onclick="setSearchOption('내용', 'content'); return false;">내용</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="searchType" id="searchType" th:value="${criteria.searchType}">
+                <div class="search-field">
+                    <input type="text" class="" placeholder="검색어" name="searchKeyword"
+                           th:value="${pageDTO.criteria.searchKeyword}">
+                </div>
+                <div class="search-button">
+                    <button type="submit">검색</button>
+                </div>
+                <div class="select-view">
+                    <select class="view-select" onchange="handleChange(event)">
+                        <option value="10" th:selected="${pageDTO.amount == 10}">10개 보기</option>
+                        <option value="20" th:selected="${pageDTO.amount == 20}">20개 보기</option>
+                        <option value="30" th:selected="${pageDTO.amount == 30}">30개 보기</option>
+                        <option value="40" th:selected="${pageDTO.amount == 40}">40개 보기</option>
+                        <option value="50" th:selected="${pageDTO.amount == 50}">50개 보기</option>
+                    </select>
+                </div>
             </div>
         </form>
     </div>
@@ -239,8 +68,8 @@
         <!-- 게시물 목록이 들어갈 자리 -->
         <tr th:each="post : ${allPosts}">
             <td th:text="${post.bid}"></td>
-            <td><a href="postdetail.html"
-                   th:href="@{{board_category}/readpost/{postbid}(postbid=${post.bid}, board_category=${board_category})}"
+            <td>
+                <a th:href="@{{board_category}/readpost/{postbid}(postbid=${post.bid}, board_category=${board_category})}"
                    th:text="${post.title}">제목</a></td>
             <td th:text="${post.author}">작성자</td>
             <td th:text="${#temporals.format(post.regdate, 'yyyy-MM-dd')}">작성일</td>
@@ -249,8 +78,8 @@
         </tbody>
     </table>
     <!-- 반복 -->
-    <!-- 글쓰기 버튼 추가 -->
-    <div style="text-align: center; margin-top: 20px;">
+    <!-- 글쓰기 버튼 추가 style="text-align: center; margin-top: 20px;" -->
+    <div class="write-post-container">
         <button th:onclick="|location.href='@{/board/{board_category}/createpost(board_category=${board_category})}'|"
                 class="write-post-btn">글쓰기
         </button>
@@ -356,6 +185,24 @@
         document.getElementById('searchType').value = searchTypeValue;
         toggleDropdown('divSearchByTop');
     }
+
+    // 위치기반
+    document.addEventListener("DOMContentLoaded", function () {
+        let locationLink = document.getElementById("location-link");
+        locationLink.addEventListener("click", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
+                    window.location.href = url;
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+    });
 
 </script>
 </html>

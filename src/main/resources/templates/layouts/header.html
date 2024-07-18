@@ -1,30 +1,20 @@
-
 <header class="header" th:fragment="header">
-    <div class="header-left">
-        알림
-    </div>
-    <nav>
-        <ul class="header-nav-links">
-            <li><a th:href="@{/mypage}">MY</a></li>
-            <li><a th:href="@{/message}">쪽지</a></li>
-            <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
-            <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
-            <li><a th:href="@{/api/area-based}">지역관광정보</a></li>
-            <li><a id="location-link" href="javascript:void(0);">주변관광정보</a></li>
-        </ul>
-    </nav>
-
-    <div class="content">
-        <div class="container">
-            <div class="sidebar">
-                <h3 sec:authorize="isAuthenticated()" sec:authentication="name"></h3>
-
-                <div class="auth-links">
-                    <div><a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></div>
-                    <div><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></div>
-                    <div><a sec:authorize="!isAuthenticated()" th:href="@{/signup}">회원가입</a></div>
-                </div>
-            </div>
+    <div class="header-container">
+        <nav class="header-nav">
+            <ul class="header-nav-links">
+                <li><a th:href="@{/api/area-based}">지역관광정보</a></li>
+                <li><a th:href="@{/api/area-based-test}">지역관광정보테스트</a></li>
+                <li><a id="location-link" href="javascript:void(0);">주변관광정보</a></li>
+                <li><a th:href="@{/board/{board_category}(board_category=${'tc'})}">동행게시판</a></li>
+                <li><a th:href="@{/board/{board_category}(board_category=${'tl'})}">여행로그게시판</a></li>
+                <li><a th:href="@{/message}">쪽지</a></li>
+            </ul>
+        </nav>
+        <div class="auth-links">
+            <div><a sec:authorize="isAuthenticated()" sec:authentication="name" th:href="@{/mypage}"></a></div>
+            <div><a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></div>
+            <div><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></div>
+            <div><a sec:authorize="!isAuthenticated()" th:href="@{/signup}">회원가입</a></div>
         </div>
     </div>
 </header>

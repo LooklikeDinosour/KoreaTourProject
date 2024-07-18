@@ -47,40 +47,42 @@
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
-<div style="display: flex;">
-    <div class="nav-container">
-        <nav>
-            <ul class="message-nav-links">
-                <li><a th:href="@{/message/createmessage}">쪽지 쓰기</a></li>
-                <li><a th:href="@{/message/received}">받은 쪽지함</a></li>
-                <li><a th:href="@{/message/sent}">보낸 쪽지함</a></li>
-                <li><a href="#saved">쪽지 보관함</a></li>
-            </ul>
-        </nav>
-    </div>
-    <div class="form-container">
-        <form id="messageForm" th:action="@{/message/sendmessage}" method="post">
-            <div>
-                <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
-                <input type="hidden" th:value="Sent" name="sentReceivedIdentifier">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-            </div>
-            <div>
-                <label for="title">제목</label>
-                <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:field="*{message.title}">
-            </div>
-            <div>
-                <label for="receivedUser">받는사람 </label>
-                <input type="text" id="receivedUser" name="receivedUser" th:field="*{message.receivedUser}">
-                <button type="button" onclick="checkUserIdExist()">확인</button>
-            </div>
-            <div>
-                <label for="messageContent">내용 </label>
-                <textarea id="messageContent" name="messageContent"
-                          th:field="*{messageContent.messageContent}"></textarea>
-            </div>
-            <button type="submit">보내기</button>
-        </form>
+<div class="main-container">
+    <div class="content-wrapper" style="display: flex;">
+        <div class="nav-container">
+            <nav>
+                <ul class="message-nav-links">
+                    <li><a th:href="@{/message/createmessage}">쪽지 쓰기</a></li>
+                    <li><a th:href="@{/message/received}">받은 쪽지함</a></li>
+                    <li><a th:href="@{/message/sent}">보낸 쪽지함</a></li>
+                    <li><a href="#saved">쪽지 보관함</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="form-container">
+            <form id="messageForm" th:action="@{/message/sendmessage}" method="post">
+                <div>
+                    <input type="hidden" th:value="${#authentication.principal.user.userId}" name="sentUser">
+                    <input type="hidden" th:value="Sent" name="sentReceivedIdentifier">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                </div>
+                <div>
+                    <label for="title">제목</label>
+                    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" th:field="*{message.title}">
+                </div>
+                <div>
+                    <label for="receivedUser">받는사람 </label>
+                    <input type="text" id="receivedUser" name="receivedUser" th:field="*{message.receivedUser}">
+                    <button type="button" onclick="checkUserIdExist()">확인</button>
+                </div>
+                <div>
+                    <label for="messageContent">내용 </label>
+                    <textarea id="messageContent" name="messageContent"
+                              th:field="*{messageContent.messageContent}"></textarea>
+                </div>
+                <button type="submit">보내기</button>
+            </form>
+        </div>
     </div>
 </div>
 
