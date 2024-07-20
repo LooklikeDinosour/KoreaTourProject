@@ -40,8 +40,6 @@ public class BoardController  {
                 criteria.getPage(), criteria.getAmount(), criteria.getSearchType(), criteria.getSearchKeyword());
 
         PageDTO pageDTO = boardService.getPageDTO(boardCategory, criteria);
-//        int totalPost = boardService.findTotalPost(boardCategory);
-//        PageDTO pageDTO = new PageDTO(criteria, totalPost);
         log.info("페이지DTO 현재 페이지 = {}, 페이지당 게시글 숫자 = {}", pageDTO.getCriteria().getPage(), pageDTO.getAmount());
         List<Board> allPosts = boardService.findAllPost(boardCategory, criteria);
         log.info("allPosts = {}", allPosts);

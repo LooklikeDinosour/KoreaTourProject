@@ -23,4 +23,5 @@ public class Message {
     private String sentReceivedIdentifier; // 수발신코드
     private int messageContentId; //message Content FK
 
+    private int total; // 전체 메시지 수
 }

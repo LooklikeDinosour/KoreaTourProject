@@ -15,8 +15,8 @@
             <nav>
                 <ul class="message-nav-links">
                     <li><a th:href="@{/message/createmessage}">쪽지 쓰기</a></li>
-                    <li><a th:href="@{/message/received}">받은 쪽지함</a></li>
-                    <li><a th:href="@{/message/sent}">보낸 쪽지함</a></li>
+                    <li><a th:href="@{/message/{message-status}(message-status=${'received'})}">받은 쪽지함</a></li>
+                    <li><a th:href="@{/message/{message-status}(message-status=${'sent'})}">보낸 쪽지함</a></li>
                     <li><a href="#saved">쪽지 보관함</a></li>
                 </ul>
             </nav>
@@ -44,6 +44,7 @@
                 </tbody>
             </table>
         </div>
+        <div th:replace="~{fragments/page :: pagination-message( ${pageDTO}, ${messageStatus})}"></div>
     </div>
 </div>
 </body>

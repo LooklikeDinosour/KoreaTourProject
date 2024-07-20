@@ -1,0 +1,215 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    max-width: 1000px;
+    margin: 0 auto 10px auto;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-field {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.search-button {
+    margin-right: 10px;
+}
+
+.search_th {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+button {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    max-width: 1000px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+
+table a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 글씨 색상 동일하게 */
+}
+
+table a:hover {
+    color: #0056b3; /* 호버 시 색상 변경 (선택 사항) */
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.page {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.page ul {
+    list-style-type: none;
+    padding: 0;
+    display: inline-block;
+}
+
+.page li {
+    display: inline;
+    margin: 0 5px;
+}
+
+.page a {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.page .on a {
+    background-color: #007bff;
+    color: white;
+}
+
+.write-post-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.write-post-btn {
+    background-color: #28a745;
+}
+
+.write-post-btn:hover {
+    background-color: #218838;
+}
+
+.select_component {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+}
+
+.select_box {
+    display: block;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #fff;
+    text-align: center;
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 글씨 색 변경 */
+    width: 95px;
+}
+
+.select_list {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    z-index: 1;
+    width: 105px;
+}
+
+.select_list li {
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.select_list li a {
+    text-decoration: none;
+    color: black;
+}
+
+.select_list a:hover {
+    color: blue;
+}
+
+.select_list li:hover {
+    background-color: #f1f1f1;
+}
+
+.is_open .select_list {
+    display: block;
+}

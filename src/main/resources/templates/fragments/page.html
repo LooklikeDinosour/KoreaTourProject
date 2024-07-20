@@ -1,0 +1,133 @@
+<div class="page" th:fragment="pagination-board(pageDTO, board_category)">
+    <ul>
+        <!-- 이전 버튼 -->
+        <th:block th:if="${pageDTO.prev}">
+            <li style="margin-right: 5px;">
+                <a th:href="@{/board/{board_category}(page=${pageDTO.start - 1},
+                                                     board_category=${board_category},
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>이전
+                </a>
+            </li>
+        </th:block>
+
+
+        <!-- 첫 페이지 -->
+        <li>
+            <a th:href="@{/board/{board_category}(page = 1,
+                                                 board_category=${board_category},
+                                                 amount=${pageDTO.amount},
+                                                 searchType=${pageDTO.criteria.searchType},
+                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+            </a>
+        </li>
+
+        <!-- 페이지 -->
+        <th:block th:each="page : ${pageDTO.pageList}">
+            <li th:class="${pageDTO.page == page ? 'on' : ''}">
+                <a th:href="@{/board/{board_category}(page=${page},
+                                                     board_category=${board_category},
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                    [[${page}]]
+                </a>
+
+            </li>
+        </th:block>
+
+        <!--마지막 페이지-->
+        <li>
+            <a th:href="@{/board/{board_category}(page = ${pageDTO.realEnd},
+                                                 board_category=${board_category},
+                                                 amount=${pageDTO.amount},
+                                                 searchType=${pageDTO.criteria.searchType},
+                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            </a>
+        </li>
+
+        <!-- 다음 버튼 -->
+        <th:block th:if="${pageDTO.next}">
+            <li style="margin-left: 5px;">
+                <a th:href="@{/board/{board_category}(page=${pageDTO.end + 1},
+                                                     board_category=${board_category},
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>다음
+                </a>
+            </li>
+        </th:block>
+    </ul>
+</div>
+
+<div class="page" th:fragment="pagination-message(${pageDTO}, ${messageStatus})">
+    <ul>
+        <!-- 이전 버튼 -->
+        <th:block th:if="${pageDTO.prev}">
+            <li style="margin-right: 5px;">
+                <a th:href="@{/message/{message-status}(page=${pageDTO.start - 1},
+                                                     message-status=${messageStatus},
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>이전
+                </a>
+            </li>
+        </th:block>
+
+
+        <!-- 첫 페이지 -->
+        <li>
+            <a th:href="@{/message/{message-status}(page = 1,
+                                                 message-status=${messageStatus},
+                                                 amount=${pageDTO.amount},
+                                                 searchType=${pageDTO.criteria.searchType},
+                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+            </a>
+        </li>
+
+        <!-- 페이지 -->
+        <th:block th:each="page : ${pageDTO.pageList}">
+            <li th:class="${pageDTO.page == page ? 'on' : ''}">
+                <a th:href="@{/message/{message-status}(page=${page},
+                                                     message-status=${messageStatus},
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                    [[${page}]]
+                </a>
+
+            </li>
+        </th:block>
+
+        <!--마지막 페이지-->
+        <li>
+            <a th:href="@{/message/{message-status}(page = ${pageDTO.realEnd},
+                                                 message-status=${messageStatus},
+                                                 amount=${pageDTO.amount},
+                                                 searchType=${pageDTO.criteria.searchType},
+                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            </a>
+        </li>
+
+        <!-- 다음 버튼 -->
+        <th:block th:if="${pageDTO.next}">
+            <li style="margin-left: 5px;">
+                <a th:href="@{/message/{message-status}(page=${pageDTO.end + 1},
+                                                     message-status=${messageStatus},
+                                                     amount=${pageDTO.amount},
+                                                     searchType=${pageDTO.criteria.searchType},
+                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>다음
+                </a>
+            </li>
+        </th:block>
+    </ul>
+</div>

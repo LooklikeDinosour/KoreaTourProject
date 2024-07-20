@@ -36,6 +36,7 @@
     //CSRF
     let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
     //대분류
     document.addEventListener('DOMContentLoaded', function () {
         fetch('/api/area1')
@@ -47,7 +48,6 @@
                     category += `<li><a href="#" data-set='${JSON.stringify(item)}'>${item.categoryDetailName}</a></li>`;
                 });
                 category += '</ul>';
-                console.log("이거 대분류인데 과연 중분류? : ", category);
                 document.querySelector(".categoryListWrap").innerHTML += category;
             })
             .catch(err => {
@@ -296,24 +296,6 @@
             })
             .catch((error) => console.error('Error:', error));
     }
-
-    // 위치기반
-    document.addEventListener("DOMContentLoaded", function () {
-        let locationLink = document.getElementById("location-link");
-        locationLink.addEventListener("click", function () {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    const url = `/api/location?latitude=${latitude}&longitude=${longitude}`
-                    window.location.href = url;
-                });
-            } else {
-                console.log("지원하지 않는 브라우저입니다.")
-            }
-        });
-    });
 </script>
 
 </body>

@@ -4,230 +4,325 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
-<!--    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>-->
-<!--    <script src="../../static/js/calllocationinfo.js"></script>-->
-
     <style>
 
-    #map {
-        height: 350px;
-        width : 400px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    /*
-    * Optional: Makes the sample page fill the window.
-    */
+        .detail-container {
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .tour-map {
+            height: 350px;
+            width: 50%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .tourist-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tourist-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .no-locations {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            padding: 20px 0;
+        }
+
+        h2 {
+            color: #333;
+            margin: 10px 0;
+        }
+
+        p {
+            color: #555;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
-<div th:if="${tourCommonInfo.getTourDetailCommonList != null}">
-    <div th:each="commonInfo : ${tourCommonInfo.getTourDetailCommonList}" class="tourist-item">
-        <img th:if="${commonInfo.firstImage}" th:src="${commonInfo.firstImage}" alt="Image">
-        <input type="hidden" name="contentId" th:value="${commonInfo.contentId}">
-        <h2 id="title" th:text="${commonInfo.title}">Title</h2>
-        <p th:text="'주소: ' + ${commonInfo.addr1} + ' ' + ${commonInfo.addr2}"></p>
-        <p th:text="'설명: ' + ${commonInfo.overview}"></p>
-        <div id="map" th:attr="data-mapx=${commonInfo.mapX}, data-mapy=${commonInfo.mapY}">
+<div class="detail-container">
+    <div th:if="${tourCommonInfo.getTourDetailCommonList != null}">
+        <div th:each="commonInfo : ${tourCommonInfo.getTourDetailCommonList}" class="tourist-item">
+            <img th:if="${commonInfo.firstImage}" th:src="${commonInfo.firstImage}" alt="Image">
+            <input type="hidden" name="contentId" th:value="${commonInfo.contentId}">
+            <h2 id="title" th:text="${commonInfo.title}">Title</h2>
+            <p th:text="'주소: ' + ${commonInfo.addr1} + ' ' + ${commonInfo.addr2}"></p>
+            <p th:text="'설명: ' + ${commonInfo.overview}"></p>
+            <div id="map" class="tour-map" th:attr="data-mapx=${commonInfo.mapX}, data-mapy=${commonInfo.mapY}">
+            </div>
         </div>
-    </div>
-</div>
-<div th:if="${tourDetailIntro.getTourDetailIntroList() != null}">
-    <div th:each="detailIntro : ${tourDetailIntro.getTourDetailIntroList}">
-        <div th:if="${detailIntro.contentTypeId == '12'}">
-            <p th:if="${detailIntro.accomCount != ''}" th:text="'수용인원: ' + ${detailIntro.accomCount}"></p>
-            <p th:if="${detailIntro.chkBabyCarriage != ''}" th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriage}"></p>
-            <p th:if="${detailIntro.chkCreditCard != ''}" th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCard}"></p>
-            <p th:if="${detailIntro.chkPet != ''}" th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPet}"></p>
-            <p th:if="${detailIntro.expAgeRange != ''}" th:text="'체험가능연령: ' + ${detailIntro.expAgeRange}"></p>
-            <p th:if="${detailIntro.expGuide != ''}" th:text="'체험안내: ' + ${detailIntro.expGuide}"></p>
-            <p th:if="${detailIntro.heritage1 != '0'}" th:text="'세계문화유산유무: ' + ${detailIntro.heritage1}"></p>
-            <p th:if="${detailIntro.heritage2 != '0'}" th:text="'세계자연유산유무: ' + ${detailIntro.heritage2}"></p>
-            <p th:if="${detailIntro.heritage3 != '0'}" th:text="'세계기록유산유무: ' + ${detailIntro.heritage3}"></p>
-            <p th:if="${detailIntro.infoCenter != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenter}"></p>
-            <p th:if="${detailIntro.openDate != ''}" th:text="'개장일: ' + ${detailIntro.openDate}"></p>
-            <p th:if="${detailIntro.parking != ''}" th:text="'주차시설: ' + ${detailIntro.parking}"></p>
-            <p th:if="${detailIntro.restDate != ''}" th:text="'쉬는날: ' + ${detailIntro.restDate}"></p>
-            <p th:if="${detailIntro.useSeason != ''}" th:text="'이용시기: ' + ${detailIntro.useSeason}"></p>
-            <p th:if="${detailIntro.useTime != ''}" th:text="'이용시간: ' + ${detailIntro.useTime}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '14'}">
-            <p th:if="${detailIntro.accomCountCulture != ''}" th:text="'수용인원: ' + ${detailIntro.accomCountCulture}"></p>
-            <p th:if="${detailIntro.chkBabyCarriageCulture != ''}" th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriageCulture}"></p>
-            <p th:if="${detailIntro.chkCreditCardCulture != ''}" th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardCulture}"></p>
-            <p th:if="${detailIntro.chkPetCulture != ''}" th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPetCulture}"></p>
-            <p th:if="${detailIntro.discountInfo != ''}" th:text="'할인정보: ' + ${detailIntro.discountInfo}"></p>
-            <p th:if="${detailIntro.infoCenterCulture != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterCulture}"></p>
-            <p th:if="${detailIntro.parkingCulture != ''}" th:text="'주차시설: ' + ${detailIntro.parkingCulture}"></p>
-            <p th:if="${detailIntro.parkingFee != ''}" th:text="'주차요금: ' + ${detailIntro.parkingFee}"></p>
-            <p th:if="${detailIntro.restDateCulture != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateCulture}"></p>
-            <p th:if="${detailIntro.useFee != ''}" th:text="'이용요금: ' + ${detailIntro.useFee}"></p>
-            <p th:if="${detailIntro.useTimeCulture != ''}" th:text="'이용시간: ' + ${detailIntro.useTimeCulture}"></p>
-            <p th:if="${detailIntro.scale != ''}" th:text="'규모: ' + ${detailIntro.scale}"></p>
-            <p th:if="${detailIntro.spendTime != ''}" th:text="'관람소요시간: ' + ${detailIntro.spendTime}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '15'}">
-            <p th:if="${detailIntro.ageLimit != ''}" th:text="'관람가능연령: ' + ${detailIntro.ageLimit}"></p>
-            <p th:if="${detailIntro.bookingPlace != ''}" th:text="'예매처: ' + ${detailIntro.bookingPlace}"></p>
-            <p th:if="${detailIntro.discountInfoFestival != ''}" th:text="'할인정보: ' + ${detailIntro.discountInfoFestival}"></p>
-            <p th:if="${detailIntro.eventEndDate != ''}" th:text="'행사종료일: ' + ${detailIntro.eventEndDate}"></p>
-            <p th:if="${detailIntro.eventHomepage != ''}" th:text="'행사홈페이지: ' + ${detailIntro.eventHomepage}"></p>
-            <p th:if="${detailIntro.eventPlace != ''}" th:text="'행사장소: ' + ${detailIntro.eventPlace}"></p>
-            <p th:if="${detailIntro.eventStartDate != ''}" th:text="'행사시작일: ' + ${detailIntro.eventStartDate}"></p>
-            <p th:if="${detailIntro.festivalGrade != ''}" th:text="'축제등급: ' + ${detailIntro.festivalGrade}"></p>
-            <p th:if="${detailIntro.placeInfo != ''}" th:text="'행사장위치안내: ' + ${detailIntro.placeInfo}"></p>
-            <p th:if="${detailIntro.playTime != ''}" th:text="'공연시간: ' + ${detailIntro.playTime}"></p>
-            <p th:if="${detailIntro.program != ''}" th:text="'행사프로그램: ' + ${detailIntro.program}"></p>
-            <p th:if="${detailIntro.spendTimeFestival != ''}" th:text="'관람소요시간: ' + ${detailIntro.spendTimeFestival}"></p>
-            <p th:if="${detailIntro.sponsor1 != ''}" th:text="'주최자정보: ' + ${detailIntro.sponsor1}"></p>
-            <p th:if="${detailIntro.sponsor1Tel != ''}" th:text="'주최자연락처: ' + ${detailIntro.sponsor1Tel}"></p>
-            <p th:if="${detailIntro.sponsor2 != ''}" th:text="'주관사정보: ' + ${detailIntro.sponsor2}"></p>
-            <p th:if="${detailIntro.sponsor2Tel != ''}" th:text="'주관사연락처: ' + ${detailIntro.sponsor2Tel}"></p>
-            <p th:if="${detailIntro.subEvent != ''}" th:text="'부대행사: ' + ${detailIntro.subEvent}"></p>
-            <p th:if="${detailIntro.useTimeFestival != ''}" th:text="'이용요금: ' + ${detailIntro.useTimeFestival}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '25'}">
-            <p th:if="${detailIntro.distance != ''}" th:text="'코스총거리: ' + ${detailIntro.distance}"></p>
-            <p th:if="${detailIntro.infoCenterTourCourse != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterTourCourse}"></p>
-            <p th:if="${detailIntro.schedule != ''}" th:text="'코스일정: ' + ${detailIntro.schedule}"></p>
-            <p th:if="${detailIntro.takeTime != ''}" th:text="'코스총소요시간: ' + ${detailIntro.takeTime}"></p>
-            <p th:if="${detailIntro.theme != ''}" th:text="'코스테마: ' + ${detailIntro.theme}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '28'}">
-            <p th:if="${detailIntro.accomCountLeports != ''}" th:text="'수용인원: ' + ${detailIntro.accomCountLeports}"></p>
-            <p th:if="${detailIntro.chkBabyCarriageLeports != ''}" th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriageLeports}"></p>
-            <p th:if="${detailIntro.chkCreditCardLeports != ''}" th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardLeports}"></p>
-            <p th:if="${detailIntro.chkPetLeports != ''}" th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPetLeports}"></p>
-            <p th:if="${detailIntro.expAgeRangeLeports != ''}" th:text="'체험가능연령: ' + ${detailIntro.expAgeRangeLeports}"></p>
-            <p th:if="${detailIntro.infoCenterLeports != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterLeports}"></p>
-            <p th:if="${detailIntro.openPeriod != ''}" th:text="'개장기간: ' + ${detailIntro.openPeriod}"></p>
-            <p th:if="${detailIntro.parkingFeeLeports != ''}" th:text="'주차요금: ' + ${detailIntro.parkingFeeLeports}"></p>
-            <p th:if="${detailIntro.parkingLeports != ''}" th:text="'주차시설: ' + ${detailIntro.parkingLeports}"></p>
-            <p th:if="${detailIntro.reservation != ''}" th:text="'예약안내: ' + ${detailIntro.reservation}"></p>
-            <p th:if="${detailIntro.restDateLeports != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateLeports}"></p>
-            <p th:if="${detailIntro.scaleLeports != ''}" th:text="'규모: ' + ${detailIntro.scaleLeports}"></p>
-            <p th:if="${detailIntro.useFeeLeports != ''}" th:text="'입장료: ' + ${detailIntro.useFeeLeports}"></p>
-            <p th:if="${detailIntro.useTimeLeports != ''}" th:text="'이용시간: ' + ${detailIntro.useTimeLeports}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '32'}">
-            <p th:if="${detailIntro.accomCountLodging != ''}" th:text="'수용가능인원: ' + ${detailIntro.accomCountLodging}"></p>
-            <p th:if="${detailIntro.benikia != ''}" th:text="'베니키아여부: ' + ${detailIntro.benikia}"></p>
-            <p th:if="${detailIntro.checkInTime != ''}" th:text="'입실시간: ' + ${detailIntro.checkInTime}"></p>
-            <p th:if="${detailIntro.checkOutTime != ''}" th:text="'퇴실시간: ' + ${detailIntro.checkOutTime}"></p>
-            <p th:if="${detailIntro.chkCooking != ''}" th:text="'객실내취사여부: ' + ${detailIntro.chkCooking}"></p>
-            <p th:if="${detailIntro.foodPlace != ''}" th:text="'식음료장: ' + ${detailIntro.foodPlace}"></p>
-            <p th:if="${detailIntro.goodStay != ''}" th:text="'굿스테이여부: ' + ${detailIntro.goodStay}"></p>
-            <p th:if="${detailIntro.hanok != ''}" th:text="'한옥여부: ' + ${detailIntro.hanok}"></p>
-            <p th:if="${detailIntro.infoCenterLodging != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterLodging}"></p>
-            <p th:if="${detailIntro.parkingLodging != ''}" th:text="'주차시설: ' + ${detailIntro.parkingLodging}"></p>
-            <p th:if="${detailIntro.pickup != ''}" th:text="'픽업서비스: ' + ${detailIntro.pickup}"></p>
-            <p th:if="${detailIntro.roomCount != ''}" th:text="'객실수: ' + ${detailIntro.roomCount}"></p>
-            <p th:if="${detailIntro.reservationLodging != ''}" th:text="'예약안내: ' + ${detailIntro.reservationLodging}"></p>
-            <p th:if="${detailIntro.reservationUrl != ''}" th:text="'예약안내홈페이지: ' + ${detailIntro.reservationUrl}"></p>
-            <p th:if="${detailIntro.roomType != ''}" th:text="'객실유형: ' + ${detailIntro.roomType}"></p>
-            <p th:if="${detailIntro.scaleLodging != ''}" th:text="'규모: ' + ${detailIntro.scaleLodging}"></p>
-            <p th:if="${detailIntro.subFacility != ''}" th:text="'부대시설: ' + ${detailIntro.subFacility}"></p>
-            <p th:if="${detailIntro.barbecue != ''}" th:text="'바비큐장여부: ' + ${detailIntro.barbecue}"></p>
-            <p th:if="${detailIntro.beauty != ''}" th:text="'뷰티시설정보: ' + ${detailIntro.beauty}"></p>
-            <p th:if="${detailIntro.beverage != ''}" th:text="'식음료장여부: ' + ${detailIntro.beverage}"></p>
-            <p th:if="${detailIntro.bicycle != ''}" th:text="'자전거대여여부: ' + ${detailIntro.bicycle}"></p>
-            <p th:if="${detailIntro.campfire != ''}" th:text="'캠프파이어여부: ' + ${detailIntro.campfire}"></p>
-            <p th:if="${detailIntro.fitness != ''}" th:text="'휘트니스센터여부: ' + ${detailIntro.fitness}"></p>
-            <p th:if="${detailIntro.karaoke != ''}" th:text="'노래방여부: ' + ${detailIntro.karaoke}"></p>
-            <p th:if="${detailIntro.publicBath != ''}" th:text="'공용샤워실여부: ' + ${detailIntro.publicBath}"></p>
-            <p th:if="${detailIntro.publicPc != ''}" th:text="'공용 PC실여부: ' + ${detailIntro.publicPc}"></p>
-            <p th:if="${detailIntro.sauna != ''}" th:text="'사우나실여부: ' + ${detailIntro.sauna}"></p>
-            <p th:if="${detailIntro.seminar != ''}" th:text="'세미나실여부: ' + ${detailIntro.seminar}"></p>
-            <p th:if="${detailIntro.sports != ''}" th:text="'스포츠시설여부: ' + ${detailIntro.sports}"></p>
-            <p th:if="${detailIntro.refundRegulation != ''}" th:text="'환불규정: ' + ${detailIntro.refundRegulation}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '38'}">
-            <p th:if="${detailIntro.chkBabyCarriageShopping != ''}" th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriageShopping}"></p>
-            <p th:if="${detailIntro.chkCreditCardShopping != ''}" th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardShopping}"></p>
-            <p th:if="${detailIntro.chkPetShopping != ''}" th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPetShopping}"></p>
-            <p th:if="${detailIntro.cultureCenter != ''}" th:text="'문화센터바로가기: ' + ${detailIntro.cultureCenter}"></p>
-            <p th:if="${detailIntro.fairDay != ''}" th:text="'장서는날: ' + ${detailIntro.fairDay}"></p>
-            <p th:if="${detailIntro.infoCenterShopping != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterShopping}"></p>
-            <p th:if="${detailIntro.openDateShopping != ''}" th:text="'개장일: ' + ${detailIntro.openDateShopping}"></p>
-            <p th:if="${detailIntro.openTime == null}" th:text="'영업시간: 전화문의'">영업시간: 전화문의</p>
-            <p th:if="${detailIntro.openTime != null}" th:text="'영업시간: ' + ${detailIntro.openTime}"></p>
-            <p th:if="${detailIntro.parkingShopping != ''}" th:text="'주차시설: ' + ${detailIntro.parkingShopping}"></p>
-            <p th:if="${detailIntro.restDateShopping != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateShopping}"></p>
-            <p th:if="${detailIntro.restroom != ''}" th:text="'화장실설명: ' + ${detailIntro.restroom}"></p>
-            <p th:if="${detailIntro.saleItem != ''}" th:text="'판매품목: ' + ${detailIntro.saleItem}"></p>
-            <p th:if="${detailIntro.saleItemCost != ''}" th:text="'판매품목별가격: ' + ${detailIntro.saleItemCost}"></p>
-            <p th:if="${detailIntro.scaleShopping != ''}" th:text="'규모: ' + ${detailIntro.scaleShopping}"></p>
-            <p th:if="${detailIntro.shopGuide != ''}" th:text="'매장안내: ' + ${detailIntro.shopGuide}"></p>
-        </div>
-        <div th:if="${detailIntro.contentTypeId == '39'}">
-            <p th:if="${detailIntro.chkCreditCardFood != ''}" th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardFood}"></p>
-            <p th:if="${detailIntro.discountInfoFood != ''}" th:text="'할인정보: ' + ${detailIntro.discountInfoFood}"></p>
-            <p th:if="${detailIntro.firstMenu != ''}" th:text="'대표메뉴: ' + ${detailIntro.firstMenu}"></p>
-            <p th:if="${detailIntro.infoCenterFood != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterFood}"></p>
-            <p th:if="${detailIntro.kidsFacility != ''}" th:text="'어린이놀이방여부: ' + ${detailIntro.kidsFacility}"></p>
-            <p th:if="${detailIntro.openDateFood != ''}" th:text="'개업일: ' + ${detailIntro.openDateFood}"></p>
-            <p th:if="${detailIntro.openTimeFood != ''}" th:text="'영업시간: ' + ${detailIntro.openTimeFood}"></p>
-            <p th:if="${detailIntro.packing != ''}" th:text="'포장가능: ' + ${detailIntro.packing}"></p>
-            <p th:if="${detailIntro.parkingFood != ''}" th:text="'주차시설: ' + ${detailIntro.parkingFood}"></p>
-            <p th:if="${detailIntro.reservationFood != ''}" th:text="'예약안내: ' + ${detailIntro.reservationFood}"></p>
-            <p th:if="${detailIntro.restDateFood != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateFood}"></p>
-            <p th:if="${detailIntro.scaleFood != ''}" th:text="'규모: ' + ${detailIntro.scaleFood}"></p>
-            <p th:if="${detailIntro.seat != ''}" th:text="'좌석수: ' + ${detailIntro.seat}"></p>
-            <p th:if="${detailIntro.smoking != ''}" th:text="'금연/흡연여부: ' + ${detailIntro.smoking}"></p>
-            <p th:if="${detailIntro.treatMenu != ''}" th:text="'취급메뉴: ' + ${detailIntro.treatMenu}"></p>
-            <p th:if="${detailIntro.lcnsNo != ''}" th:text="'인허가번호: ' + ${detailIntro.lcnsNo}"></p>
-        </div>
-    </div>
 
-</div>
-<div th:if="${tourCommonInfo == null}" style="grid-column: span 4; text-align: center;">
-    <p>No tourist locations available.</p>
+    </div>
+    <div th:if="${tourDetailIntro.getTourDetailIntroList() != null}">
+        <div th:each="detailIntro : ${tourDetailIntro.getTourDetailIntroList}">
+            <div th:if="${detailIntro.contentTypeId == '12'}">
+                <p th:if="${detailIntro.accomCount != ''}" th:text="'수용인원: ' + ${detailIntro.accomCount}"></p>
+                <p th:if="${detailIntro.chkBabyCarriage != ''}"
+                   th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriage}"></p>
+                <p th:if="${detailIntro.chkCreditCard != ''}" th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCard}"></p>
+                <p th:if="${detailIntro.chkPet != ''}" th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPet}"></p>
+                <p th:if="${detailIntro.expAgeRange != ''}" th:text="'체험가능연령: ' + ${detailIntro.expAgeRange}"></p>
+                <p th:if="${detailIntro.expGuide != ''}" th:text="'체험안내: ' + ${detailIntro.expGuide}"></p>
+                <p th:if="${detailIntro.heritage1 != '0'}" th:text="'세계문화유산유무: ' + ${detailIntro.heritage1}"></p>
+                <p th:if="${detailIntro.heritage2 != '0'}" th:text="'세계자연유산유무: ' + ${detailIntro.heritage2}"></p>
+                <p th:if="${detailIntro.heritage3 != '0'}" th:text="'세계기록유산유무: ' + ${detailIntro.heritage3}"></p>
+                <p th:if="${detailIntro.infoCenter != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenter}"></p>
+                <p th:if="${detailIntro.openDate != ''}" th:text="'개장일: ' + ${detailIntro.openDate}"></p>
+                <p th:if="${detailIntro.parking != ''}" th:text="'주차시설: ' + ${detailIntro.parking}"></p>
+                <p th:if="${detailIntro.restDate != ''}" th:text="'쉬는날: ' + ${detailIntro.restDate}"></p>
+                <p th:if="${detailIntro.useSeason != ''}" th:text="'이용시기: ' + ${detailIntro.useSeason}"></p>
+                <p th:if="${detailIntro.useTime != ''}" th:text="'이용시간: ' + ${detailIntro.useTime}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '14'}">
+                <p th:if="${detailIntro.accomCountCulture != ''}"
+                   th:text="'수용인원: ' + ${detailIntro.accomCountCulture}"></p>
+                <p th:if="${detailIntro.chkBabyCarriageCulture != ''}"
+                   th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriageCulture}"></p>
+                <p th:if="${detailIntro.chkCreditCardCulture != ''}"
+                   th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardCulture}"></p>
+                <p th:if="${detailIntro.chkPetCulture != ''}"
+                   th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPetCulture}"></p>
+                <p th:if="${detailIntro.discountInfo != ''}" th:text="'할인정보: ' + ${detailIntro.discountInfo}"></p>
+                <p th:if="${detailIntro.infoCenterCulture != ''}"
+                   th:text="'문의및안내: ' + ${detailIntro.infoCenterCulture}"></p>
+                <p th:if="${detailIntro.parkingCulture != ''}" th:text="'주차시설: ' + ${detailIntro.parkingCulture}"></p>
+                <p th:if="${detailIntro.parkingFee != ''}" th:text="'주차요금: ' + ${detailIntro.parkingFee}"></p>
+                <p th:if="${detailIntro.restDateCulture != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateCulture}"></p>
+                <p th:if="${detailIntro.useFee != ''}" th:text="'이용요금: ' + ${detailIntro.useFee}"></p>
+                <p th:if="${detailIntro.useTimeCulture != ''}" th:text="'이용시간: ' + ${detailIntro.useTimeCulture}"></p>
+                <p th:if="${detailIntro.scale != ''}" th:text="'규모: ' + ${detailIntro.scale}"></p>
+                <p th:if="${detailIntro.spendTime != ''}" th:text="'관람소요시간: ' + ${detailIntro.spendTime}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '15'}">
+                <p th:if="${detailIntro.ageLimit != ''}" th:text="'관람가능연령: ' + ${detailIntro.ageLimit}"></p>
+                <p th:if="${detailIntro.bookingPlace != ''}" th:text="'예매처: ' + ${detailIntro.bookingPlace}"></p>
+                <p th:if="${detailIntro.discountInfoFestival != ''}"
+                   th:text="'할인정보: ' + ${detailIntro.discountInfoFestival}"></p>
+                <p th:if="${detailIntro.eventEndDate != ''}" th:text="'행사종료일: ' + ${detailIntro.eventEndDate}"></p>
+                <p th:if="${detailIntro.eventHomepage != ''}" th:text="'행사홈페이지: ' + ${detailIntro.eventHomepage}"></p>
+                <p th:if="${detailIntro.eventPlace != ''}" th:text="'행사장소: ' + ${detailIntro.eventPlace}"></p>
+                <p th:if="${detailIntro.eventStartDate != ''}" th:text="'행사시작일: ' + ${detailIntro.eventStartDate}"></p>
+                <p th:if="${detailIntro.festivalGrade != ''}" th:text="'축제등급: ' + ${detailIntro.festivalGrade}"></p>
+                <p th:if="${detailIntro.placeInfo != ''}" th:text="'행사장위치안내: ' + ${detailIntro.placeInfo}"></p>
+                <p th:if="${detailIntro.playTime != ''}" th:text="'공연시간: ' + ${detailIntro.playTime}"></p>
+                <p th:if="${detailIntro.program != ''}" th:text="'행사프로그램: ' + ${detailIntro.program}"></p>
+                <p th:if="${detailIntro.spendTimeFestival != ''}"
+                   th:text="'관람소요시간: ' + ${detailIntro.spendTimeFestival}"></p>
+                <p th:if="${detailIntro.sponsor1 != ''}" th:text="'주최자정보: ' + ${detailIntro.sponsor1}"></p>
+                <p th:if="${detailIntro.sponsor1Tel != ''}" th:text="'주최자연락처: ' + ${detailIntro.sponsor1Tel}"></p>
+                <p th:if="${detailIntro.sponsor2 != ''}" th:text="'주관사정보: ' + ${detailIntro.sponsor2}"></p>
+                <p th:if="${detailIntro.sponsor2Tel != ''}" th:text="'주관사연락처: ' + ${detailIntro.sponsor2Tel}"></p>
+                <p th:if="${detailIntro.subEvent != ''}" th:text="'부대행사: ' + ${detailIntro.subEvent}"></p>
+                <p th:if="${detailIntro.useTimeFestival != ''}" th:text="'이용요금: ' + ${detailIntro.useTimeFestival}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '25'}">
+                <p th:if="${detailIntro.distance != ''}" th:text="'코스총거리: ' + ${detailIntro.distance}"></p>
+                <p th:if="${detailIntro.infoCenterTourCourse != ''}"
+                   th:text="'문의및안내: ' + ${detailIntro.infoCenterTourCourse}"></p>
+                <p th:if="${detailIntro.schedule != ''}" th:text="'코스일정: ' + ${detailIntro.schedule}"></p>
+                <p th:if="${detailIntro.takeTime != ''}" th:text="'코스총소요시간: ' + ${detailIntro.takeTime}"></p>
+                <p th:if="${detailIntro.theme != ''}" th:text="'코스테마: ' + ${detailIntro.theme}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '28'}">
+                <p th:if="${detailIntro.accomCountLeports != ''}"
+                   th:text="'수용인원: ' + ${detailIntro.accomCountLeports}"></p>
+                <p th:if="${detailIntro.chkBabyCarriageLeports != ''}"
+                   th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriageLeports}"></p>
+                <p th:if="${detailIntro.chkCreditCardLeports != ''}"
+                   th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardLeports}"></p>
+                <p th:if="${detailIntro.chkPetLeports != ''}"
+                   th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPetLeports}"></p>
+                <p th:if="${detailIntro.expAgeRangeLeports != ''}"
+                   th:text="'체험가능연령: ' + ${detailIntro.expAgeRangeLeports}"></p>
+                <p th:if="${detailIntro.infoCenterLeports != ''}"
+                   th:text="'문의및안내: ' + ${detailIntro.infoCenterLeports}"></p>
+                <p th:if="${detailIntro.openPeriod != ''}" th:text="'개장기간: ' + ${detailIntro.openPeriod}"></p>
+                <p th:if="${detailIntro.parkingFeeLeports != ''}"
+                   th:text="'주차요금: ' + ${detailIntro.parkingFeeLeports}"></p>
+                <p th:if="${detailIntro.parkingLeports != ''}" th:text="'주차시설: ' + ${detailIntro.parkingLeports}"></p>
+                <p th:if="${detailIntro.reservation != ''}" th:text="'예약안내: ' + ${detailIntro.reservation}"></p>
+                <p th:if="${detailIntro.restDateLeports != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateLeports}"></p>
+                <p th:if="${detailIntro.scaleLeports != ''}" th:text="'규모: ' + ${detailIntro.scaleLeports}"></p>
+                <p th:if="${detailIntro.useFeeLeports != ''}" th:text="'입장료: ' + ${detailIntro.useFeeLeports}"></p>
+                <p th:if="${detailIntro.useTimeLeports != ''}" th:text="'이용시간: ' + ${detailIntro.useTimeLeports}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '32'}">
+                <p th:if="${detailIntro.accomCountLodging != ''}"
+                   th:text="'수용가능인원: ' + ${detailIntro.accomCountLodging}"></p>
+                <p th:if="${detailIntro.benikia != ''}" th:text="'베니키아여부: ' + ${detailIntro.benikia}"></p>
+                <p th:if="${detailIntro.checkInTime != ''}" th:text="'입실시간: ' + ${detailIntro.checkInTime}"></p>
+                <p th:if="${detailIntro.checkOutTime != ''}" th:text="'퇴실시간: ' + ${detailIntro.checkOutTime}"></p>
+                <p th:if="${detailIntro.chkCooking != ''}" th:text="'객실내취사여부: ' + ${detailIntro.chkCooking}"></p>
+                <p th:if="${detailIntro.foodPlace != ''}" th:text="'식음료장: ' + ${detailIntro.foodPlace}"></p>
+                <p th:if="${detailIntro.goodStay != ''}" th:text="'굿스테이여부: ' + ${detailIntro.goodStay}"></p>
+                <p th:if="${detailIntro.hanok != ''}" th:text="'한옥여부: ' + ${detailIntro.hanok}"></p>
+                <p th:if="${detailIntro.infoCenterLodging != ''}"
+                   th:text="'문의및안내: ' + ${detailIntro.infoCenterLodging}"></p>
+                <p th:if="${detailIntro.parkingLodging != ''}" th:text="'주차시설: ' + ${detailIntro.parkingLodging}"></p>
+                <p th:if="${detailIntro.pickup != ''}" th:text="'픽업서비스: ' + ${detailIntro.pickup}"></p>
+                <p th:if="${detailIntro.roomCount != ''}" th:text="'객실수: ' + ${detailIntro.roomCount}"></p>
+                <p th:if="${detailIntro.reservationLodging != ''}"
+                   th:text="'예약안내: ' + ${detailIntro.reservationLodging}"></p>
+                <p th:if="${detailIntro.reservationUrl != ''}"
+                   th:text="'예약안내홈페이지: ' + ${detailIntro.reservationUrl}"></p>
+                <p th:if="${detailIntro.roomType != ''}" th:text="'객실유형: ' + ${detailIntro.roomType}"></p>
+                <p th:if="${detailIntro.scaleLodging != ''}" th:text="'규모: ' + ${detailIntro.scaleLodging}"></p>
+                <p th:if="${detailIntro.subFacility != ''}" th:text="'부대시설: ' + ${detailIntro.subFacility}"></p>
+                <p th:if="${detailIntro.barbecue != ''}" th:text="'바비큐장여부: ' + ${detailIntro.barbecue}"></p>
+                <p th:if="${detailIntro.beauty != ''}" th:text="'뷰티시설정보: ' + ${detailIntro.beauty}"></p>
+                <p th:if="${detailIntro.beverage != ''}" th:text="'식음료장여부: ' + ${detailIntro.beverage}"></p>
+                <p th:if="${detailIntro.bicycle != ''}" th:text="'자전거대여여부: ' + ${detailIntro.bicycle}"></p>
+                <p th:if="${detailIntro.campfire != ''}" th:text="'캠프파이어여부: ' + ${detailIntro.campfire}"></p>
+                <p th:if="${detailIntro.fitness != ''}" th:text="'휘트니스센터여부: ' + ${detailIntro.fitness}"></p>
+                <p th:if="${detailIntro.karaoke != ''}" th:text="'노래방여부: ' + ${detailIntro.karaoke}"></p>
+                <p th:if="${detailIntro.publicBath != ''}" th:text="'공용샤워실여부: ' + ${detailIntro.publicBath}"></p>
+                <p th:if="${detailIntro.publicPc != ''}" th:text="'공용 PC실여부: ' + ${detailIntro.publicPc}"></p>
+                <p th:if="${detailIntro.sauna != ''}" th:text="'사우나실여부: ' + ${detailIntro.sauna}"></p>
+                <p th:if="${detailIntro.seminar != ''}" th:text="'세미나실여부: ' + ${detailIntro.seminar}"></p>
+                <p th:if="${detailIntro.sports != ''}" th:text="'스포츠시설여부: ' + ${detailIntro.sports}"></p>
+                <p th:if="${detailIntro.refundRegulation != ''}"
+                   th:text="'환불규정: ' + ${detailIntro.refundRegulation}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '38'}">
+                <p th:if="${detailIntro.chkBabyCarriageShopping != ''}"
+                   th:text="'유모차대여정보: ' + ${detailIntro.chkBabyCarriageShopping}"></p>
+                <p th:if="${detailIntro.chkCreditCardShopping != ''}"
+                   th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardShopping}"></p>
+                <p th:if="${detailIntro.chkPetShopping != ''}"
+                   th:text="'애완동물동반가능정보: ' + ${detailIntro.chkPetShopping}"></p>
+                <p th:if="${detailIntro.cultureCenter != ''}" th:text="'문화센터바로가기: ' + ${detailIntro.cultureCenter}"></p>
+                <p th:if="${detailIntro.fairDay != ''}" th:text="'장서는날: ' + ${detailIntro.fairDay}"></p>
+                <p th:if="${detailIntro.infoCenterShopping != ''}"
+                   th:text="'문의및안내: ' + ${detailIntro.infoCenterShopping}"></p>
+                <p th:if="${detailIntro.openDateShopping != ''}"
+                   th:text="'개장일: ' + ${detailIntro.openDateShopping}"></p>
+                <p th:if="${detailIntro.openTime == null}" th:text="'영업시간: 전화문의'">영업시간: 전화문의</p>
+                <p th:if="${detailIntro.openTime != null}" th:text="'영업시간: ' + ${detailIntro.openTime}"></p>
+                <p th:if="${detailIntro.parkingShopping != ''}" th:text="'주차시설: ' + ${detailIntro.parkingShopping}"></p>
+                <p th:if="${detailIntro.restDateShopping != ''}"
+                   th:text="'쉬는날: ' + ${detailIntro.restDateShopping}"></p>
+                <p th:if="${detailIntro.restroom != ''}" th:text="'화장실설명: ' + ${detailIntro.restroom}"></p>
+                <p th:if="${detailIntro.saleItem != ''}" th:text="'판매품목: ' + ${detailIntro.saleItem}"></p>
+                <p th:if="${detailIntro.saleItemCost != ''}" th:text="'판매품목별가격: ' + ${detailIntro.saleItemCost}"></p>
+                <p th:if="${detailIntro.scaleShopping != ''}" th:text="'규모: ' + ${detailIntro.scaleShopping}"></p>
+                <p th:if="${detailIntro.shopGuide != ''}" th:text="'매장안내: ' + ${detailIntro.shopGuide}"></p>
+            </div>
+            <div th:if="${detailIntro.contentTypeId == '39'}">
+                <p th:if="${detailIntro.chkCreditCardFood != ''}"
+                   th:text="'신용카드가능정보: ' + ${detailIntro.chkCreditCardFood}"></p>
+                <p th:if="${detailIntro.discountInfoFood != ''}"
+                   th:text="'할인정보: ' + ${detailIntro.discountInfoFood}"></p>
+                <p th:if="${detailIntro.firstMenu != ''}" th:text="'대표메뉴: ' + ${detailIntro.firstMenu}"></p>
+                <p th:if="${detailIntro.infoCenterFood != ''}" th:text="'문의및안내: ' + ${detailIntro.infoCenterFood}"></p>
+                <p th:if="${detailIntro.kidsFacility != ''}" th:text="'어린이놀이방여부: ' + ${detailIntro.kidsFacility}"></p>
+                <p th:if="${detailIntro.openDateFood != ''}" th:text="'개업일: ' + ${detailIntro.openDateFood}"></p>
+                <p th:if="${detailIntro.openTimeFood != ''}" th:text="'영업시간: ' + ${detailIntro.openTimeFood}"></p>
+                <p th:if="${detailIntro.packing != ''}" th:text="'포장가능: ' + ${detailIntro.packing}"></p>
+                <p th:if="${detailIntro.parkingFood != ''}" th:text="'주차시설: ' + ${detailIntro.parkingFood}"></p>
+                <p th:if="${detailIntro.reservationFood != ''}" th:text="'예약안내: ' + ${detailIntro.reservationFood}"></p>
+                <p th:if="${detailIntro.restDateFood != ''}" th:text="'쉬는날: ' + ${detailIntro.restDateFood}"></p>
+                <p th:if="${detailIntro.scaleFood != ''}" th:text="'규모: ' + ${detailIntro.scaleFood}"></p>
+                <p th:if="${detailIntro.seat != ''}" th:text="'좌석수: ' + ${detailIntro.seat}"></p>
+                <p th:if="${detailIntro.smoking != ''}" th:text="'금연/흡연여부: ' + ${detailIntro.smoking}"></p>
+                <p th:if="${detailIntro.treatMenu != ''}" th:text="'취급메뉴: ' + ${detailIntro.treatMenu}"></p>
+                <p th:if="${detailIntro.lcnsNo != ''}" th:text="'인허가번호: ' + ${detailIntro.lcnsNo}"></p>
+            </div>
+        </div>
+    </div>
+    <div th:if="${tourCommonInfo == null}" style="grid-column: span 4; text-align: center;">
+        <p>No tourist locations available.</p>
+    </div>
 </div>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    let mapsApiKey = /*[[${mapsApiKey}]]*/
-    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-({key: mapsApiKey, v: "weekly"});
+    let mapsApiKey = /*[[${mapsApiKey}]]*/ "";
+        (g => {
+            var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                m = document, b = window;
+            b = b[c] || (b[c] = {});
+            var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                u = () => h || (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => h = n(Error(p + " could not load."));
+                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                    m.head.append(a)
+                }));
+            d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+        })
+        ({key: mapsApiKey, v: "weekly"});
     /*]]>*/
-let map;
+    let map;
 
-async function initMap() {
-    const { Map, InfoWindow } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    async function initMap() {
+        const {Map, InfoWindow} = await google.maps.importLibrary("maps");
+        const {AdvancedMarkerElement} = await google.maps.importLibrary("marker");
 
-    const mapElement = document.getElementById("map");
-    const mapX = parseFloat(mapElement.getAttribute("data-mapx"));
-    const mapY = parseFloat(mapElement.getAttribute("data-mapy"));
-    const position = { lat: mapY, lng: mapX };
+        const mapElement = document.getElementById("map");
+        const mapX = parseFloat(mapElement.getAttribute("data-mapx"));
+        const mapY = parseFloat(mapElement.getAttribute("data-mapy"));
+        const position = {lat: mapY, lng: mapX};
 
-    const titleElement = document.getElementById("title");
-    const title = titleElement.innerText;
-    const infoWindow = new InfoWindow();
+        const titleElement = document.getElementById("title");
 
-    map = new Map(mapElement, {
-        center : position,
-        zoom : 17,
-        mapId : "demo"
-    });
+        const title = titleElement.innerText;
+        const infoWindow = new InfoWindow();
 
-    const marker = new AdvancedMarkerElement({
-        map : map,
-        position : position,
-        title : title,
-        gmpClickable: true
-    });
+        map = new Map(mapElement, {
+            center: position,
+            zoom: 17,
+            mapId: "demo"
+        });
 
-    marker.addListener("click", ({domEvent, latLng}) => {
-        const { target } = domEvent;
+        const marker = new AdvancedMarkerElement({
+            map: map,
+            position: position,
+            title: title,
+            gmpClickable: true
+        });
 
-        infoWindow.close();
-        infoWindow.setContent(marker.title);
-        infoWindow.open(marker.map, marker);
-    });
-}
+        marker.addListener("click", ({domEvent, latLng}) => {
+            const {target} = domEvent;
 
-initMap();
+            infoWindow.close();
+            infoWindow.setContent(marker.title);
+            infoWindow.open(marker.map, marker);
+        });
+    }
+
+    initMap();
 </script>
-
 </body>
 </html>

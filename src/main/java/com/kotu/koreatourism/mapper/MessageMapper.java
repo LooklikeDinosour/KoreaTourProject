@@ -1,5 +1,6 @@
 package com.kotu.koreatourism.mapper;
 
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.MessageContentDTO;
@@ -23,7 +24,8 @@ public interface MessageMapper {
 
     //쪽지리스트 불러오기 (받은, 보낸편지함. where Send, Received)
     public List<Message> findAllMessage(@Param("type") String type,
-                                        @Param("userId") String userId);
+                                        @Param("userId") String userId,
+                                        @Param("cri") Criteria criteria);
 //    public List<Message> findReceivedMessage();
 //    public List<Message> findSentMessage();
 
@@ -33,5 +35,8 @@ public interface MessageMapper {
 
     public void readMessage(@Param("messageContentId") int messageContentId,
                             @Param("currentUsername") String currentUser);
+
+    public int findTotalMessage(@Param("currentUsername") String currentUsername,
+                                @Param("identifier") String messageStatus);
 
 }

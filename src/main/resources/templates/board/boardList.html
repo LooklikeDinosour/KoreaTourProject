@@ -84,72 +84,72 @@
                 class="write-post-btn">글쓰기
         </button>
     </div>
+    <div th:replace="~{fragments/page :: pagination-board( ${pageDTO}, ${board_category})}"></div>
+<!--    <div class="page">-->
+<!--        <ul>-->
+<!--            &lt;!&ndash; 이전 버튼 &ndash;&gt;-->
+<!--            <th:block th:if="${pageDTO.prev}">-->
+<!--                <li style="margin-right: 5px;">-->
+<!--                    <a th:href="@{/board/{board_category}(page=${pageDTO.start - 1},-->
+<!--                                                     board_category=${board_category},-->
+<!--                                                     amount=${pageDTO.amount},-->
+<!--                                                     searchType=${pageDTO.criteria.searchType},-->
+<!--                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">-->
+<!--                        <i class="fa fa-angle-left" aria-hidden="true"></i>이전-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </th:block>-->
 
-    <div class="page">
-        <ul>
-            <!-- 이전 버튼 -->
-            <th:block th:if="${pageDTO.prev}">
-                <li style="margin-right: 5px;">
-                    <a th:href="@{/board/{board_category}(page=${pageDTO.start - 1},
-                                                     board_category=${board_category},
-                                                     amount=${pageDTO.amount},
-                                                     searchType=${pageDTO.criteria.searchType},
-                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
-                        <i class="fa fa-angle-left" aria-hidden="true"></i>이전
-                    </a>
-                </li>
-            </th:block>
+<!--            &lt;!&ndash; 첫 페이지 &ndash;&gt;-->
+<!--            <li>-->
+<!--                <a th:href="@{/board/{board_category}(page = 1,-->
+<!--                                                 board_category=${board_category},-->
+<!--                                                 amount=${pageDTO.amount},-->
+<!--                                                 searchType=${pageDTO.criteria.searchType},-->
+<!--                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">-->
+<!--                    <i class="fa fa-angle-double-left" aria-hidden="true"></i>-->
+<!--                </a>-->
+<!--            </li>-->
 
-            <!-- 첫 페이지 -->
-            <li>
-                <a th:href="@{/board/{board_category}(page = 1,
-                                                 board_category=${board_category},
-                                                 amount=${pageDTO.amount},
-                                                 searchType=${pageDTO.criteria.searchType},
-                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">
-                    <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-                </a>
-            </li>
+<!--            &lt;!&ndash; 페이지 &ndash;&gt;-->
+<!--            <th:block th:each="page : ${pageDTO.pageList}">-->
+<!--                <li th:class="${pageDTO.page == page ? 'on' : ''}">-->
+<!--                    <a th:href="@{/board/{board_category}(page=${page},-->
+<!--                                                     board_category=${board_category},-->
+<!--                                                     amount=${pageDTO.amount},-->
+<!--                                                     searchType=${pageDTO.criteria.searchType},-->
+<!--                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">-->
+<!--                        [[${page}]]-->
+<!--                    </a>-->
 
-            <!-- 페이지 -->
-            <th:block th:each="page : ${pageDTO.pageList}">
-                <li th:class="${pageDTO.page == page ? 'on' : ''}">
-                    <a th:href="@{/board/{board_category}(page=${page},
-                                                     board_category=${board_category},
-                                                     amount=${pageDTO.amount},
-                                                     searchType=${pageDTO.criteria.searchType},
-                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
-                        [[${page}]]
-                    </a>
+<!--                </li>-->
+<!--            </th:block>-->
 
-                </li>
-            </th:block>
+<!--            &lt;!&ndash;마지막 페이지&ndash;&gt;-->
+<!--            <li>-->
+<!--                <a th:href="@{/board/{board_category}(page = ${pageDTO.realEnd},-->
+<!--                                                 board_category=${board_category},-->
+<!--                                                 amount=${pageDTO.amount},-->
+<!--                                                 searchType=${pageDTO.criteria.searchType},-->
+<!--                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">-->
+<!--                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>-->
+<!--                </a>-->
+<!--            </li>-->
 
-            <!--마지막 페이지-->
-            <li>
-                <a th:href="@{/board/{board_category}(page = ${pageDTO.realEnd},
-                                                 board_category=${board_category},
-                                                 amount=${pageDTO.amount},
-                                                 searchType=${pageDTO.criteria.searchType},
-                                                 searchKeyword=${pageDTO.criteria.searchKeyword})}">
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </a>
-            </li>
-
-            <!-- 다음 버튼 -->
-            <th:block th:if="${pageDTO.next}">
-                <li style="margin-left: 5px;">
-                    <a th:href="@{/board/{board_category}(page=${pageDTO.end + 1},
-                                                     board_category=${board_category},
-                                                     amount=${pageDTO.amount},
-                                                     searchType=${pageDTO.criteria.searchType},
-                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">
-                        <i class="fa fa-angle-right" aria-hidden="true"></i>다음
-                    </a>
-                </li>
-            </th:block>
-        </ul>
-    </div>
+<!--            &lt;!&ndash; 다음 버튼 &ndash;&gt;-->
+<!--            <th:block th:if="${pageDTO.next}">-->
+<!--                <li style="margin-left: 5px;">-->
+<!--                    <a th:href="@{/board/{board_category}(page=${pageDTO.end + 1},-->
+<!--                                                     board_category=${board_category},-->
+<!--                                                     amount=${pageDTO.amount},-->
+<!--                                                     searchType=${pageDTO.criteria.searchType},-->
+<!--                                                     searchKeyword=${pageDTO.criteria.searchKeyword})}">-->
+<!--                        <i class="fa fa-angle-right" aria-hidden="true"></i>다음-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </th:block>-->
+<!--        </ul>-->
+<!--    </div>-->
 </div>
 </body>
 <script th:inline="javascript">

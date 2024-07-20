@@ -1,8 +1,10 @@
 package com.kotu.koreatourism.service;
 
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.dto.MessageContentDTO;
+import com.kotu.koreatourism.dto.PageDTO;
 
 import java.security.Principal;
 import java.util.List;
@@ -18,11 +20,15 @@ public interface MessageService {
     //쪽지 내용 불러오기
     public MessageContentDTO findContent(int messageId);
     //쪽지리스트 불러오기 (받은, 보낸편지함. where Send, Received)
-    public List<Message> findAllMessage(String type, String userId);
+    public List<Message> findAllMessage(String type, String userId, Criteria criteria);
 
     //쪽지삭제 쪽지내용이 1개인데 처음 삭제는 막고, 두번째 삭제에서 삭제 시켜야 한다.
     public void deleteMessage(String sentReceivedIdentifier, int messageId);
 
     public void readMessage(int messageContentId);
+
+    public PageDTO getPageDTO(String username, Criteria criteria, String identifier);
+
+    public int findTotalMessage(String identifier);
 
 }

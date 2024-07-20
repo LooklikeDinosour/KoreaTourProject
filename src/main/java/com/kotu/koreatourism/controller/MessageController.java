@@ -1,16 +1,15 @@
 package com.kotu.koreatourism.controller;
 
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
-import com.kotu.koreatourism.domain.SiteUser;
-import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.MessageContentDTO;
+import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.service.MessageService;
 import com.kotu.koreatourism.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.cfg.defs.CreditCardNumberDef;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +27,61 @@ public class MessageController {
     private final UserService userService;
     private final MessageService messageService;
 
-    @GetMapping("")
-    public String messageBoard(Model model, Principal principal) {
+    //받은 쪽지
+    @GetMapping("/{message-status}")
+    public String receivedMessages(Model model, Principal principal, Criteria criteria,
+                                   @PathVariable("message-status") String messageStatus) {
+
         String userId = principal.getName();
-        log.info("접속한 유저 아이디 가져오기 = {}", userId);
-        List<Message> receivedMessages = messageService.findAllMessage("Received", userId);
-        model.addAttribute("receivedMessages", receivedMessages);
-        return "message/messageBoard";
+        log.info("접속한 유저 아이디 가져오기 = {}, 메시지 송수신 = {}", userId, messageStatus);
+        //대문자 기능은 배포 때 없애는게 편함
+        PageDTO pageDTO = messageService.getPageDTO(userId, criteria, messageStatus);
+        model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("messageStatus", messageStatus);
+        if (messageStatus.equals("received")) {
+            List<Message> receivedMessages = messageService.findAllMessage(changeFirstLetterToUpper(messageStatus), userId, criteria);
+            log.info("대문자 = {}", changeFirstLetterToUpper(messageStatus));
+            model.addAttribute("receivedMessages", receivedMessages);
+            return "message/messageboard";
+        }
+        List<Message> sentMessages = messageService.findAllMessage(changeFirstLetterToUpper(messageStatus), userId, criteria);
+        log.info("대문자 = {}", changeFirstLetterToUpper(messageStatus));
+        model.addAttribute("sentMessages", sentMessages);
+        return "message/sentMessagesBoard";
     }
+
+    private static String changeFirstLetterToUpper(String messageStatus) {
+        if (messageStatus == null || messageStatus.isEmpty()) {
+            return messageStatus;
+        }
+        return messageStatus.substring(0, 1).toUpperCase() + messageStatus.substring(1);
+    }
+
+    //보낸 쪽지
+//    @GetMapping("/sent")
+//    public String sentMessages(Model model, Principal principal, Criteria criteria) {
+//        String userId = principal.getName();
+//        log.info("접속한 유저 아이디 가져오기 = {}", userId);
+//        List<Message> sentMessages = messageService.findAllMessage("Sent", userId, criteria);
+//////        PageDTO pageDTO = messageService.getPageDTO(userId, criteria,);
+////        model.addAttribute("sentMessages", sentMessages);
+////        model.addAttribute("pageDTO", pageDTO);
+////        model.addAttribute("criteria", criteria);
+//        return "message/sentMessagesBoard";
+//    }
+
+//    @GetMapping("")
+//    public String messageBoard(Model model, Criteria criteria, Principal principal) {
+//        String userId = principal.getName();
+//        log.info("접속한 유저 아이디 가져오기 = {}", userId);
+//        List<Message> receivedMessages = messageService.findAllMessage("Received", userId, criteria);
+//        PageDTO pageDTO = messageService.getPageDTO(userId, criteria);
+//        model.addAttribute("receivedMessages", receivedMessages);
+//        model.addAttribute("pageDTO", pageDTO);
+//        model.addAttribute("criteria", criteria);
+//        return "message/messageboard";
+//    }
     @GetMapping("/messagewindows")
     public String createMessageWindow(@RequestParam(required = true) String receiver, Model model) {
         model.addAttribute("receiver", receiver);
@@ -75,26 +121,6 @@ public class MessageController {
         return "redirect:/message";
     }
 
-    //받은 쪽지
-    @GetMapping("/received")
-    public String receivedMessages(Model model, Principal principal) {
-        //String userId = session.getId();
-        String userId = principal.getName();
-        log.info("접속한 유저 아이디 가져오기 = {}", userId);
-        List<Message> receivedMessages = messageService.findAllMessage("Received", userId);
-        model.addAttribute("receivedMessages", receivedMessages);
-        return "message/messageBoard";
-    }
-
-    //보낸 쪽지
-    @GetMapping("/sent")
-    public String sentMessages(Model model, Principal principal) {
-        String userId = principal.getName();
-        log.info("접속한 유저 아이디 가져오기 = {}", userId);
-        List<Message> sentMessages = messageService.findAllMessage("Sent", userId);
-        model.addAttribute("sentMessages", sentMessages);
-        return "message/sentMessagesBoard";
-    }
 
     //쪽지 내용
     @GetMapping("/detail/{messageId}")

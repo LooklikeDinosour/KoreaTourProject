@@ -4,56 +4,59 @@
 <mapper namespace="com.kotu.koreatourism.mapper.MessageMapper">
 
     <insert id="sendMessageContent" useGeneratedKeys="true" keyProperty="messageContentId">
-        insert into
-            MESSAGECONTENT_TB
+        insert into MESSAGECONTENT_TB
             (message_content)
-        values
-            (#{messageContent})
+        values (#{messageContent})
     </insert>
 
     <insert id="sendMessage" parameterType="Message">
-        insert into
-            MESSAGE_TB
-            (sent_user,
-             received_user,
-             title,
-             sent_received_identifier,
-             message_content_id)
+        insert into MESSAGE_TB
+        (sent_user,
+         received_user,
+         title,
+         sent_received_identifier,
+         message_content_id)
         values (#{sentUser}, #{receivedUser}, #{title}, #{sentReceivedIdentifier}, #{messageContentId}),
                (#{sentUser}, #{receivedUser}, #{title}, 'Received', #{messageContentId})
     </insert>
 
     <select id="findAllMessage">
         select
-            <choose>
-                <when test="type == 'Sent'">
-                    M.message_id, M.received_user, M.title, M.sent_date, M.read_date
-                </when>
-                <when test="type == 'Received'">
-                    M.message_id, M.sent_user, M.title, M.sent_date
-                </when>
-            </choose>
+        <choose>
+            <when test="type == 'Sent'">
+                M.message_id, M.received_user, M.title, M.sent_date, M.read_date
+            </when>
+            <when test="type == 'Received'">
+                M.message_id, M.sent_user, M.title, M.sent_date
+            </when>
+        </choose>
         from MESSAGE_TB AS M
         join MESSAGECONTENT_TB AS MC
         on M.message_content_id = MC.message_content_id
         where
-            <choose>
-                <when test="type =='Sent'">
-                    M.sent_received_identifier = 'Sent' and M.sent_user = #{userId} and MC.delete_check_s = 0
-                </when>
-                <when test="type =='Received'">
-                    M.sent_received_identifier = 'Received' and M.received_user = #{userId} and MC.delete_check_r = 0
-                </when>
-            </choose>
-        order by M.sent_date DESC;
-
+        <choose>
+            <when test="type =='Sent'">
+                M.sent_received_identifier = 'Sent' and M.sent_user = #{userId} and MC.delete_check_s = 0
+            </when>
+            <when test="type =='Received'">
+                M.sent_received_identifier = 'Received' and M.received_user = #{userId} and MC.delete_check_r = 0
+            </when>
+        </choose>
+        order by M.sent_date DESC
+        limit #{cri.pageStart}, #{cri.amount};
     </select>
 
     <select id="findContent">
-        select M.message_id, M.sent_user, M.sent_date, M.title, M.sent_received_identifier, M.message_content_id, MC.message_content
+        select M.message_id,
+               M.sent_user,
+               M.sent_date,
+               M.title,
+               M.sent_received_identifier,
+               M.message_content_id,
+               MC.message_content
         from MESSAGE_TB AS M
-        join MESSAGECONTENT_TB AS MC
-        on M.message_content_id = MC.message_content_id
+                 join MESSAGECONTENT_TB AS MC
+                      on M.message_content_id = MC.message_content_id
         where M.message_id = #{messageId}
     </select>
 
@@ -68,17 +71,31 @@
             </when>
         </choose>
         where message_content_id = (
-            select distinct M.message_content_id
-            from MESSAGE_TB AS M
-            where M.message_id = #{messageId}
-            )
+        select distinct M.message_content_id
+        from MESSAGE_TB AS M
+        where M.message_id = #{messageId}
+        )
     </update>
 
     <update id="readMessage">
         update MESSAGE_TB
         set message_read_chk = 1
         where message_content_id = #{messageContentId}
-        and received_user = #{currentUsername}
+          and received_user = #{currentUsername}
     </update>
+
+    <select id="findTotalMessage" resultType="int">
+        select count(*) as total
+        from MESSAGE_TB as M
+        join MESSAGECONTENT_TB as MC
+        on M.message_content_id = MC.message_content_id
+        where M.sent_received_identifier = #{identifier}
+        <if test="identifier.equalsIgnoreCase('Sent')">
+            and M.sent_user = #{currentUsername} and MC.delete_check_s = 0
+        </if>
+        <if test="identifier.equalsIgnoreCase('Received')">
+            and M.received_user = #{currentUsername} and MC.delete_check_r = 0
+        </if>
+    </select>
 
 </mapper>

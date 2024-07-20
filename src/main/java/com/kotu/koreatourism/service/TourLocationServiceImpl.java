@@ -183,12 +183,13 @@ public class TourLocationServiceImpl implements TourLocationService {
         int areaCode = tourCategoryService.takeApiCodeNum(areaSigunguCode.getGroupId());
         int categoryParentLv = areaSigunguCode.getCategoryParentLv();
         int sigunguCode = areaSigunguCode.getCategoryApiCode();
-
         log.info("지역코드 = {}, 시군구 코드 = {} 부모카테고리레벨 = {}", areaCode, sigunguCode, categoryParentLv);
-
         StringBuilder urlBuilder = new StringBuilder(callBackUrl + "/areaBasedList1"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + serviceKey); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
+        if (pageNo == null) {
+            pageNo = "1";
+        }
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("kotu", "UTF-8"));

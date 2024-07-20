@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div class="no-locations" th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" >
+    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" class="no-locations">
         <p>해당 지역에는 관련된 위치정보가 없습니다.</p>
     </div>
 </div>

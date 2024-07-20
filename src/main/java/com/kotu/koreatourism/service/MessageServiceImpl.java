@@ -1,10 +1,12 @@
 package com.kotu.koreatourism.service;
 
+import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
 import com.kotu.koreatourism.domain.SiteUser;
 import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.MessageContentDTO;
+import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.mapper.MessageMapper;
 import com.kotu.koreatourism.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MessageServiceImpl implements MessageService{
+public class MessageServiceImpl implements MessageService {
 
     private final UserService userService;
 
@@ -56,9 +58,9 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<Message> findAllMessage(String type, String userId) {
-        log.info("서비스단 type = {}, userId={}", type, userId);
-        return messageMapper.findAllMessage(type, userId);
+    public List<Message> findAllMessage(String type, String userId, Criteria criteria) {
+        log.info("서비스단 type = {}, userId={}, criteria={}", type, userId, criteria);
+        return messageMapper.findAllMessage(type, userId, criteria);
     }
 
 
@@ -68,8 +70,20 @@ public class MessageServiceImpl implements MessageService{
     }
     @Override
     public void readMessage(int messageContentId) {
-        String currentUserName = userService.getCurrentUserName();
-        messageMapper.readMessage(messageContentId, currentUserName);
+        String currentUsername = userService.getCurrentUserName();
+        messageMapper.readMessage(messageContentId, currentUsername);
+    }
+
+    @Override
+    public PageDTO getPageDTO(String username, Criteria criteria, String identifier) {
+            int total = messageMapper.findTotalMessage(username, identifier);
+        return new PageDTO(criteria, total);
+    }
+
+    @Override
+    public int findTotalMessage(String identifier) {
+        String currentUsername = userService.getCurrentUserName();
+        return messageMapper.findTotalMessage(currentUsername, identifier);
     }
 
     private String extractId(String userId) {
