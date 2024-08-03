@@ -32,7 +32,11 @@
         }
 
         .button-container {
-            text-align: center; /* 가운데 정렬 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-top: 20px;
         }
 
@@ -44,7 +48,6 @@
             color: white;
             cursor: pointer;
             font-size: 16px;
-            margin: 5px;
         }
 
         .button-container button:hover {
@@ -208,6 +211,7 @@
     </div>
     <div class="separator"></div>
     <div class="post-content" th:text="${post.content}"></div>
+    <div class="separator"></div>
     <div th:text="${post.userId}" style="display: none;"></div>
     <div class="button-container">
         <button
@@ -238,10 +242,10 @@
     <div sec:authorize="!isAuthenticated()">
         <p>댓글을 등록하려면 로그인 해주세요.</p>
     </div>
-    <div class="separator"></div>
+    <div class="separator" th:if="${not #lists.isEmpty(comments)}"></div>
 
     <div id="comment-list">
-        <div th:each="comment : ${comments}">
+        <div th:each="comment, commentStat : ${comments}">
             <input type="hidden" th:value="${comment.commentId}" id="comment-[[${comment.commentId}]]">
             <p th:text="${comment.commentId}" style="display: none"></p>
             <p th:text="${comment.author}"></p>
@@ -257,7 +261,7 @@
                 </button>
             </div>
             <div th:id="'update-form-' + ${comment.commentId}" style="display:none;"></div>
-            <div class="separator"></div>
+            <div class="separator" th:if="${!commentStat.last}"></div>
         </div>
     </div>
 </div>

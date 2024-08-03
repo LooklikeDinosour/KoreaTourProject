@@ -26,9 +26,8 @@
 
 
 <div class="tourist-container-wrapper">
-    <div id="touristContainer" class="tourist-container">
-
-    </div>
+    <div id="touristContainer" class="tourist-container"></div>
+    <div class="pagination"></div>
 </div>
 
 <script>
@@ -36,6 +35,16 @@
     //CSRF
     let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    let currentCategory = {
+
+        groupId : null,
+        categoryLv : null,
+        categoryDetailOr : null,
+        categoryApiCode : null,
+        categoryParentLv : null,
+    };
+
 
     //대분류
     document.addEventListener('DOMContentLoaded', function () {
@@ -49,6 +58,9 @@
                 });
                 category += '</ul>';
                 document.querySelector(".categoryListWrap").innerHTML += category;
+
+                //이벤트 리스너 추가
+                document.querySelector(".categoryList").addEventListener('click', getCategory_List);
             })
             .catch(err => {
                 alert('카테고리 조회에 문제가 생겼습니다. 관리자에게 문의해주세요.');
@@ -60,16 +72,13 @@
     function getCategory_List(event) {
         event.preventDefault(); // 고유 이벤트 중지
         if (event.target.tagName !== 'A') return; // 태그 검증 태그 호출은 대문자라서
-        var obj = JSON.parse(event.target.getAttribute('data-set')); // 데이터셋을 가져옴
-        const groupId = obj.groupId;
-        const categoryLv = obj.categoryLv;
-        const categoryDetailOr = obj.categoryDetailOr;
-        var categoryApiCode = obj.categoryApiCode;
+
+        let obj = JSON.parse(event.target.getAttribute('data-set')); // 데이터셋을 가져옴
+        Object.assign(currentCategory, obj)
 
         //대분류
         //첫클릭시는 대분류 중분류 클릭하면 중분류 내용으로 바뀜
-        console.log("Clicked category:", obj);
-        console.log("gi, cl, cdo, cac:", groupId, categoryLv, categoryDetailOr, categoryApiCode);
+        console.log("Clicked category:", currentCategory);
 
         // 토글 색 처리
         let categoryList = event.currentTarget;
@@ -80,53 +89,40 @@
 
         // 태그 처리
         if (obj.categoryLv == 1) {
-            console.log('1lv');
-            console.log(event.target);
             removeSubCategories(); // 이전 카테고리 삭제
-
-            // Fetch를 사용하여 AJAX 호출 대체
-            fetch(`/api/area2`, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    [csrfHeader]: csrfToken
-                },
-                body: JSON.stringify({
-                    groupId: obj.groupId,
-                    categoryLv: obj.categoryLv,
-                    categoryDetailOr: obj.categoryDetailOr
-                })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("카테고리 아이들 : " + data);
-                    if (data.length > 0) {
-                        createSubCategories(data);
-                    }
-                })
-                .catch(err => {
-                    alert('카테고리 조회에 실패했습니다. 관리자에게 문의해주세요');
-                    console.error('Error:', err);
-                });
+            fetchSubCategories();
         } else {
-            removeSubCategories(); // 중분류가 없을 경우 중분류 영역 비우기
+            removeSubCategories();
+            handleAreaBasedAPIClick();
         }
-
-        //category_set(e.target); // 히든 태그에 값을 저장, 클릭한 대상을 매개변수로 저장
     }
 
-    // function category_set(element) {
-    //     var obj = JSON.parse(element.getAttribute('data-set'));
-    //     var category_id = obj.categoryId;
-    //     var group_id = obj.groupId;
-    //     document.querySelector("input[name='area_category']").value = group_id + category_id; // name이 area_category인 곳에 추가
-    // }
-
+    function fetchSubCategories() {
+        fetch(`/api/area2`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify(currentCategory)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("카테고리 아이들 : " + data);
+                if (data.length > 0) {
+                    createSubCategories(data);
+                }
+            })
+            .catch(err => {
+                alert('카테고리 조회에 실패했습니다. 관리자에게 문의해주세요');
+                console.error('Error:', err);
+            });
+    }
 
     // 다음 카테고리 생성 함수 수정
     ///onclick event 제거함
@@ -138,6 +134,7 @@
         category += '</ul>';
 
         document.querySelector('.categoryListWrap').appendChild(document.createRange().createContextualFragment(category));
+        document.querySelector('.subCategoryList').addEventListener('click', getCategory_List);
     }
 
     // 이전 중분류 삭제 함수
@@ -149,14 +146,7 @@
     }
 
     //공공데이터 API를 호출
-    function handleAreaBasedAPIClick(event) {
-        event.preventDefault();
-        let target = event.target;
-        if (target.tagName !== 'A') return;
-
-        var obj = JSON.parse(target.getAttribute('data-set'));
-        console.log('Subcategory clicked:', obj);
-
+    function handleAreaBasedAPIClick(page) {
         fetch('/api/areabase', {
             method: 'POST',
             headers: {
@@ -164,15 +154,16 @@
                 [csrfHeader]: csrfToken
             },
             body: JSON.stringify({
-                groupId: obj.groupId,
-                categoryParentLv: obj.categoryParentLv,
-                categoryApiCode: obj.categoryApiCode
+                ...currentCategory,
+                pageNo: page,
+                numOfRows: 20,
             })
         })
             .then(response => response.json())
             .then(data => {
                 console.log('AreaBased API response:', data);
                 createTouristItems(data);
+                createPagination(data.pageDTO);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -226,6 +217,40 @@
 
             container.appendChild(item);
         });
+    }
+
+    function createPagination(pageDTO) {
+        const paginationElement = document.querySelector('.pagination');
+
+        paginationElement.innerHTML = '';
+
+        if(pageDTO.prev) {
+            paginationElement.appendChild(createPageLink('이전', pageDTO.start - 1));
+        }
+        for(let i = pageDTO.start; i <= pageDTO.end; i++) {
+            paginationElement.appendChild(createPageLink(i, i, i === pageDTO.page));
+        }
+
+        if(pageDTO.next) {
+            paginationElement.appendChild(createPageLink('다음', pageDTO.end + 1));
+        }
+
+    }
+
+    function createPageLink(text, page, isActive = false) {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = text;
+        if (isActive) {
+            link.className = 'active';
+        }
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log(page);
+            handleAreaBasedAPIClick(page);
+        });
+
+        return link;
     }
 
     function like(contentId) {

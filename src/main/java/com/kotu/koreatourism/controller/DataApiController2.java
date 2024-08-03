@@ -1,6 +1,8 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.ContentType;
+import com.kotu.koreatourism.domain.Criteria;
+import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.dto.tour.*;
 import com.kotu.koreatourism.service.TourCategoryService;
 import com.kotu.koreatourism.service.TourDeserializerService;
@@ -17,7 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -26,7 +30,7 @@ import java.util.List;
 public class DataApiController2 {
 
     @Value("${openApi.callbackurl.kor}")
-    private String callBackUrl;
+    private  String callBackUrl;
 
     @Value("${openApi.serviceKeyE}")
     private String serviceKey;
@@ -138,6 +142,31 @@ public class DataApiController2 {
 
     //지역기반
     //비동기식 구성
+    //공공데이터 API 호출
+    @PostMapping("/areabase")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> areaBasedAPI(@RequestBody TourAreaSigunguDTO areaSigunguCode,
+                                                             @RequestParam(defaultValue = "1") int pageNo,
+                                                             @RequestParam(defaultValue = "10") int numOfRows,
+                                                             Criteria criteria,
+                                                             HttpSession session) throws IOException {
+
+        session.setAttribute("areaSigungu", areaSigunguCode);
+        log.info("pageNo = {}, numOfRows = {}, Criteria = {} ", pageNo, numOfRows, criteria);
+
+        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, 0, String.valueOf(numOfRows), String.valueOf(pageNo), areaSigunguCode);
+        TourAreaBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourAreaBasedItemDTO.class);
+        log.info("AreaBased 데이터 = {}", tourAreaBased);
+
+        PageDTO pageDTO = new PageDTO(criteria, tourAreaBased.getTotalCount());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("item", tourAreaBased.getTourLocations());
+        response.put("pageDTO", pageDTO);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     //대분류
     @GetMapping("/area1")
     @ResponseBody
@@ -163,23 +192,8 @@ public class DataApiController2 {
 
         return new ResponseEntity<>(responseArea2Category, HttpStatus.OK);
     }
-    //공공데이터 API 호출
-    @PostMapping("/areabase")
-    @ResponseBody
-    public ResponseEntity<TourAreaBasedItemDTO> areaBasedAPI(@RequestBody TourAreaSigunguDTO areaSigunguCode,
-                                                             @RequestParam String pageNo,
-                                                             @RequestParam String numOfRows,
-                                                             HttpSession session) throws IOException {
 
-        session.setAttribute("areaSigungu", areaSigunguCode);
-
-        String areaBasedList = tourLocationService.areaBasedAPI(callBackUrl, serviceKey, dataType, 0, numOfRows, pageNo, areaSigunguCode);
-        TourAreaBasedItemDTO tourAreaBased = tourDeserializerService.parsingJsonObject(areaBasedList, TourAreaBasedItemDTO.class);
-        log.info("AreaBased 데이터 = {}", tourAreaBased);
-
-        return new ResponseEntity<>(tourAreaBased, HttpStatus.OK);
-    }
-
+    //지역기반 view 호출
     @GetMapping("/area-based")
     public String areaBased(Model model) {
 
@@ -196,8 +210,8 @@ public class DataApiController2 {
     @GetMapping("/area-based/{content-type}")
     @ResponseBody
     public ResponseEntity<TourAreaBasedItemDTO> areaCategory(@PathVariable("content-type") String contentType,
-                               String pageNo,
                                String numOfRows,
+                               String pageNo,
                                HttpServletRequest request,
                                HttpSession session,
                                Model model) throws IOException {

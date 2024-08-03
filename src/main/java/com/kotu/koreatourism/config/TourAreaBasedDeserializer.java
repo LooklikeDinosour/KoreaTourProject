@@ -31,12 +31,17 @@ public class TourAreaBasedDeserializer extends JsonDeserializer {
     public TourAreaBasedItemDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         JsonNode itemNode = node.findValue("item");
+        JsonNode totalCountNode = node.findValue("totalCount");
 
+        int totalCount = 0;
+        if (totalCountNode != null && totalCountNode.isInt()) {
+            totalCount = totalCountNode.asInt(); // totalCountNode를 int로 변환
+        }
         // "item" 노드가 없는 경우 null 반환
         // 지역에 따라 데이터가 없는 경우 Json 구조가 다름
         if (itemNode == null) {
             log.warn("TourLocationBasedItemDTO itemNode is null.");
-            return new TourAreaBasedItemDTO(Collections.emptyList());
+            return new TourAreaBasedItemDTO(Collections.emptyList(), totalCount);
         }
 
         //지역정보
@@ -55,7 +60,7 @@ public class TourAreaBasedDeserializer extends JsonDeserializer {
         }
 
             log.info("content type 변경후  = {}", tourAreaBasedList.toString());
-            return new TourAreaBasedItemDTO(tourAreaBasedList);
+            return new TourAreaBasedItemDTO(tourAreaBasedList, totalCount);
     }
 }
 

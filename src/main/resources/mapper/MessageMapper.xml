@@ -84,6 +84,7 @@
           and received_user = #{currentUsername}
     </update>
 
+<!-- 추후 rds 옮길시에는 controller에서 조건 바뀌어서 equalsIgnoreCase 안써도 될 예정   -->
     <select id="findTotalMessage" resultType="int">
         select count(*) as total
         from MESSAGE_TB as M

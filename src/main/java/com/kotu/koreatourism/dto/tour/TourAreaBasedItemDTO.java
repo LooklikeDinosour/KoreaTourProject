@@ -17,8 +17,12 @@ public class TourAreaBasedItemDTO {
     @JsonProperty("item")
     private List<TourAreaBasedDTO> tourLocations;
 
-    public TourAreaBasedItemDTO(List<TourAreaBasedDTO> tourLocations) {
+    @JsonProperty("totalCount")
+    private int totalCount;
+
+    public TourAreaBasedItemDTO(List<TourAreaBasedDTO> tourLocations, int totalCount) {
         this.tourLocations = tourLocations;
+        this.totalCount = totalCount;
     }
 
 
