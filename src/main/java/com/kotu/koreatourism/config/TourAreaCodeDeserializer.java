@@ -25,16 +25,15 @@ public class TourAreaCodeDeserializer extends JsonDeserializer {
         this.objectMapper = new ObjectMapper();
     }
 
-
     @Override
     public TourAreaCodeItemDTO deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         JsonNode itemNode = node.findValue("item");
 
-            TourAreaCodeDTO[] tourAreaCodeArrays = objectMapper.treeToValue(itemNode, TourAreaCodeDTO[].class);
-            List<TourAreaCodeDTO> tourAreaCodeList = Arrays.asList(tourAreaCodeArrays);
-        //    log.info("배열 정렬 = {}", tourAreaCodeList);
-            return new TourAreaCodeItemDTO(tourAreaCodeList);
+        TourAreaCodeDTO[] tourAreaCodeArrays = objectMapper.treeToValue(itemNode, TourAreaCodeDTO[].class);
+        List<TourAreaCodeDTO> tourAreaCodeList = Arrays.asList(tourAreaCodeArrays);
+        log.info("역직렬화 완료, 해당 클래스 = {}", TourAreaCodeDTO.class);
+        return new TourAreaCodeItemDTO(tourAreaCodeList);
     }
 }
 

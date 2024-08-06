@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kotu.koreatourism.domain.ContentType;
+import com.kotu.koreatourism.dto.tour.TourAreaCodeDTO;
 import com.kotu.koreatourism.dto.tour.TourLocationBasedItemDTO;
 import com.kotu.koreatourism.dto.tour.TourLocationBasedDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,6 @@ import java.util.List;
 @Slf4j
 public class TourLocationBasedDeserializer extends JsonDeserializer {
     private final ObjectMapper objectMapper;
-
     private TourLocationBasedDeserializer() {
         this.objectMapper = new ObjectMapper();
     }
@@ -37,22 +37,22 @@ public class TourLocationBasedDeserializer extends JsonDeserializer {
             return new TourLocationBasedItemDTO(Collections.emptyList());
         }
 
-
         //지역정보
-            TourLocationBasedDTO[] tourLocationBasedArray = objectMapper.treeToValue(itemNode, TourLocationBasedDTO[].class);
-            List<TourLocationBasedDTO> tourLocationBasedList = Arrays.asList(tourLocationBasedArray);
+        TourLocationBasedDTO[] tourLocationBasedArray = objectMapper.treeToValue(itemNode, TourLocationBasedDTO[].class);
+        List<TourLocationBasedDTO> tourLocationBasedList = Arrays.asList(tourLocationBasedArray);
 
-            //contentTypeId 숫자 -> content로 변경
+        //contentTypeId 숫자 -> contentType으로 변경
         // ex) 12 -> attraction
         for (TourLocationBasedDTO tlbDTO : tourLocationBasedList) {
             int contentTypeIdNum = Integer.parseInt(tlbDTO.getContentTypeId());
             ContentType content = ContentType.contentTypeIdToContentType(contentTypeIdNum);
             String contentName = String.valueOf(content).replace("_","-").toLowerCase();
-            log.info("content타입 변경 후 = {}", contentName);
             tlbDTO.setContentTypeId(contentName);
         }
+        log.info("contentType -> contentType 변경 완료");
+        log.info("역직렬화 완료, 해당 클래스 = {}", TourLocationBasedDTO.class);
 
-            return new TourLocationBasedItemDTO(tourLocationBasedList);
+        return new TourLocationBasedItemDTO(tourLocationBasedList);
     }
 }
 

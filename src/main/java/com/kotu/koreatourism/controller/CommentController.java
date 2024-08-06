@@ -23,9 +23,8 @@ public class CommentController {
     public String saveComment(@PathVariable("board_category") String boardCategory,
                               @PathVariable("postbid") int bid,
                               CommentDTO commentDTO) {
-        log.info("boardCat={}", boardCategory);
-        log.info("게시글 pk={}", bid);
-
+        log.info("코멘트 작성");
+        log.info("boardCat={} , 게시글 pk={}", boardCategory, bid);
         log.info("댓글 내용 = {}", commentDTO.toString());
         commentService.saveComment(commentDTO);
 
@@ -49,7 +48,7 @@ public class CommentController {
                                         @PathVariable("commentId") int commentId,
                                         @PathVariable("postbid") int bid,
                                         Model model) {
-
+        log.info("Comment 수정 요청");
         log.info("boardCat={}", boardCategory);
         log.info("게시글 pk={}", bid);
         log.info("댓글 ID = {}", commentId);
@@ -63,9 +62,9 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/update")
-    public ResponseEntity<CommentDTO> updateComment(@ModelAttribute CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> updateComment(CommentDTO commentDTO) {
 
-        log.info("코멘트 수정 내용 = {}", commentDTO.getComment());
+        log.info("코멘트 수정 내용 = {}, 번호 = {}", commentDTO.getComment(), commentDTO.getBid());
         return (commentService.updateComment(commentDTO) == 1) ? new ResponseEntity<>(commentDTO, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }

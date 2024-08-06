@@ -29,7 +29,6 @@ import java.util.List;
 public class BoardController  {
 
     private final BoardService boardService;
-
     private final CommentService commentService;
 
     //게시판 조회하기

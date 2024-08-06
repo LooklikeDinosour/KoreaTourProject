@@ -18,7 +18,6 @@ import java.util.List;
 public class TourDetailCommonInfoDeserializer extends JsonDeserializer {
 
     private final ObjectMapper objectMapper;
-
     public TourDetailCommonInfoDeserializer() {
         this.objectMapper = new ObjectMapper();
     }
@@ -33,5 +32,4 @@ public class TourDetailCommonInfoDeserializer extends JsonDeserializer {
 
         return new TourDetailCommonItemDTO(tourDetailCommonList);
     }
-
 }

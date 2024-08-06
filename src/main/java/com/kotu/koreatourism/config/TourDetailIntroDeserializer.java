@@ -21,7 +21,6 @@ import java.util.List;
 public class TourDetailIntroDeserializer extends JsonDeserializer {
 
     private final ObjectMapper objectMapper;
-
     public TourDetailIntroDeserializer() {
         this.objectMapper = new ObjectMapper();
     }
@@ -39,6 +38,7 @@ public class TourDetailIntroDeserializer extends JsonDeserializer {
 
         TourDetailIntroDTO[] tourDetailIntroArrays = objectMapper.treeToValue(itemNode, TourDetailIntroDTO[].class);
         List<TourDetailIntroDTO> tourDetailIntroList = Arrays.asList(tourDetailIntroArrays);
+
         return new TourDetailIntroItemDTO(tourDetailIntroList);
     }
 }

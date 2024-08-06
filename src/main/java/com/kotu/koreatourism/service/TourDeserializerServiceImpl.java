@@ -17,7 +17,7 @@ public class TourDeserializerServiceImpl implements TourDeserializerService {
     @Override
     public <T> T parsingJsonObject(String json, Class<T> clazz) {
         try {
-            log.info("Json = {}, 파싱 데이터 = {}", json, objectMapper.readValue(json, clazz));
+            log.info("Json 파싱 -> Java 객체 및 클래스 확인 = {}", clazz);
             return objectMapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

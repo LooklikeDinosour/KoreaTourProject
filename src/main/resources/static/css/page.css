@@ -1,0 +1,38 @@
+.page {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.page ul {
+    list-style-type: none;
+    padding: 0;
+    display: inline-block;
+}
+
+.page li {
+    display: inline;
+    margin: 0 5px;
+}
+
+.page a {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.page .on a {
+    background-color: #007bff;
+    color: white;
+}
+.pagination-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}

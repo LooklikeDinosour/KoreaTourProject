@@ -79,115 +79,7 @@
             });
     }
 
-    //
-    // function setContentType(contentType) {
-    //     const contentDiv = document.querySelector('.content'); // 콘텐츠를 로드할 div
-    //     const url = `/api/location/${contentType}`;
-    //
-    //     fetch(url, {
-    //         method: 'GET',
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log('Success:', data);
-    //             // 이 부분에서 data를 이용하여 contentDiv를 업데이트합니다.
-    //             contentDiv.innerHTML = ''; // 이전 콘텐츠 삭제
-    //             data.forEach(item => {
-    //                 const itemDiv = document.createElement('div');
-    //                 itemDiv.textContent = item.name; // 예시, 실제로는 data의 구조에 맞게 수정
-    //                 contentDiv.appendChild(itemDiv);
-    //             });
-    //         })
-    //         .catch((error) => console.error('Error:', error.message));
-    // }
-    //
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(function (position) {
-    //             const latitude = position.coords.latitude;
-    //             const longitude = position.coords.longitude;
-    //
-    //             const links = document.querySelectorAll('a[href*="api/location"]');
-    //             links.forEach(link => {
-    //                 const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
-    //                 link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
-    //
-    //                 // 링크 클릭 이벤트 리스너 추가
-    //                 link.addEventListener('click', function (event) {
-    //                     event.preventDefault(); // 기본 링크 동작 방지
-    //                     const contentType = link.getAttribute('href').split('/')[3]; // URL에서 contentType 추출
-    //                     console.log(contentType);
-    //                     setContentType(contentType);
-    //                 });
-    //             });
-    //         });
-    //     } else {
-    //         console.log("지원하지 않는 브라우저입니다.")
-    //     }
-    // });
-    // // 위치기반
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(function (position) {
-    //             const latitude = position.coords.latitude;
-    //             const longitude = position.coords.longitude;
-    //
-    //             const url = document.querySelector('a[href*="api/location"]');
-    //             url.href = `/api/location/${selectedContentType}?latitude=${latitude}&longitude=${longitude}`;
-    //
-    //             fetch(url.href, {
-    //                 method: 'GET',
-    //             })
-    //                 .then(response => response.json())
-    //                 .then(data => console.log('Success:', data))
-    //                 .catch((error) => console.error('Error:', error.message));
-    //         });
-    //     } else {
-    //         console.log("지원하지 않는 브라우저입니다.")
-    //     }
-    // });
-
-    // function setContentType(contentType) {
-    //     selectedContentType = contentType;
-    //     console.log(selectedContentType);
-    // }
-
-
-    // // 위치기반
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(function (position) {
-    //             const latitude = position.coords.latitude;
-    //             const longitude = position.coords.longitude;
-    //
-    //             const links = document.querySelectorAll('a[href*="api/location"]');
-    //             links.forEach(link => {
-    //                 const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
-    //                 console.log("basehref" + baseHref);
-    //                 // link.href = `${baseHref}`;
-    //                 link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
-    //             });
-    //
-    //             // Fetch를 각 링크에서 클릭 시 실행하도록 설정 (선택 사항)
-    //             links.forEach(link => {
-    //                 link.addEventListener('click', function (event) {
-    //                     event.preventDefault(); // 링크의 기본 동작 막기
-    //                     fetch(link.href, {
-    //                         method: 'GET',
-    //                     })
-    //                         .then(response => response.json())
-    //                         .then(data => console.log('Success:', data))
-    //                         .catch((error) => console.error('Error:', error.message));
-    //                 });
-    //             });
-    //         });
-    //     } else {
-    //         console.log("지원하지 않는 브라우저입니다.")
-    //     }
-    // });
     let tourLocations = /*[[${tourLocationBased.tourLocations}]]*/ [];
-    let csrfToken = /*[[${_csrf.token}]]*/ '';
-    let csrfHeader = /*[[${_csrf.headerName}]]*/ '';
 
     document.addEventListener("DOMContentLoaded", function () {
         if (navigator.geolocation) {
@@ -253,7 +145,10 @@
                 contentDiv.appendChild(itemDiv);
             });
         } else {
-            contentDiv.innerHTML = '<div class="no-locations"><p>No tourist locations available.</p></div>';
+            contentDiv.innerHTML = '' +
+                '    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" class="no-locations">\n' +
+                '        <p>해당 지역에는 관련된 위치정보가 없습니다.</p>\n' +
+                '    </div>';
         }
     }
 

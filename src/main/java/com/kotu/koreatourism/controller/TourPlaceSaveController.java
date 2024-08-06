@@ -26,10 +26,10 @@ import java.util.Map;
 @Slf4j
 public class TourPlaceSaveController {
 
-    @Value("${openApi.callbackurl.kor}")
+    @Value("${openapi.callbackurl.kor}")
     private String callBackUrl;
 
-    @Value("${openApi.serviceKeyE}")
+    @Value("${openapi.servicekeye}")
     private String serviceKey;
 
     @Value("${openApi.dataType}")

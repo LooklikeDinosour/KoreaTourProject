@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +30,16 @@ import java.util.Map;
 @RequestMapping("/api")
 public class DataApiController2 {
 
-    @Value("${openApi.callbackurl.kor}")
+    @Value("${openapi.callbackurl.kor}")
     private  String callBackUrl;
 
-    @Value("${openApi.serviceKeyE}")
+    @Value("${openapi.servicekeye}")
     private String serviceKey;
 
     @Value("${openApi.dataType}")
     private String dataType;
 
-    @Value("${googleMapApi}")
+    @Value("${googlemapapi}")
     private String googleMapsApiKey;
 
     private final TourDeserializerService tourDeserializerService;
@@ -72,11 +73,13 @@ public class DataApiController2 {
         }
 
         try {
+            log.info("공공데이터 API 호출");
             String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
-            TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
-            log.info("location 공공데이터 API 호출 = {}", tourLocationBased);
-            log.info("컨텐츠 메뉴 = {}", ContentType.values());
-            model.addAttribute("menu", ContentType.values());
+            TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);;
+
+            ContentType[] contentTypesValues = ContentType.values();
+            log.info("컨텐츠 메뉴 = {}", Arrays.asList(contentTypesValues));
+            model.addAttribute("menu", contentTypesValues);
             model.addAttribute("tourLocationBased", tourLocationBased);
 
             return "tour/tourlocation";
@@ -89,8 +92,6 @@ public class DataApiController2 {
    }
     @GetMapping("/location/{content-type}")
     public String locationCategory(@PathVariable("content-type") String contentType,
-//                                   @RequestParam(value = "latitude", required = false) String latitude1,
-//                                   @RequestParam(value = "longitude", required = false) String longitude1,
                                    HttpServletRequest request,
                                    HttpSession session,
                                    Model model) throws IOException {
@@ -110,7 +111,7 @@ public class DataApiController2 {
 
         String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, String.valueOf(contentTypeId), longitude, latitude);
         TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);
-        log.info("LC 공공데이터 API 호출 = {}", tourLocationBased);
+        log.info("LC 공공데이터 해당 클래스 = {}", tourLocationBased.getClass());
 
         model.addAttribute("menu", ContentType.values());
         model.addAttribute("tourLocationBased", tourLocationBased);

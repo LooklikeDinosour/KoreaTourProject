@@ -6,6 +6,7 @@
     <title>Sent Messages</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/message-style.css}">
+    <link rel="stylesheet" th:href="@{/css/page.css}">
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
@@ -17,34 +18,37 @@
                     <li><a th:href="@{/message/createmessage}">쪽지 쓰기</a></li>
                     <li><a th:href="@{/message/{message-status}(message-status=${'received'})}">받은 쪽지함</a></li>
                     <li><a th:href="@{/message/{message-status}(message-status=${'sent'})}">보낸 쪽지함</a></li>
-                    <li><a href="#saved">쪽지 보관함</a></li>
                 </ul>
             </nav>
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>받은 사람</th>
-                    <th>제목</th>
-                    <th>보낸 날짜</th>
-                    <th>읽은 날짜</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="messages : ${sentMessages}">
-                    <td><input type="checkbox" th:value="${messages.messageId}"></td>
-                    <td th:text="${messages.receivedUser}"></td>
-                    <td><a th:href="@{/message/detail/{messageId}(messageId=${messages.messageId})}"
-                           th:text="${messages.title}"></a></td>
-                    <td th:text="${#temporals.format(messages.sentDate, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:text="${messages.readDate != null ? #temporals.format(messages.readDate, 'yyyy-MM-dd HH:mm') : '읽지않음'}"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="content-container">
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>받은 사람</th>
+                        <th>제목</th>
+                        <th>보낸 날짜</th>
+                        <th>읽은 날짜</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="messages : ${sentMessages}">
+                        <td><input type="checkbox" th:value="${messages.messageId}"></td>
+                        <td th:text="${messages.receivedUser}"></td>
+                        <td><a th:href="@{/message/detail/{messageId}(messageId=${messages.messageId})}"
+                               th:text="${messages.title}"></a></td>
+                        <td th:text="${#temporals.format(messages.sentDate, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${messages.readDate != null ? #temporals.format(messages.readDate, 'yyyy-MM-dd HH:mm') : '읽지않음'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="button-container">
+                <div th:replace="~{fragments/page :: pagination-message( ${pageDTO}, ${messageStatus})}"></div>
+            </div>
         </div>
-        <div th:replace="~{fragments/page :: pagination-message( ${pageDTO}, ${messageStatus})}"></div>
     </div>
 </div>
 </body>
