@@ -40,3 +40,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// -plain.jar 생성 못하게 조건
+jar {
+    enabled = false
+}
