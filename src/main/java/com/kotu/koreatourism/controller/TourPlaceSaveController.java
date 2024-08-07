@@ -26,6 +26,10 @@ import java.util.Map;
 @Slf4j
 public class TourPlaceSaveController {
 
+    private final TourPlaceSaveService tourPlaceSaveService;
+    private final TourLocationService tourLocationService;
+    private final TourDeserializerService tourDeserializerService;
+
     @Value("${openapi.callbackurl.kor}")
     private String callBackUrl;
 
@@ -34,10 +38,6 @@ public class TourPlaceSaveController {
 
     @Value("${openApi.dataType}")
     private String dataType;
-
-    private final TourPlaceSaveService tourPlaceSaveService;
-    private final TourLocationService tourLocationService;
-    private final TourDeserializerService tourDeserializerService;
 
     @PostMapping("/save")
     @ResponseBody

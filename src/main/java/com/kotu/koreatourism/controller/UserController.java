@@ -28,9 +28,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-
     private final TourPlaceSaveService tourPlaceSaveService;
-
     private final BoardService boardService;
 
     //회원가입

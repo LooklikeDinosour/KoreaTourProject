@@ -28,7 +28,11 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class DataApiController2 {
+public class DataApiController {
+
+    private final TourDeserializerService tourDeserializerService;
+    private final TourLocationService tourLocationService;
+    private final TourCategoryService tourCategoryService;
 
     @Value("${openapi.callbackurl.kor}")
     private  String callBackUrl;
@@ -42,9 +46,6 @@ public class DataApiController2 {
     @Value("${googlemapapi}")
     private String googleMapsApiKey;
 
-    private final TourDeserializerService tourDeserializerService;
-    private final TourLocationService tourLocationService;
-    private final TourCategoryService tourCategoryService;
 
     //위치기반 GPS 좌표 필요
     //동기식 구성
