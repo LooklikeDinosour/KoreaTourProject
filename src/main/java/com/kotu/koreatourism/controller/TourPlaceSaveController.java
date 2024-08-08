@@ -36,7 +36,7 @@ public class TourPlaceSaveController {
     @Value("${openapi.servicekeye}")
     private String serviceKey;
 
-    @Value("${openApi.dataType}")
+    @Value("${openapi.datatype}")
     private String dataType;
 
     @PostMapping("/save")

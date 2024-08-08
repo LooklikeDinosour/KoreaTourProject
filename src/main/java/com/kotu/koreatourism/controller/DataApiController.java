@@ -40,7 +40,7 @@ public class DataApiController {
     @Value("${openapi.servicekeye}")
     private String serviceKey;
 
-    @Value("${openApi.dataType}")
+    @Value("${openapi.datatype}")
     private String dataType;
 
     @Value("${googlemapapi}")

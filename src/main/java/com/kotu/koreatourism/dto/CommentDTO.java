@@ -19,5 +19,4 @@ public class CommentDTO {
     private int bid; // 게시글 연걸 FK
     private String userId;
 
-
 }

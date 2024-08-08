@@ -62,7 +62,7 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/update")
-    public ResponseEntity<CommentDTO> updateComment(CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> updateComment(@RequestBody CommentDTO commentDTO) {
 
         log.info("코멘트 수정 내용 = {}, 번호 = {}", commentDTO.getComment(), commentDTO.getBid());
         return (commentService.updateComment(commentDTO) == 1) ? new ResponseEntity<>(commentDTO, HttpStatus.OK)

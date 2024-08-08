@@ -7,6 +7,120 @@
     <link rel="stylesheet" th:href="@{/css/tour.css}">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script>
+
+        //CSRF
+        let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        let selectedContentType = '';
+
+        function like(contentId) {
+            // 좋아요 버튼 클릭 시 처리할 로직
+            console.log('좋아요:', contentId);
+        }
+
+        function save(contentId) {
+            console.log('저장하기:', contentId);
+
+            fetch('/place/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify({contentId: contentId})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        console.log('장소 저장 성공:', data);
+                        alert('장소가 성공적으로 저장되었습니다.');
+                    } else {
+                        console.log('장소 저장 실패:', data);
+                        alert('장소 저장에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('오류 발생:', error);
+                    alert('저장하려면 로그인을 해주세요');
+                });
+        }
+
+        let tourLocations = /*[[${tourLocationBased.tourLocations}]]*/ [];
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    const links = document.querySelectorAll('a[href*="api/location"]');
+                    links.forEach(link => {
+                        const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
+                        link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
+
+                        // 링크 클릭 이벤트 리스너 추가
+                        link.addEventListener('click', function (event) {
+                            event.preventDefault(); // 기본 링크 동작 방지
+                            const contentType = baseHref.split('/')[3]; // URL에서 contentType 추출
+                            console.log(contentType);
+                            setContentType(contentType, latitude, longitude);
+                        });
+                    });
+
+                    if (tourLocations.length > 0) {
+                        updateContent(tourLocations);
+                    }
+                });
+            } else {
+                console.log("지원하지 않는 브라우저입니다.")
+            }
+        });
+
+        function setContentType(contentType, latitude, longitude) {
+            const url = `/api/location/${contentType}?latitude=${latitude}&longitude=${longitude}`;
+            fetch(url, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    updateContent(data);
+                })
+                .catch((error) => console.error('Error:', error.message));
+        }
+
+        function updateContent(data) {
+            const contentDiv = document.querySelector('.tourist-container-wrapper');
+            contentDiv.innerHTML = ''; // 이전 콘텐츠 삭제
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('tourist-item');
+                    itemDiv.innerHTML = `
+                    <a href="/api/location/detail-info/${item.contentId}">
+                        <img src="${item.firstImage ? item.firstImage : '/images/default.jpg'}" alt="Image">
+                        <input type="hidden" name="contentId" value="${item.contentId}">
+                        <h2>${item.title}</h2>
+                        <p>주소: ${item.addr1} ${item.addr2}</p>
+                    </a>
+                    <div class="buttons">
+                        <button class="button" onclick="like(${item.contentId})">좋아요</button>
+                        <button class="button" onclick="save(${item.contentId})">저장하기</button>
+                    </div>
+                `;
+                    contentDiv.appendChild(itemDiv);
+                });
+            } else {
+                contentDiv.innerHTML = '' +
+                    '    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" class="no-locations">\n' +
+                    '        <p>해당 지역에는 관련된 위치정보가 없습니다.</p>\n' +
+                    '    </div>';
+            }
+        }
+
+    </script>
 </head>
 <body>
 <header th:replace="~{layouts/header :: header}"></header>
@@ -34,125 +148,12 @@
             </div>
         </div>
     </div>
-    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" class="no-locations">
+    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}"
+         class="no-locations">
         <p>해당 지역에는 관련된 위치정보가 없습니다.</p>
     </div>
 </div>
 
-<script>
-
-    //CSRF
-    let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-    let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-    let selectedContentType = '';
-
-    function like(contentId) {
-        // 좋아요 버튼 클릭 시 처리할 로직
-        console.log('좋아요:', contentId);
-    }
-
-    function save(contentId) {
-        console.log('저장하기:', contentId);
-
-        fetch('/place/save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
-            },
-            body: JSON.stringify({contentId: contentId})
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data) {
-                    console.log('장소 저장 성공:', data);
-                    alert('장소가 성공적으로 저장되었습니다.');
-                } else {
-                    console.log('장소 저장 실패:', data);
-                    alert('장소 저장에 실패했습니다.');
-                }
-            })
-            .catch(error => {
-                console.error('오류 발생:', error);
-                alert('저장하려면 로그인을 해주세요');
-            });
-    }
-
-    let tourLocations = /*[[${tourLocationBased.tourLocations}]]*/ [];
-
-    document.addEventListener("DOMContentLoaded", function () {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                const links = document.querySelectorAll('a[href*="api/location"]');
-                links.forEach(link => {
-                    const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
-                    link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
-
-                    // 링크 클릭 이벤트 리스너 추가
-                    link.addEventListener('click', function (event) {
-                        event.preventDefault(); // 기본 링크 동작 방지
-                        const contentType = baseHref.split('/')[3]; // URL에서 contentType 추출
-                        console.log(contentType);
-                        setContentType(contentType, latitude, longitude);
-                    });
-                });
-
-                if (tourLocations.length > 0) {
-                    updateContent(tourLocations);
-                }
-            });
-        } else {
-            console.log("지원하지 않는 브라우저입니다.")
-        }
-    });
-
-    function setContentType(contentType, latitude, longitude) {
-        const url = `/api/location/${contentType}?latitude=${latitude}&longitude=${longitude}`;
-        fetch(url, {
-            method: 'GET',
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                updateContent(data);
-            })
-            .catch((error) => console.error('Error:', error.message));
-    }
-
-    function updateContent(data) {
-        const contentDiv = document.querySelector('.tourist-container-wrapper');
-        contentDiv.innerHTML = ''; // 이전 콘텐츠 삭제
-        if (data && data.length > 0) {
-            data.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('tourist-item');
-                itemDiv.innerHTML = `
-                    <a href="/api/location/detail-info/${item.contentId}">
-                        <img src="${item.firstImage ? item.firstImage : '/images/default.jpg'}" alt="Image">
-                        <input type="hidden" name="contentId" value="${item.contentId}">
-                        <h2>${item.title}</h2>
-                        <p>주소: ${item.addr1} ${item.addr2}</p>
-                    </a>
-                    <div class="buttons">
-                        <button class="button" onclick="like(${item.contentId})">좋아요</button>
-                        <button class="button" onclick="save(${item.contentId})">저장하기</button>
-                    </div>
-                `;
-                contentDiv.appendChild(itemDiv);
-            });
-        } else {
-            contentDiv.innerHTML = '' +
-                '    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" class="no-locations">\n' +
-                '        <p>해당 지역에는 관련된 위치정보가 없습니다.</p>\n' +
-                '    </div>';
-        }
-    }
-
-</script>
 
 </body>
 </html>
