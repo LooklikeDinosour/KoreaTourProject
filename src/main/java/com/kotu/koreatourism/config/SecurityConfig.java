@@ -21,16 +21,16 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(request ->
                                 request.getMethod().equals(HttpMethod.GET.name())));
 
-        http
-//                .csrf(csrf -> csrf
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 CSRF토큰을 저장한다.
+        http    .requiresChannel(channel ->
+                    channel.anyRequest().requiresSecure() //https를 요구하도록 설정
+                )
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/login","/checkid","/signup","/loginProc","/api/**","/board/**","/static/**","/js/**","/css/**","/images/**","/fragments/**","/layouts/**").permitAll()
+                        .requestMatchers("/", "/login", "/checkid", "/signup", "/loginProc", "/api/**", "/board/**", "/static/**", "/js/**", "/css/**", "/images/**", "/fragments/**", "/layouts/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/place/save","user/mypage","comment/save").authenticated()
+                        .requestMatchers("/place/save", "user/mypage", "comment/save").authenticated()
                         .requestMatchers("/message/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()// 특정한 경로에 작업하고 싶으면 설정하는 메서드
-                       );
+                );
 
         //로그인이되어있지 않은 상태에서 /설정주소에 접근하면 login 페이지로 리다이렉션됌.
         http
