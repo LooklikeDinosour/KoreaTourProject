@@ -34,6 +34,7 @@ public class UserController {
     //회원가입
     @GetMapping("/signup")
     public String signUp(Model model) {
+        log.info("회원가입");
         model.addAttribute("userForm", new SignUpFormDTO());
         return "login/signUp";
     }
@@ -57,7 +58,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signUpProcess(@Validated @ModelAttribute("userForm") SignUpFormDTO userForm, BindingResult bindingResult) {
-        log.info("회원가입");
+        log.info("회원가입 기입 데이터 전송");
 
         if(bindingResult.hasErrors()) {
             log.info("회원가입 에러 = {}", bindingResult);
@@ -65,6 +66,7 @@ public class UserController {
         }
 
         userService.signUp(userForm);
+        log.info("회원가입 완료");
         return "main/mainPage";
     }
 

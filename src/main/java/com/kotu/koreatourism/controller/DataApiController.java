@@ -69,11 +69,10 @@ public class DataApiController {
 
         if (latitude == null || longitude == null) {
             log.error("위도, 경도 누락되었습니다.");
-            model.addAttribute("errorMessage", "위도, 경도 누락되었습니다.");
+            model.addAttribute("errorMessage", "구글 위치 권한을 허락해주세요");
             return "error";
         }
 
-        try {
             log.info("공공데이터 API 호출");
             String locationBasedList = tourLocationService.locationBasedAPI(callBackUrl, serviceKey, dataType, "12", longitude, latitude);
             TourLocationBasedItemDTO tourLocationBased = tourDeserializerService.parsingJsonObject(locationBasedList, TourLocationBasedItemDTO.class);;
@@ -84,13 +83,8 @@ public class DataApiController {
             model.addAttribute("tourLocationBased", tourLocationBased);
 
             return "tour/tourlocation";
-
-        } catch (Exception e) {
-            log.error("Error occurred while processing location data", e);
-            model.addAttribute("errorMessage", "An error occurred while processing location data.");
-            return "error";
-        }
    }
+
     @GetMapping("/location/{content-type}")
     public String locationCategory(@PathVariable("content-type") String contentType,
                                    HttpServletRequest request,
@@ -98,6 +92,7 @@ public class DataApiController {
                                    Model model) throws IOException {
 
         //Enum 목록에 있는 건지 다시 검증
+        log.info("content type 확인 = {}", contentType);
         ContentType content = ContentType.fromUrlName(contentType);
         int contentTypeId = content.getContentTypeId();
         log.info("LC URL 확인하기 = {} ", request.getRequestURL());
@@ -264,6 +259,5 @@ public class DataApiController {
 
         return new ResponseEntity<>(tourAreaBased, HttpStatus.OK);
     }
-
 
 }

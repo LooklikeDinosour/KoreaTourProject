@@ -14,10 +14,11 @@
 
 <div class="tour-page">
     <nav class="tour-nav">
-        <a th:each="topic : ${menu}"
-           th:href="@{'/api/location/' + ${topic.name().replace('_','-').toLowerCase()}}"
-           th:text="${topic.contentName}"
-           onclick="setContentType(${topic.name().replace('_','-').toLowerCase()});"></a>
+        <div th:each="topic : ${menu}">
+            <a th:href="@{'/api/location/' + ${topic.name().replace('_','-').toLowerCase()}}"
+               th:text="${topic.contentName}"
+               th:onclick="setContentType([[${topic.name().replace('_','-').toLowerCase()}]])"></a>
+        </div>
     </nav>
 </div>
 <div class="tourist-container-wrapper">
@@ -82,78 +83,39 @@
             });
     }
 
-    let tourLocations = /*[[${tourLocationBased.tourLocations}]]*/ [];
+    function setContentType(contentType) {
+       selectedContentType = contentType;
+       console.log('Selected Content Type', selectedContentType);
+    }
 
+     // 위치기반
     document.addEventListener("DOMContentLoaded", function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
 
-                const links = document.querySelectorAll('a[href*="api/location"]');
-                links.forEach(link => {
-                    const baseHref = link.getAttribute('href').split('?')[0]; // 기존 href에서 파라미터를 제거한 부분
-                    link.href = `${baseHref}?latitude=${latitude}&longitude=${longitude}`;
-
-                    // 링크 클릭 이벤트 리스너 추가
-                    link.addEventListener('click', function (event) {
-                        event.preventDefault(); // 기본 링크 동작 방지
-                        const contentType = baseHref.split('/')[3]; // URL에서 contentType 추출
-                        console.log(contentType);
-                        setContentType(contentType, latitude, longitude);
-                    });
+                // 모든 메뉴 항목의 링크를 업데이트
+                document.querySelectorAll('.tour-nav a').forEach(link => {
+                    const baseUrl = link.getAttribute('href');
+                    link.href = `${baseUrl}?latitude=${latitude}&longitude=${longitude}`;
                 });
 
-                if (tourLocations.length > 0) {
-                    updateContent(tourLocations);
+                // 현재 선택된 컨텐츠 타입에 대한 데이터 요청 (옵션)
+                if (selectedContentType) {
+                    const url = `/api/location/${selectedContentType}?latitude=${latitude}&longitude=${longitude}`;
+                    fetch(url, {
+                        method: 'GET',
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log('Success:', data))
+                    .catch((error) => console.error('Error:', error.message));
                 }
             });
         } else {
-            console.log("지원하지 않는 브라우저입니다.")
+            console.log("지원하지 않는 브라우저입니다.");
         }
     });
-
-    function setContentType(contentType, latitude, longitude) {
-        const url = `/api/location/${contentType}?latitude=${latitude}&longitude=${longitude}`;
-        fetch(url, {
-            method: 'GET',
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                updateContent(data);
-            })
-            .catch((error) => console.error('Error:', error.message));
-    }
-
-    function updateContent(data) {
-        const contentDiv = document.querySelector('.tourist-container-wrapper');
-        contentDiv.innerHTML = ''; // 이전 콘텐츠 삭제
-        if (data && data.length > 0) {
-            data.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('tourist-item');
-                itemDiv.innerHTML = `
-                <a href="/api/location/detail-info/${item.contentId}">
-                    <img src="${item.firstImage ? item.firstImage : '/images/default.jpg'}" alt="Image">
-                    <input type="hidden" name="contentId" value="${item.contentId}">
-                    <h2>${item.title}</h2>
-                    <p>주소: ${item.addr1} ${item.addr2}</p>
-                </a>
-                <div class="buttons">
-                    <button class="button" onclick="like(${item.contentId})">좋아요</button>
-                    <button class="button" onclick="save(${item.contentId})">저장하기</button>
-                </div>
-            `;
-                contentDiv.appendChild(itemDiv);
-            });
-        } else {
-            contentDiv.innerHTML = '' +
-                '    <div th:if="${tourLocationBased.tourLocations == null or #lists.isEmpty(tourLocationBased.tourLocations)}" class="no-locations">\n' +
-                '        <p>해당 지역에는 관련된 위치정보가 없습니다.</p>\n' +
-                '    </div>';
-        }
-    }
 
 </script>
 </body>
