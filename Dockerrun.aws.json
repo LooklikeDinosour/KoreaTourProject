@@ -1,0 +1,13 @@
+{
+  "AWSEBDocker runVersion": "1",
+  "Image": {
+    "Name": "009160070046.dkr.ecr.ap-northeast-2.amazonaws.com/kotu:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "5000",
+      "HostPort": "5000"
+    }
+  ]
+}
