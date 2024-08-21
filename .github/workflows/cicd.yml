@@ -55,11 +55,16 @@ jobs:
           format: YYYY-MM-DDTHH-mm-ss
           utcOffset: "+09:00" #한국 시간
 
+      - name: Update Dockerrun.aws.json
+        run: |
+          sed -i.bak -e "s|009160070046.dkr.ecr.ap-northeast-2.amazonaws.com/kotu:latest|${{ steps.build-image.outputs.image }}|g" Dockerrun.aws.json
+
       - name: Generate deployment package
         run: |
           mkdir -p deploy
           cp -r .ebextensions deploy/.ebextensions
           cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cp build/libs/*.jar deploy/
           cd deploy && zip -r deploy.zip .
 
       - name: Beanstalk Deploy
