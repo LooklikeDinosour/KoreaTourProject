@@ -1,5 +1,5 @@
 {
-  "AWSEBDocker runVersion": "1",
+  "AWSEBDockerrunVersion": "1",
   "Image": {
     "Name": "009160070046.dkr.ecr.ap-northeast-2.amazonaws.com/kotu:latest",
     "Update": "true"
