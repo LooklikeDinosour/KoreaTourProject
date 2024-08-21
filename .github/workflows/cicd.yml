@@ -60,7 +60,7 @@ jobs:
           mkdir -p deploy
           cp -r .ebextensions deploy/.ebextensions
           cp Dockerrun.aws.json deploy/Dockerrun.aws.json
-          cp deploy && zip -r ../deploy.zip .
+          cd deploy && zip -r deploy.zip .
 
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v20
