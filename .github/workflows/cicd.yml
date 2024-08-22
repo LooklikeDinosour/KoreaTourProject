@@ -18,6 +18,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: application.properties 생성
+        run: |
+          touch ./src/main/resources/application.properties
+          echo "{{secrets.KOTU_PROPERTIES}}" > ./src/main/resources/application.properties
+          cat ./src/main/resources/application.properties
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
