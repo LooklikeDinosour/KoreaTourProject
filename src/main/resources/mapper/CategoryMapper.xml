@@ -3,22 +3,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kotu.koreatourism.mapper.CategoryMapper">
 
-    <select id="takeCategoryList">
-        SELECT
-            CONCAT(P1.GROUP_ID, P1.CATEGORY_ID) AS CATEGORY_KEY,
-            CASE P1.CATEGORY_PARENT_LV
-                WHEN 0 THEN P1.CATEGORY_DETAIL_NAME
-                WHEN 1 THEN CONCAT(P2.CATEGORY_DETAIL_NAME, ' > ', P1.CATEGORY_DETAIL_NAME)
-                END as CATEGORY_NAV,
-            P1.CATEGORY_API_CODE
-        FROM
-            AREA_CATEGORY_TB as P1
-                LEFT OUTER JOIN
-            AREA_CATEGORY_TB as P2
-            ON P1.CATEGORY_PARENT_LV = P2.CATEGORY_LV
-                AND P1.CATEGORY_DETAIL_PARENT_LV = P2.CATEGORY_DETAIL_OR
-                AND P1.GROUP_ID = P2.GROUP_ID
-    </select>
+<!--    <select id="takeCategoryList">-->
+<!--        SELECT-->
+<!--            CONCAT(P1.GROUP_ID, P1.CATEGORY_ID) AS CATEGORY_KEY,-->
+<!--            CASE P1.CATEGORY_PARENT_LV-->
+<!--                WHEN 0 THEN P1.CATEGORY_DETAIL_NAME-->
+<!--                WHEN 1 THEN CONCAT(P2.CATEGORY_DETAIL_NAME, ' > ', P1.CATEGORY_DETAIL_NAME)-->
+<!--                END as CATEGORY_NAV,-->
+<!--            P1.CATEGORY_API_CODE-->
+<!--        FROM-->
+<!--            AREA_CATEGORY_TB as P1-->
+<!--                LEFT OUTER JOIN-->
+<!--            AREA_CATEGORY_TB as P2-->
+<!--            ON P1.CATEGORY_PARENT_LV = P2.CATEGORY_LV-->
+<!--                AND P1.CATEGORY_DETAIL_PARENT_LV = P2.CATEGORY_DETAIL_OR-->
+<!--                AND P1.GROUP_ID = P2.GROUP_ID-->
+<!--    </select>-->
 
     <select id="takeCategory">
         select *

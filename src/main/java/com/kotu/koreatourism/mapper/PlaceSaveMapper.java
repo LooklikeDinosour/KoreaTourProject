@@ -11,7 +11,5 @@ public interface PlaceSaveMapper {
 
     public Boolean savePlace(@Param("placeInfo")TourPlace placeInfo, @Param("userId") String userId);
 
-    public void deletePlace(int placeId);
-
     public List<TourPlace> findAllPlace(String userId);
 }
