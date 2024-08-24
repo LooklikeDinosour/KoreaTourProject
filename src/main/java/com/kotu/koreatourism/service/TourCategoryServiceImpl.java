@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RequiredArgsConstructor
-@Service
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class TourCategoryServiceImpl implements TourCategoryService {
 
     private final CategoryMapper categoryMapper;

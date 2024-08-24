@@ -23,8 +23,8 @@ import java.util.List;
 
 
 @Slf4j
-@RequiredArgsConstructor
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;

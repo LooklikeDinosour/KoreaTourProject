@@ -22,10 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.List;
 
-@Controller
 @Slf4j
-@RequiredArgsConstructor
+@Controller
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class BoardController  {
 
     private final BoardService boardService;

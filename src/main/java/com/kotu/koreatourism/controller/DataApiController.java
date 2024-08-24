@@ -26,8 +26,8 @@ import java.util.Map;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class DataApiController {
 
     private final TourDeserializerService tourDeserializerService;

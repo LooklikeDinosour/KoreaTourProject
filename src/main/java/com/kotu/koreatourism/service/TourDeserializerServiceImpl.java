@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
+@Service
 public class TourDeserializerServiceImpl implements TourDeserializerService {
 
     private final ObjectMapper objectMapper;

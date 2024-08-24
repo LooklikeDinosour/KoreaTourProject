@@ -20,10 +20,10 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
-@Controller
-@RequestMapping("/place")
-@RequiredArgsConstructor
 @Slf4j
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/place")
 public class TourPlaceSaveController {
 
     private final TourPlaceSaveService tourPlaceSaveService;

@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MessageServiceImpl implements MessageService {
 
     private final UserService userService;

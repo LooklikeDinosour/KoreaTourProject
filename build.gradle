@@ -44,3 +44,12 @@ tasks.named('test') {
 jar {
     enabled = false
 }
+
+//sourceSets {
+//    main {
+//        resources {
+//            srcDirs = ['src/main/resources', 'src/main/java']
+//            include '**/*.xml', '**/*.properties', '**/*.setting'
+//        }
+//    }
+//}

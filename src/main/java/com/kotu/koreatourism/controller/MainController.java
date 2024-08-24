@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Collection;
 import java.util.Iterator;
 
-@Controller
 @Slf4j
+@Controller
 @RequiredArgsConstructor
 public class MainController {
 
