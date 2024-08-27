@@ -6,4 +6,4 @@ COPY ${JAR_FILE} app.jar
 
 EXPOSE 5000
 
-ENTRYPOINT ["java", "-jar", "--spring.profiles.active=prod", "-Dfile.encoding=UTF-8", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "-Dfile.encoding=UTF-8", "/app.jar"]
