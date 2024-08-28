@@ -16,7 +16,7 @@ public class SignUpTest {
     @Autowired
     UserService userService;
 
-    @DisplayName("회원가입 및 검증 테스트")
+    @DisplayName("회원가입 테스트")
     @Test
     public void signUpTest() {
 
@@ -35,7 +35,7 @@ public class SignUpTest {
         Assertions.assertThat(result).isEqualTo(1);
     }
 
-    @DisplayName("중복확인 테스트")
+    @DisplayName("회원 중복확인 테스트")
     @Test
     public void duplicatedTest() {
 
