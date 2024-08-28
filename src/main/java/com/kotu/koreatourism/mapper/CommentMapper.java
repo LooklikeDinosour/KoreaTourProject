@@ -1,7 +1,6 @@
 package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Comment;
-import com.kotu.koreatourism.dto.CommentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -45,7 +45,7 @@
     </insert>
 
 
-    <select id ="findAllPlace">
+    <select id="findAllPlace">
         SELECT *
         FROM PLACESAVE_TB AS PS
         LEFT JOIN USER_PLACE_TB AS UP

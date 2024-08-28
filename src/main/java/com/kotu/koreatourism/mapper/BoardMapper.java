@@ -2,7 +2,6 @@ package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Board;
 import com.kotu.koreatourism.domain.Criteria;
-import com.kotu.koreatourism.dto.BoardUpdateDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
