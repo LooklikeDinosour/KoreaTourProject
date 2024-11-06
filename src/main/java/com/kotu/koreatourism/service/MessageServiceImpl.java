@@ -63,7 +63,6 @@ public class MessageServiceImpl implements MessageService {
         return messageMapper.findAllMessage(type, userId, criteria);
     }
 
-
     @Override
     public void deleteMessage(String sentReceivedIdentifier, int messageId) {
         messageMapper.deleteMessage(sentReceivedIdentifier, messageId);

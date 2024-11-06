@@ -3,7 +3,6 @@ package com.kotu.koreatourism.dto.tour;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kotu.koreatourism.config.TourAreaBasedDeserializer;
-import com.kotu.koreatourism.config.TourLocationBasedDeserializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

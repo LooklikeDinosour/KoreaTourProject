@@ -23,15 +23,6 @@ public class SecurityConfig {
                                 request.getMethod().equals(HttpMethod.GET.name())));
 
         http
-//                .headers(headers -> headers
-//                    .httpStrictTransportSecurity(hsts -> hsts
-//                    .includeSubDomains(true)
-//                    .maxAgeInSeconds(31536000)
-//                    )
-//                )
-//                .requiresChannel((channel) ->
-//                        channel.anyRequest().requiresSecure() //https를 요구하도록 설정
-//                )
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/login", "/checkid", "/signup", "/loginProc", "/api/**", "/board/**", "/static/**", "/js/**", "/css/**", "/images/**", "/fragments/**", "/layouts/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")

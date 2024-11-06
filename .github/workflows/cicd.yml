@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # CI 지속적 통합
       - uses: actions/checkout@v3
 
       - name: JDK 세팅
@@ -18,19 +19,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-#      - name: application.properties 생성
-#        run: |
-#          touch ./src/main/resources/application.properties
-#          echo "{{ secrets.KOTU_PROPERTIES }}" > ./src/main/resources/application.properties
-#          cat ./src/main/resources/application.properties
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew clean build -Dfile.encoding=UTF-8 -Dspring.profiles.active=prod
 
-
+      # CD(지속적 배포)
       # Docker 추가
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
