@@ -5,6 +5,8 @@ import com.kotu.koreatourism.mapper.LikeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -15,8 +17,15 @@ public class LikeService {
         //좋아요 상태 확인
         LikeDTO isLiked = likeMapper.findLikeByUser(userId, contentId);
         if(isLiked == null) {
-            //좋아요
+            //좋아요 적용
+            LikeDTO newLike = new LikeDTO(null, userId, contentId, 1, LocalDateTime.now());
+            likeMapper.insertLike(newLike);
+            return true;
+        } else {
+            if(isLiked.getLikeCount() > 0) {
+                //좋아요 취소
 
+            }
         }
         return true;
     }

@@ -11,6 +11,7 @@ public interface LikeMapper {
     LikeDTO findLikeByUser(@Param("userId") String userId, @Param("contentId") int contentId);
 
     //좋아요 +1
+    int insertLike(LikeDTO likeDTO);
 
     //좋아요 삭제
 }

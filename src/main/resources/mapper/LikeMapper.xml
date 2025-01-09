@@ -9,4 +9,9 @@
         where user_id = #{userId} AND content_id = #{contentId}
     </select>
 
+    <insert id="insertLike">
+        insert into
+            LIKE_TB(user_id, content_id, like_count)
+        values (#{userId}, #{contentId}, #{likeCount})
+    </insert>
 </mapper>
