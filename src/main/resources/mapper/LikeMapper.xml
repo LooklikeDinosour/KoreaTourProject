@@ -5,13 +5,18 @@
 
     <select id="findLikeByUser" resultType="LikeDTO">
         select *
-        from LIKES_TB
+        from LIKE_TB
         where user_id = #{userId} AND content_id = #{contentId}
     </select>
 
-    <insert id="insertLike">
+    <insert id="increaseLike">
         insert into
             LIKE_TB(user_id, content_id, like_count)
         values (#{userId}, #{contentId}, #{likeCount})
     </insert>
+
+    <delete id="decreaseLike">
+        delete from LIKE_TB
+        where like_id = #{likeId}
+    </delete>
 </mapper>

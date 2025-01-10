@@ -16,18 +16,20 @@ public class LikeService {
     public boolean toggleLike(String userId, int contentId) {
         //좋아요 상태 확인
         LikeDTO isLiked = likeMapper.findLikeByUser(userId, contentId);
-        if(isLiked == null) {
+        if (isLiked == null) {
             //좋아요 적용
             LikeDTO newLike = new LikeDTO(null, userId, contentId, 1, LocalDateTime.now());
-            likeMapper.insertLike(newLike);
+            likeMapper.increaseLike(newLike);
             return true;
         } else {
-            if(isLiked.getLikeCount() > 0) {
+            if (isLiked.getLikeCount() > 0) {
                 //좋아요 취소
-
+                likeMapper.decreaseLike(isLiked.getLikeId());
+                return false;
             }
         }
-        return true;
+        //
+        return false;
     }
 
 

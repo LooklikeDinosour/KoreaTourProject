@@ -10,8 +10,9 @@ public interface LikeMapper {
     //좋아요 상태 조회
     LikeDTO findLikeByUser(@Param("userId") String userId, @Param("contentId") int contentId);
 
-    //좋아요 +1
-    int insertLike(LikeDTO likeDTO);
+    //좋아요 +1(작동)
+    int increaseLike(LikeDTO likeDTO);
 
-    //좋아요 삭제
+    //좋아요 -1(취소)
+    int decreaseLike(Long likeId);
 }
