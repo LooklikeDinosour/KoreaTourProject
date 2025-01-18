@@ -41,7 +41,7 @@ public class TourPlaceSaveController {
 
     @PostMapping("/save")
     @ResponseBody
-    public boolean savePlace(@RequestBody Map<String, Integer> contentInfo, @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+    public void savePlace(@RequestBody Map<String, Integer> contentInfo, @AuthenticationPrincipal UserDetails userDetails) throws IOException {
         String userId = userDetails.getUsername();
         Integer contentId = contentInfo.get("contentId");
         log.info("content 아이디 = {}", contentId);
@@ -49,7 +49,7 @@ public class TourPlaceSaveController {
         TourDetailCommonItemDTO placeCommonInfoList = tourDeserializerService.parsingJsonObject(placeInfo, TourDetailCommonItemDTO.class);
         TourDetailCommonDTO placeCommonInfo = placeCommonInfoList.getTourDetailCommonList().get(0);
         log.info("해당 장소 정보 = {}", placeCommonInfo);
-        return tourPlaceSaveService.savePlace(placeCommonInfo, userId);
+        tourPlaceSaveService.savePlace(placeCommonInfo, userId);
     }
 
     @DeleteMapping("/delete/{placeId}")

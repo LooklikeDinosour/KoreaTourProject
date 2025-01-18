@@ -7,6 +7,7 @@ import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.mapper.PlaceSaveMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,8 @@ public class TourPlaceSaveServiceImpl implements TourPlaceSaveService{
 
     private final PlaceSaveMapper placeSaveMapper;
     @Override
-    public Boolean savePlace(TourDetailCommonDTO placeCommonInfo, String userId) {
+    @Transactional
+    public void savePlace(TourDetailCommonDTO placeCommonInfo, String userId) {
 
         TourPlace tourPlaceInfo = new TourPlace();
         tourPlaceInfo.setAddr1(placeCommonInfo.getAddr1());
@@ -36,7 +38,11 @@ public class TourPlaceSaveServiceImpl implements TourPlaceSaveService{
         tourPlaceInfo.setZipcode(placeCommonInfo.getZipcode());
         tourPlaceInfo.setOverview(placeCommonInfo.getOverview());
 
-        return placeSaveMapper.savePlace(tourPlaceInfo, userId);
+        placeSaveMapper.savePlace(tourPlaceInfo, userId);
+
+        int placeId = tourPlaceInfo.getPlaceId();
+
+        placeSaveMapper.saveUserPlace(userId, placeId);
     }
 
     @Override

@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kotu.koreatourism.mapper.PlaceSaveMapper">
 
-    <insert id="savePlace">
+    <insert id="savePlace" useGeneratedKeys="true" keyProperty="placeInfo.placeId">
         INSERT INTO PLACESAVE_TB (
             addr1,
             addr2,
@@ -36,12 +36,11 @@
                      #{placeInfo.overview}
                  );
 
-        <!-- 마지막으로 삽입된 place_id를 가져옴 -->
-        SET @placeId = LAST_INSERT_ID();
+    </insert>
 
-        <!-- USER_PLACESAVE 테이블에 데이터 삽입 -->
+    <insert id="saveUserPlace">
         INSERT INTO USER_PLACE_TB (user_id, place_id)
-        VALUES (#{userId}, @placeId);
+        VALUES (#{userId}, #{placeId});
     </insert>
 
 
