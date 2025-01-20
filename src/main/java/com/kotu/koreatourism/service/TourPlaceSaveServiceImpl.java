@@ -39,10 +39,7 @@ public class TourPlaceSaveServiceImpl implements TourPlaceSaveService{
         tourPlaceInfo.setOverview(placeCommonInfo.getOverview());
 
         placeSaveMapper.savePlace(tourPlaceInfo, userId);
-
-        int placeId = tourPlaceInfo.getPlaceId();
-
-        placeSaveMapper.saveUserPlace(userId, placeId);
+        placeSaveMapper.saveUserPlace(userId, tourPlaceInfo.getPlaceId());
     }
 
     @Override

@@ -20,7 +20,7 @@ public class LIkeController {
 
     private final LikeService likeService;
 
-    @PostMapping
+    @PostMapping("/switch")
     public ResponseEntity<String> toggleLike(@RequestParam int contentId, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("좋아요 요청");
         String userId = userDetails.getUsername();

@@ -1,5 +1,6 @@
 package com.kotu.koreatourism.controller;
 
+import com.kotu.koreatourism.dto.ResponseDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
 import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
@@ -41,15 +42,24 @@ public class TourPlaceSaveController {
 
     @PostMapping("/save")
     @ResponseBody
-    public void savePlace(@RequestBody Map<String, Integer> contentInfo, @AuthenticationPrincipal UserDetails userDetails) throws IOException {
-        String userId = userDetails.getUsername();
-        Integer contentId = contentInfo.get("contentId");
-        log.info("content 아이디 = {}", contentId);
-        String placeInfo = tourLocationService.detailCommonInfoAPI(callBackUrl, serviceKey, dataType, contentId);
-        TourDetailCommonItemDTO placeCommonInfoList = tourDeserializerService.parsingJsonObject(placeInfo, TourDetailCommonItemDTO.class);
-        TourDetailCommonDTO placeCommonInfo = placeCommonInfoList.getTourDetailCommonList().get(0);
-        log.info("해당 장소 정보 = {}", placeCommonInfo);
-        tourPlaceSaveService.savePlace(placeCommonInfo, userId);
+    public ResponseDTO savePlace(@RequestBody Map<String, Integer> contentInfo, @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        try {
+            String userId = userDetails.getUsername();
+            Integer contentId = contentInfo.get("contentId");
+            log.info("content 아이디 = {}", contentId);
+
+            String placeInfo = tourLocationService.detailCommonInfoAPI(callBackUrl, serviceKey, dataType, contentId);
+            TourDetailCommonItemDTO placeCommonInfoList = tourDeserializerService.parsingJsonObject(placeInfo, TourDetailCommonItemDTO.class);
+            TourDetailCommonDTO placeCommonInfo = placeCommonInfoList.getTourDetailCommonList().get(0);
+            log.info("해당 장소 정보 = {}", placeCommonInfo);
+
+            tourPlaceSaveService.savePlace(placeCommonInfo, userId);
+
+            return new ResponseDTO(true, "장소가 성공적으로 저장되었습니다.");
+        } catch (Exception e) {
+            return new ResponseDTO(false, "장소 저장에 실패했습니다." + e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/delete/{placeId}")

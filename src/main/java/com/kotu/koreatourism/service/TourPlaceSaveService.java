@@ -11,8 +11,6 @@ public interface TourPlaceSaveService {
 
     public void savePlace(TourDetailCommonDTO placeCommonInfo, String userId);
 
-
-
     public void deletePlace(int placeId);
 
     public List<TourPlaceSaveDTO> findAllPlace(String userId);

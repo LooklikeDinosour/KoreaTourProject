@@ -54,7 +54,7 @@
     function like(contentId) {
         console.log('좋아요 요청:', contentId);
 
-        fetch('/likes', {
+        fetch('/likes/switch', {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json',
@@ -64,19 +64,19 @@
             contentId: contentId
             })
         })
-        .then(response => {
-            if(!response.ok) {
-                throw new Error(`Http 에러: ${response.status}`);
-            }
-            return response.text();
-        })
+        .then(response => response.json())
         .then(data => {
-        console.log('좋아요 성공:', data);
-        alert('좋아요가 완료되었습니다.');
+            if(data){
+                console.log('좋아요 성공:', data);
+                alert('좋아요가 완료되었습니다.');
+            } else {
+                console.log('좋아요 실패', data);
+                alert('잠시 후 다시 시도해주십시오.');
+            }
         })
         .catch(error => {
             console.error('좋아요 실패:', error);
-            alert('요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+            alert('좋아요를 누르시려면 로그인을 해주세요');
         });
     }
 
@@ -95,16 +95,16 @@
         })
             .then(response => response.json())
             .then(data => {
-                if (data) {
-                    console.log('장소 저장 성공:', data);
-                    alert('장소가 성공적으로 저장되었습니다.');
+                if (data.success) {
+                    console.log('장소 저장 성공:', data.message);
+                    alert(data.message);
                 } else {
-                    console.log('장소 저장 실패:', data);
-                    alert('장소 저장에 실패했습니다.');
+                    console.log('장소 저장 실패:', data.message);
+                    alert(data.message);
                 }
             })
             .catch(error => {
-                console.error('오류 발생:', error);
+                console.error('저장 오류 발생:', error);
                 alert('저장하려면 로그인을 해주세요');
             });
     }

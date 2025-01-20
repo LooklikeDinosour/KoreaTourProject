@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/login", "/checkid", "/signup", "/loginProc", "/api/**", "/board/**", "/static/**", "/js/**", "/css/**", "/images/**", "/fragments/**", "/layouts/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/place/save", "user/mypage", "comment/save", "/likes").authenticated()
+                        .requestMatchers("/place/save", "user/mypage", "comment/save", "likes/switch").authenticated()
                         .requestMatchers("/message/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()// 특정한 경로에 작업하고 싶으면 설정하는 메서드
                 );
