@@ -9,8 +9,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -21,9 +24,10 @@ public class LIkeController {
     private final LikeService likeService;
 
     @PostMapping("/switch")
-    public ResponseEntity<String> toggleLike(@RequestParam int contentId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> toggleLike(@RequestBody Map<String, Integer> request, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("좋아요 요청");
         String userId = userDetails.getUsername();
+        int contentId = request.get("contentId");
         boolean isLiked = likeService.toggleLike(userId, contentId);
 
         return ResponseEntity.ok(isLiked ? "좋아요 완료!" : "좋아요 취소!");
