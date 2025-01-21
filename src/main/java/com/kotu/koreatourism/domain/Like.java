@@ -1,7 +1,12 @@
 package com.kotu.koreatourism.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@AllArgsConstructor
 public class Like {
 
     private Long likeId;

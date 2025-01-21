@@ -1,5 +1,6 @@
 package com.kotu.koreatourism.mapper;
 
+import com.kotu.koreatourism.domain.Like;
 import com.kotu.koreatourism.dto.LikeDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 public interface LikeMapper {
 
     //좋아요 상태 조회
-    LikeDTO findLikeByUser(@Param("userId") String userId, @Param("contentId") int contentId);
+    Like findLikeByUser(@Param("userId") String userId, @Param("contentId") int contentId);
 
     //좋아요 +1(작동)
     int increaseLike(LikeDTO likeDTO);
