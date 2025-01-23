@@ -64,6 +64,7 @@ public class TourPlaceSaveController {
 
     @DeleteMapping("/delete/{placeId}")
     public void deletePlace(@PathVariable int placeId) {
+        log.info("저장한 장소 삭제 : ", placeId);
         tourPlaceSaveService.deletePlace(placeId);
     }
 
