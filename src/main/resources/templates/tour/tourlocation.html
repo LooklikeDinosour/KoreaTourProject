@@ -31,7 +31,7 @@
                 <p th:text="'주소: ' + ${tour.addr1} + ' ' + ${tour.addr2}">Address</p>
             </a>
             <div class="buttons">
-                <button class="button" th:data-liked="false" th:onclick="'like(\'' + ${tour.contentId} + '\', this)'">좋아요</button>
+                <button class="like-button" th:onclick="'like(\'' + ${tour.contentId} + '\', this)'">좋아요</button>
                 <button class="button" th:attr="onclick='save(' + ${tour.contentId} + ')'">저장하기</button>
             </div>
         </div>
@@ -64,15 +64,27 @@
             contentId: contentId
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response Error');
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('응답 데이터:', data);
+
             if(data.isLiked){
                 console.log('좋아요 성공:', data);
-                alert('좋아요가 완료되었습니다.');
+                button.classList.add('liked');
+                button.innerText = '좋아요 취소';
+
             } else {
                 console.log('좋아요 취소', data);
-                alert('좋아요가 취소되었습니다.');
+                button.classList.remove('liked');
+                button.innerText = '좋아요';
             }
+
+            alert(data.message);
         })
         .catch(error => {
             console.error('좋아요 실패:', error);

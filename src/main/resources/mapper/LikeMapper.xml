@@ -19,4 +19,8 @@
         delete from LIKE_TB
         where like_id = #{likeId}
     </delete>
+
+    <select id="findAllLikesByUser">
+        select
+    </select>
 </mapper>
