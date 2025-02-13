@@ -5,6 +5,8 @@ import com.kotu.koreatourism.dto.LikeDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface LikeMapper {
 
@@ -16,4 +18,7 @@ public interface LikeMapper {
 
     //좋아요 -1(취소)
     int decreaseLike(Long likeId);
+
+    // 사용가 누른 모든 좋아요 리스트로 불러오기
+    List<LikeDTO> findAllLikesByUser(String userId);
 }

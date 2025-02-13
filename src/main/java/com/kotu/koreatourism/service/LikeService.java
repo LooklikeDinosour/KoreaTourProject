@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -42,6 +43,10 @@ public class LikeService {
         }
         //
         return false;
+    }
+
+    public List<LikeDTO> getLikeList(String userId) {
+        return likeMapper.findAllLikesByUser(userId);
     }
 
     private LikeDTO convertToLikeDTO(Like liked) {

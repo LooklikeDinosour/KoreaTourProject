@@ -170,3 +170,19 @@ body {
     font-size: 1.2em; /* 필요에 따라 조정 */
     color: #333; /* 필요에 따라 조정 */
 }
+
+.like-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.like-button.liked {
+    background-color: #ff6b6b;
+    color: #fff;
+}
