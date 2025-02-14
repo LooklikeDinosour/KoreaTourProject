@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface PlaceSaveMapper {
 
+    public TourPlace findContentId(int contentId);
     public void savePlace(@Param("placeInfo")TourPlace placeInfo, @Param("userId") String userId);
 
     public void saveUserPlace(@Param("userId") String userId, @Param("placeId") int placeId);

@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TourPlaceSaveService {
 
+    public TourPlace findContentId(int contentId);
+
     public void savePlace(TourDetailCommonDTO placeCommonInfo, String userId);
 
     public void deletePlace(int placeId);

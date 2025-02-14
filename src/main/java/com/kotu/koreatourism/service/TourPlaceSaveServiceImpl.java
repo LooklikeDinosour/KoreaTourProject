@@ -6,6 +6,7 @@ import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
 import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.mapper.PlaceSaveMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +14,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TourPlaceSaveServiceImpl implements TourPlaceSaveService{
 
     private final PlaceSaveMapper placeSaveMapper;
+
+    @Override
+    public TourPlace findContentId(int contentId) {
+        log.info("테이블에 저장된 장소인지 확인절차");
+        return placeSaveMapper.findContentId(contentId);
+    }
+
     @Override
     @Transactional
     public void savePlace(TourDetailCommonDTO placeCommonInfo, String userId) {
