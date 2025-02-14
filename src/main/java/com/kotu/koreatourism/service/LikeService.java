@@ -1,7 +1,9 @@
 package com.kotu.koreatourism.service;
 
 import com.kotu.koreatourism.domain.Like;
+import com.kotu.koreatourism.domain.TourPlace;
 import com.kotu.koreatourism.dto.LikeDTO;
+import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.mapper.LikeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,7 @@ public class LikeService {
         return false;
     }
 
-    public List<LikeDTO> getLikeList(String userId) {
+    public List<TourPlace> getLikeList(String userId) {
         return likeMapper.findAllLikesByUser(userId);
     }
 

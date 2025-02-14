@@ -4,6 +4,7 @@ import com.kotu.koreatourism.domain.TourPlace;
 import com.kotu.koreatourism.dto.LikeDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
+import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.service.LikeService;
 import com.kotu.koreatourism.service.TourDeserializerService;
 import com.kotu.koreatourism.service.TourLocationService;
@@ -87,11 +88,11 @@ public class LIkeController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<LikeDTO>> getLikesList(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<TourPlace>> getLikesList(@AuthenticationPrincipal UserDetails userDetails) {
         String userId = userDetails.getUsername();
-        likeService.getLikeList(userId);
+        List<TourPlace> likeList = likeService.getLikeList(userId);
 
-        return null;
+        return ResponseEntity.ok(likeList);
     }
 
 }
