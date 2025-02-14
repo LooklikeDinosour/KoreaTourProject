@@ -3,6 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kotu.koreatourism.mapper.PlaceSaveMapper">
 
+    <select id="findContentId">
+        select *
+        from PLACESAVE_TB
+        where content_id = #{contentId}
+    </select>
+
     <insert id="savePlace" useGeneratedKeys="true" keyProperty="placeInfo.placeId">
         INSERT INTO PLACESAVE_TB (
             addr1,
