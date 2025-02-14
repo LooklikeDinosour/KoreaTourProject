@@ -2,10 +2,13 @@ package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.Board;
 import com.kotu.koreatourism.domain.SiteUser;
+import com.kotu.koreatourism.domain.TourPlace;
+import com.kotu.koreatourism.dto.LikeDTO;
 import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.SignUpFormDTO;
 import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.service.BoardService;
+import com.kotu.koreatourism.service.LikeService;
 import com.kotu.koreatourism.service.TourPlaceSaveService;
 import com.kotu.koreatourism.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class UserController {
     private final UserService userService;
     private final TourPlaceSaveService tourPlaceSaveService;
     private final BoardService boardService;
+    private final LikeService likeService;
 
     //회원가입
     @GetMapping("/signup")
@@ -79,6 +83,9 @@ public class UserController {
 
         List<TourPlaceSaveDTO> myPlaceList = tourPlaceSaveService.findAllPlace(userId);
         model.addAttribute("myPlaceList", myPlaceList);
+
+        List<TourPlace> likeList = likeService.getLikeList(userId);
+        model.addAttribute("likeList", likeList);
 
         //문제 아이디가 작성자가 아닌 닉네임 작성임.. DB 수정
         List<Board> myAllPost = boardService.findMyAllPost(userNickname);

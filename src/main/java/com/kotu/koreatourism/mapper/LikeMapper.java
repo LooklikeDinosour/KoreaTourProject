@@ -1,6 +1,7 @@
 package com.kotu.koreatourism.mapper;
 
 import com.kotu.koreatourism.domain.Like;
+import com.kotu.koreatourism.domain.TourPlace;
 import com.kotu.koreatourism.dto.LikeDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,5 +21,5 @@ public interface LikeMapper {
     int decreaseLike(Long likeId);
 
     // 사용가 누른 모든 좋아요 리스트로 불러오기
-    List<LikeDTO> findAllLikesByUser(String userId);
+    List<TourPlace> findAllLikesByUser(String userId);
 }
