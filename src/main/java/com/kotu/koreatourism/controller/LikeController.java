@@ -1,10 +1,8 @@
 package com.kotu.koreatourism.controller;
 
 import com.kotu.koreatourism.domain.TourPlace;
-import com.kotu.koreatourism.dto.LikeDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonDTO;
 import com.kotu.koreatourism.dto.tour.TourDetailCommonItemDTO;
-import com.kotu.koreatourism.dto.tour.TourPlaceSaveDTO;
 import com.kotu.koreatourism.service.LikeService;
 import com.kotu.koreatourism.service.TourDeserializerService;
 import com.kotu.koreatourism.service.TourLocationService;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +25,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/likes")
 @RequiredArgsConstructor
-public class LIkeController {
+public class LikeController {
 
     private final LikeService likeService;
     private final TourLocationService tourLocationService;
@@ -91,7 +88,6 @@ public class LIkeController {
     public ResponseEntity<List<TourPlace>> getLikesList(@AuthenticationPrincipal UserDetails userDetails) {
         String userId = userDetails.getUsername();
         List<TourPlace> likeList = likeService.getLikeList(userId);
-
         return ResponseEntity.ok(likeList);
     }
 
