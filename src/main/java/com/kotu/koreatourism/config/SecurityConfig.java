@@ -1,5 +1,6 @@
 package com.kotu.koreatourism.config;
 
+import com.kotu.koreatourism.service.Oauth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -45,6 +46,11 @@ public class SecurityConfig {
                         })
                         .defaultSuccessUrl("/", true)
                         .permitAll()
+                );
+
+        http
+                .oauth2Login((oauth) -> oauth.loginPage("/login")
+                        .defaultSuccessUrl("/")
                 );
 
         http

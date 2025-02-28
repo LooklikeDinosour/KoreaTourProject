@@ -37,6 +37,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     // H2 Database 의존성 추가
     testImplementation 'com.h2database:h2'
+    //소셜 로그인
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 test {

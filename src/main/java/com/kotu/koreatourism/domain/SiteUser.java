@@ -20,6 +20,9 @@ public class SiteUser {
     private LocalDateTime createDate; // 생성일자
     private String userRole; // 유저 권한 구분
 
+    private String provider; //Oauth 리소스 제공
+    private String providerId;
+
     @Override
     public String toString() {
         return "SiteUser{" +

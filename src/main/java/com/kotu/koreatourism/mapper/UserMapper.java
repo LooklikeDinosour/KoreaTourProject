@@ -12,4 +12,7 @@ public interface UserMapper {
 
     public boolean checkUserIdExist(String userId);
 
+    //Oauth 회원 여부 확인용
+    public SiteUser findByUserEmail(String userEmail);
+
 }
