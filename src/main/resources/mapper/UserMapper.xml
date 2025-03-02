@@ -12,13 +12,18 @@
              user_phone,
              user_email,
              user_nickname,
-             user_role)
+             user_role,
+             oauth_provider,
+             oauth_provider_id
+        )
         values (#{userId},
                 #{userPassword},
                 #{userPhone},
                 #{userEmail},
                 #{userNickname},
-                #{userRole}
+                #{userRole},
+                #{provider},
+                #{providerId}
                )
     </insert>
 

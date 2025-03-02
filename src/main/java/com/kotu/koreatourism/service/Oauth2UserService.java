@@ -3,6 +3,7 @@ package com.kotu.koreatourism.service;
 import com.kotu.koreatourism.domain.SiteUser;
 import com.kotu.koreatourism.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class Oauth2UserService extends DefaultOAuth2UserService {
@@ -24,7 +26,10 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
                 //유저가
                 Map<String, Object> attributes = user.getAttributes();
-                String id = (String) attributes.get("id");
+
+                String sub = (String) attributes.get("sub");
+                String provider = "google";
+                String id = provider + sub;
                 String email = (String)attributes.get("email");
                 String name = (String)attributes.get("name");
 
@@ -35,6 +40,8 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                         newUserInfo.setUserEmail(email);
                         newUserInfo.setUserNickname(name);
                         newUserInfo.setUserRole("ROLE_USER");
+                        newUserInfo.setProvider(provider);
+                        newUserInfo.setProviderId(sub);
 
                         userMapper.signUp(newUserInfo);
                 }
