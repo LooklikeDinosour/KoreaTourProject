@@ -23,7 +23,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
         public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
                 //리소스 서버에 사용자 정보 요청 후 사용자 정보를 담은 객체 받아오기
                 OAuth2User user = super.loadUser(userRequest);
-
+                log.info("Oauth 리소스 서버 사용자 정보 객체 = {}", user);
                 //유저가
                 Map<String, Object> attributes = user.getAttributes();
 
@@ -33,8 +33,10 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 String email = (String)attributes.get("email");
                 String name = (String)attributes.get("name");
 
-                SiteUser isUser = userMapper.findByUserId(email);
-                if (isUser == null) {
+                boolean isUserMail = userMapper.findByUserEmail(email);
+                log.info("기존 회원 인지 확인 = {}", isUserMail);
+                if (isUserMail == false) {
+                        log.info("Oauth 회원가입");
                         SiteUser newUserInfo = new SiteUser();
                         newUserInfo.setUserId(id);
                         newUserInfo.setUserEmail(email);
@@ -42,7 +44,6 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                         newUserInfo.setUserRole("ROLE_USER");
                         newUserInfo.setProvider(provider);
                         newUserInfo.setProviderId(sub);
-
                         userMapper.signUp(newUserInfo);
                 }
                 return user;

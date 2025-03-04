@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,8 +77,8 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPage(Model model, Principal principal) {
-        String userId = principal.getName();
+    public String myPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String userId = userDetails.getUsername();
         log.info("접속유저 아이디 = {}", userId);
         LoginDTO userInfo = userService.findByUserId(userId);
         String userNickname = userInfo.getUserNickname();
