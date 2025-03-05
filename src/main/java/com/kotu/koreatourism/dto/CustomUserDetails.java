@@ -6,24 +6,27 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Getter
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private final LoginDTO user;
+    private Map<String, Object> attributes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         log.info("siteUser = {}", user.toString());
-        Collection<GrantedAuthority> collection = new ArrayList<>();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        collection.add( new GrantedAuthority() {
+        authorities.add(new GrantedAuthority() {
 
             @Override
             public String getAuthority() {
@@ -32,7 +35,7 @@ public class CustomUserDetails implements UserDetails {
             }
         });
 
-        return collection;
+        return authorities;
     }
 
     @Override
@@ -64,5 +67,16 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    //OAuth
+    @Override
+    public String getName() {
+        return String.valueOf(attributes.get("id"));
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }

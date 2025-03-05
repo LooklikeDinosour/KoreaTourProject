@@ -50,6 +50,8 @@ public class SecurityConfig {
 
         http
                 .oauth2Login((oauth) -> oauth.loginPage("/login")
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                .userService(Oauth2UserService))
                         .defaultSuccessUrl("/")
                 );
 
