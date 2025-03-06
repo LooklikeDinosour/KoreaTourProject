@@ -34,4 +34,17 @@ public class SignUpFormDTO {
     private String userNickname; // 닉네임
 
     private String userRole; // 유저 권한 구분
+
+    //Oauth
+    private String provider; //Oauth 리소스 제공
+    private String providerId;
+
+    public SignUpFormDTO(String userId, String userEmail, String userNickname, String provider, String providerId){
+        this.userId = userId;
+        this.userEmail = userEmail;
+        this.userNickname = userNickname;
+        this.userRole = "ROLE_USER"; //기본값 설정
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 }

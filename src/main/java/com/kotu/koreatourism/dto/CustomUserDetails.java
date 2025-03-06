@@ -20,6 +20,11 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     private final LoginDTO user;
     private Map<String, Object> attributes;
 
+    public CustomUserDetails(LoginDTO user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //회원가입
@@ -75,6 +74,11 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean checkUserEmailExist(String userEmail) {
+        return userMapper.findByUserEmail(userEmail);
     }
 
     private String extractId(String userId) {

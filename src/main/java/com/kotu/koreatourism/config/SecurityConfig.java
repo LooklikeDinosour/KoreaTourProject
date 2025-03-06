@@ -14,6 +14,12 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final Oauth2UserService oauth2UserService;
+
+    public SecurityConfig(Oauth2UserService oauth2UserService) {
+        this.oauth2UserService = oauth2UserService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -50,8 +56,8 @@ public class SecurityConfig {
 
         http
                 .oauth2Login((oauth) -> oauth.loginPage("/login")
-                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                                .userService(Oauth2UserService))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oauth2UserService))
                         .defaultSuccessUrl("/")
                 );
 
