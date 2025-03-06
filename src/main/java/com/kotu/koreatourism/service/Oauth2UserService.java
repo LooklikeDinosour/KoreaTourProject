@@ -9,6 +9,7 @@ import com.mysql.cj.log.Log;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Slf4j
@@ -24,8 +26,6 @@ import java.util.Map;
 public class Oauth2UserService extends DefaultOAuth2UserService {
 
         private final UserMapper userMapper;
-
-        @Lazy
         private final UserService userService;
 
         @Override
@@ -34,10 +34,8 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 OAuth2User oAuth2User = super.loadUser(oAuthUserRequest);
                 log.info("Oauth 리소스 서버 사용자 정보 객체 = {}", oAuth2User.getAttributes());
 
-                //유저가
+                //유저
                 Map<String, Object> attributes = oAuth2User.getAttributes();
-
-                //ClientRegistration userInfoEndpoint = oAuthUserRequest.getClientRegistration();
 
                 String sub = (String) attributes.get("sub");
                 String provider = "google";
@@ -45,25 +43,22 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 String email = (String)attributes.get("email");
                 String name = (String)attributes.get("name");
 
-                SiteUser member;
                 boolean isExistUserMail = userMapper.findByUserEmail(email);
                 log.info("기존 회원 인지 확인 = {}", isExistUserMail);
                 if (isExistUserMail == false) {
                         log.info("Oauth 회원가입 = {}", email);
                         userService.signUp(new SignUpFormDTO(id, email, name, provider, sub));
                 }
-                member = userMapper.findByUserId(id);
-                if (member == null) {
+
+                SiteUser user = userMapper.findByUserId(id);
+
+                if (user == null) {
                         throw new OAuth2AuthenticationException("OAuth 회원 정보를 찾을 수 없습니다.");
                 }
 
-                LoginDTO loginDTO = new LoginDTO();
-                loginDTO.setUserId(member.getUserId());
-                loginDTO.setUserPassword("");
-                loginDTO.setUserNickname(member.getUserNickname());
-                loginDTO.setUserRole(member.getUserRole());
+                LoginDTO byUserId = userService.findByUserId(id);
 
-                return new CustomUserDetails(loginDTO, attributes);
+                return new CustomUserDetails(byUserId, attributes, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole())));
         }
 
 }

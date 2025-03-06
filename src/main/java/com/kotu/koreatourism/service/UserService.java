@@ -13,8 +13,9 @@ public interface UserService {
 
     public LoginDTO findByUserId(String userId);
 
-    public String getCurrentUserName();
-
+    //순환참조 발생하여 분리시켜봄
+//    public String getCurrentUserName();
+    
     public boolean checkUserIdExist(String userId);
 
     //OAuth 가입시 중복회원 확인절차

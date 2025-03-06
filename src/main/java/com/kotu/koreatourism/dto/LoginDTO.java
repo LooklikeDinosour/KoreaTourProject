@@ -17,4 +17,14 @@ public class LoginDTO {
     private String userPassword; // 비밀번호
     private String userNickname; //이름
     private String userRole;
+
+    @Override
+    public String toString() {
+        return "LoginDTO{" +
+                "userId='" + userId + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userRole='" + userRole + '\'' +
+                '}';
+    }
 }

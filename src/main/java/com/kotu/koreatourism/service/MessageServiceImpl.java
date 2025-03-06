@@ -9,6 +9,7 @@ import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.mapper.MessageMapper;
 import com.kotu.koreatourism.mapper.UserMapper;
+import com.kotu.koreatourism.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -22,10 +23,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
-
-    private final UserService userService;
-
-    private final UserMapper userMapper;
+//
+//    private final UserService userService;
+//
+//    private final UserMapper userMapper;
 
     private final MessageMapper messageMapper;
 
@@ -69,7 +70,7 @@ public class MessageServiceImpl implements MessageService {
     }
     @Override
     public void readMessage(int messageContentId) {
-        String currentUsername = userService.getCurrentUserName();
+        String currentUsername = SecurityUtil.getCurrentUserName();
         messageMapper.readMessage(messageContentId, currentUsername);
     }
 
@@ -81,7 +82,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public int findTotalMessage(String identifier) {
-        String currentUsername = userService.getCurrentUserName();
+        String currentUsername = SecurityUtil.getCurrentUserName();
         return messageMapper.findTotalMessage(currentUsername, identifier);
     }
 

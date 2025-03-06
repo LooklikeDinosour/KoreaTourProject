@@ -50,19 +50,20 @@ public class UserServiceImpl implements UserService {
         return loginInfo;
     }
 
-    @Override
-    public String getCurrentUserName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if(principal instanceof UserDetails) {
-                return (((UserDetails) principal).getUsername());
-            } else {
-                return principal.toString();
-            }
-        }
-        return null;
-    }
+    //이 부분이 순환참조를 끊어 줄거라 생각했는데 아니었다.
+//    @Override
+//    public String getCurrentUserName() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null && authentication.isAuthenticated()) {
+//            Object principal = authentication.getPrincipal();
+//            if(principal instanceof UserDetails) {
+//                return (((UserDetails) principal).getUsername());
+//            } else {
+//                return principal.toString();
+//            }
+//        }
+//        return null;
+//    }
 
     //ID확인
     @Override
