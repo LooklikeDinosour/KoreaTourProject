@@ -13,8 +13,7 @@ public interface UserService {
 
     public LoginDTO findByUserId(String userId);
 
-    //순환참조 발생하여 분리시켜봄
-//    public String getCurrentUserName();
+    public String getCurrentUserName();
     
     public boolean checkUserIdExist(String userId);
 

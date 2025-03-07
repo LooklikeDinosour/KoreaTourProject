@@ -3,29 +3,24 @@ package com.kotu.koreatourism.service;
 import com.kotu.koreatourism.domain.Criteria;
 import com.kotu.koreatourism.domain.Message;
 import com.kotu.koreatourism.domain.MessageContent;
-import com.kotu.koreatourism.domain.SiteUser;
-import com.kotu.koreatourism.dto.LoginDTO;
 import com.kotu.koreatourism.dto.MessageContentDTO;
 import com.kotu.koreatourism.dto.PageDTO;
 import com.kotu.koreatourism.mapper.MessageMapper;
-import com.kotu.koreatourism.mapper.UserMapper;
-import com.kotu.koreatourism.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
-//
-//    private final UserService userService;
-//
+
+    private final UserService userService;
+
 //    private final UserMapper userMapper;
 
     private final MessageMapper messageMapper;
@@ -70,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
     }
     @Override
     public void readMessage(int messageContentId) {
-        String currentUsername = SecurityUtil.getCurrentUserName();
+        String currentUsername = userService.getCurrentUserName();
         messageMapper.readMessage(messageContentId, currentUsername);
     }
 
@@ -82,7 +77,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public int findTotalMessage(String identifier) {
-        String currentUsername = SecurityUtil.getCurrentUserName();
+        String currentUsername = userService.getCurrentUserName();
         return messageMapper.findTotalMessage(currentUsername, identifier);
     }
 

@@ -28,11 +28,14 @@
             <div class="field-error" th:errors="*{userPassword}">
                 비밀번호를 입력해주세요.
             </div>
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+<!--            <input type="hidden" name="_csrf" th:value="${_csrf.token}">-->
             <button type="submit">로그인</button>
         </form>
-        <a href="/oauth2/authorization/google">구글 로그인</a>
+
         <button type="button" class="signup-button" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+
+        <a href="/oauth2/authorization/google">구글 로그인</a>
+        <a href="/oauth2/authorization/kakao">카카오 로그인</a>
     </div>
 </div>
 </body>
