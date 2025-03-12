@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -34,20 +35,46 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 OAuth2User oAuth2User = super.loadUser(oAuthUserRequest);
                 log.info("Oauth 리소스 서버 사용자 정보 객체 = {}", oAuth2User.getAttributes());
 
+                //공급자 정보 registrationId(구글, 카카오)
+                String registrationId = oAuthUserRequest.getClientRegistration().getRegistrationId();
+
+                String sub = "";
+                String provider = "";
+                String id = "";
+                String email = "";
+                String name = "";
+
                 //유저
                 Map<String, Object> attributes = oAuth2User.getAttributes();
+                attributes.forEach((key, value) -> log.info(key + ": " + value));
 
-                String sub = (String) attributes.get("sub");
-                String provider = "google";
-                String id = provider + sub;
-                String email = (String)attributes.get("email");
-                String name = (String)attributes.get("name");
+                if(Objects.equals(registrationId, "google")) {
+                        sub = (String) attributes.get("sub");
+                        provider = "google";
+                        id = provider + sub;
+                        email = (String)attributes.get("email");
+                        name = (String)attributes.get("name");
+                }
+
+
+                if(Objects.equals(registrationId, "kakao")) {
+                        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+                        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+
+                        sub = String.valueOf(attributes.get("id"));
+                        provider = "kakao";
+                        id = provider + "_" + sub;
+                        email = (String) kakaoAccount.get("email");
+                        name = (String) properties.get("nickname");
+
+                }
+                //Kakao 구글과 들어오는 Json 형태가 다르다.
 
                 boolean isExistUserMail = userMapper.findByUserEmail(email);
                 log.info("기존 회원 인지 확인 = {}", isExistUserMail);
                 if (isExistUserMail == false) {
                         log.info("Oauth 회원가입 = {}", email);
-                        userService.signUp(new SignUpFormDTO(id, email, name, provider, sub));
+                        userService.signUpOauth(new SignUpFormDTO(id, email, name, provider, sub));
                 }
 
                 SiteUser user = userMapper.findByUserId(id);

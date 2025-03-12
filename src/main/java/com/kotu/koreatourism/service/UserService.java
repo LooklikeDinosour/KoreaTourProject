@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface UserService {
 
     public int signUp(SignUpFormDTO userInfo);
+    public int signUpOauth(SignUpFormDTO userInfo);
 
     public LoginDTO findByUserId(String userId);
 

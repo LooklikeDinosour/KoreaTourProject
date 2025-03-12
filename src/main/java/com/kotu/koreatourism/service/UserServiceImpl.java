@@ -37,6 +37,20 @@ public class UserServiceImpl implements UserService {
         return userMapper.signUp(newUserInfo);
     }
 
+    @Override
+    public int signUpOauth(SignUpFormDTO userInfo) {
+
+        SiteUser newUserInfo = new SiteUser();
+        newUserInfo.setUserId(userInfo.getUserId());
+        newUserInfo.setUserPhone(userInfo.getUserPhone());
+        newUserInfo.setUserEmail(userInfo.getUserEmail());
+        newUserInfo.setUserNickname(userInfo.getUserNickname());
+        newUserInfo.setUserRole("ROLE_USER");
+
+        return userMapper.signUp(newUserInfo);
+    }
+
+
     //로그인용
     @Override
     public LoginDTO findByUserId(String userId) {
