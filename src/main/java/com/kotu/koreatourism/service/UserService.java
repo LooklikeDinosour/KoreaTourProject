@@ -20,4 +20,6 @@ public interface UserService {
 
     //OAuth 가입시 중복회원 확인절차
     public boolean checkUserEmailExist(String userEmail);
+
+
 }

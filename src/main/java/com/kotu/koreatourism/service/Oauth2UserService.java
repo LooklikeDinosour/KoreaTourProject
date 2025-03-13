@@ -37,6 +37,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
                 //공급자 정보 registrationId(구글, 카카오)
                 String registrationId = oAuthUserRequest.getClientRegistration().getRegistrationId();
+                log.info("공급자 정보 = {}", registrationId);
 
                 String sub = "";
                 String provider = "";
@@ -49,26 +50,28 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 attributes.forEach((key, value) -> log.info(key + ": " + value));
 
                 if(Objects.equals(registrationId, "google")) {
+                        log.info("Google 로그인");
                         sub = (String) attributes.get("sub");
-                        provider = "google";
-                        id = provider + sub;
+                        provider = registrationId;
+                        id = provider + "_" + sub;
                         email = (String)attributes.get("email");
                         name = (String)attributes.get("name");
                 }
 
 
                 if(Objects.equals(registrationId, "kakao")) {
+                        log.info("kakao 로그인");
+                        //Kakao 구글과 들어오는 Json 형태가 다르다.
                         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
                         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
 
                         sub = String.valueOf(attributes.get("id"));
-                        provider = "kakao";
+                        provider = registrationId;
                         id = provider + "_" + sub;
                         email = (String) kakaoAccount.get("email");
                         name = (String) properties.get("nickname");
-
                 }
-                //Kakao 구글과 들어오는 Json 형태가 다르다.
+
 
                 boolean isExistUserMail = userMapper.findByUserEmail(email);
                 log.info("기존 회원 인지 확인 = {}", isExistUserMail);
