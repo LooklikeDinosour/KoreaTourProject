@@ -21,15 +21,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(request ->
-                                request.getMethod().equals(HttpMethod.GET.name())));
-
-        http
+        httpSecurity
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/login", "/checkid", "/signup", "/loginProc", "/api/**", "/board/**", "/static/**", "/js/**", "/css/**", "/images/**", "/fragments/**", "/layouts/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
@@ -39,7 +33,7 @@ public class SecurityConfig {
                 );
 
         //로그인이되어있지 않은 상태에서 /설정주소에 접근하면 login 페이지로 리다이렉션됌.
-        http
+        httpSecurity
                 .formLogin((auth) -> auth
                         .usernameParameter("userId")
                         .passwordParameter("userPassword")
@@ -54,30 +48,29 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-        http
+        httpSecurity
                 .oauth2Login((oauth) -> oauth.loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oauth2UserService))
                         .defaultSuccessUrl("/")
                 );
 
-        http
+        httpSecurity
                 .logout((auth) -> auth.logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                 );
 
 
-        http
+        httpSecurity
                 .sessionManagement((auth) -> auth
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(true) //true면 설정 갯수 초과시 신규 로그인 불가, false는 기존세션 1개를 종료하고 접속시킴
                 );
 
-        return http.build();
+        return httpSecurity.build();
 
     }
-
 
 //    @Bean
 //    public BCryptPasswordEncoder bCryptPasswordEncoder() {
