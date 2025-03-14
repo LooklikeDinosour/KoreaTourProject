@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
+import java.util.SimpleTimeZone;
 
 @Slf4j
 @Controller
@@ -43,23 +48,25 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request,
                          HttpServletResponse response,
-                         @RequestParam(required = false) String accessToken) {
+                         @AuthenticationPrincipal OAuth2User oAuth2User) {
 
-        //카카오 로그아웃
-        if (accessToken != null && !accessToken.isEmpty()) {
-            log.info("kakao 로그아웃 실행 : AccessToken = {}", accessToken);
-            kakaoLogoutService.kakaoLogout(accessToken);
-        }
+            HttpSession session = request.getSession(false);
+            if(session != null) {
+                String accessToken = (String) session.getAttribute("kakaoAccessToken");
+                log.info("Access_token 확인 = {}", accessToken);
+
+                //카카오 로그아웃
+                if (accessToken != null && !accessToken.isEmpty()) {
+                    log.info("kakao 로그아웃 실행");
+                    kakaoLogoutService.kakaoLogout(accessToken);
+                }
+            }
+
 
         //Spring Security 로그아웃
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
-        }
-
-        HttpSession session = request.getSession(false);
-        if(session != null) {
-            session.invalidate();
         }
 
         log.info("로그아웃 완료");

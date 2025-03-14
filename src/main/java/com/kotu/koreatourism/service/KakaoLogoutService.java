@@ -11,10 +11,10 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class KakaoLogoutService {
-
    private final RestTemplate restTemplate = new RestTemplate();
 
    public void kakaoLogout(String accessToken) {
+
       String logoutUrl = "https://kapi.kakao.com/v1/user/logout";
 
       HttpHeaders httpHeaders = new HttpHeaders();
