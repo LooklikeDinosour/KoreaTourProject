@@ -75,7 +75,7 @@
 <header th:replace="~{layouts/header :: header}"></header>
 <div class="form-container">
 
-    <form action="createPost.html" th:action th:object="${post}" method="post">
+    <form th:action="@{/board/{board_category}/createpost(board_category=${board_category})}" th:object="${post}" method="post">
         <div>
             <input type="hidden" name="boardCategory" th:value="${board_category}">
             <input type="hidden" name="userId" th:value="${#authentication.principal.user.userId}">

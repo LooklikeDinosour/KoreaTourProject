@@ -51,7 +51,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
                 if(Objects.equals(registrationId, "google")) {
                         log.info("Google 로그인");
-                        sub = (String) attributes.get("sub");
+                        sub = (String) attributes.get("id");
                         provider = registrationId;
                         id = provider + "_" + sub;
                         email = (String)attributes.get("email");
@@ -80,6 +80,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                         userService.signUpOauth(new SignUpFormDTO(id, email, name, provider, sub));
                 }
 
+                log.info("유저 ID로 유저 정보 불러오기");
                 SiteUser user = userMapper.findByUserId(id);
 
                 if (user == null) {
