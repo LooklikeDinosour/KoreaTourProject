@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS USER_TB (
   user_email VARCHAR(50) NOT NULL,
   user_nickname VARCHAR(20) NOT NULL,
   user_role VARCHAR(15) NOT NULL,
+  oauth_provider VARCHAR(45),
+  oauth_provider_id VARCHAR(100),
   PRIMARY KEY (user_id),
   CONSTRAINT user_nickname_UNIQUE UNIQUE (user_nickname)
 );
